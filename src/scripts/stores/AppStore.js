@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
-var _data = {};
+var _data = require('../../example.json');
 
 var AppStore = _.extend(EventEmitter.prototype, {
 	

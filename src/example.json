@@ -1,77 +1,65 @@
 {
-    family: {
-        id: 1,
-        name: 'some description',
-        clinicianId: 1,
-        proband: 4,
+    "family": {
+        "id": 1,
+        "name": "some description",
+        "clinicianId": 1,
+        "proband": 4,
 
-        members: [
+        "members": [
             {
-                id: 1,
-                gender: 2, // 0 = unknown, 1 = male, 2 = female, same as the PED 
-                name: "Jane Doe"
+                "id": 1,
+                "gender": 2, 
+                "name": "Jane Doe"
             },
             {
-                id: 2,
-                gender: 1,
-                name: "John Smith"
-                dateOfDeath: "2012-05-07"
+                "id": 2,
+                "gender": 1,
+                "name": "John Smith",
+                "dateOfDeath": "2012-05-07"
             },
             {
-                id: 3,
-                gender: 1,
-                dateOfBirth: "1977-04-27"
+                "id": 3,
+                "gender": 1,
+                "dateOfBirth": "1977-04-27"
             },
             {
-                id: 4,
-                gender: 2
+                "id": 4,
+                "gender": 2
             },
             {
-                id: 5,
-                gender: 2
+                "id": 5,
+                "gender": 2
             }, 
             {
-            	id: 6,
-            	gender: 2
+            	"id": 6,
+            	"gender": 2
             },
             {	
-            	id: 7,
-            	gender: 0
+            	"id": 7,
+            	"gender": 0
             }
         ],
 
-        // TODO: how to model monozygotic twins?
-
-        nests: [
+        "nests": [
         	{
-        		father: 2,
-        		mother: 1,
-                preganencies: [[3], [4], [5]]
+        		"father": 2,
+        		"mother": 1,
+                "preganencies": [[3], [4], [5]]
         	},
         	{
-        		father: 3,
-        		mother: 6,
-        		children: [[7]],
-                consanguenous: true
+        		"father": 3,
+        		"mother": 6,
+        		"preganencies": [[7]],
+                "consanguenous": true
         	}
-        ],
-
-        // Alternative nest structure.
-        // nests: {
-        // 	'1,2': {children: [[3], [4], [5]], consanguenous: false},
-        // 	'3,6': [[7]]
-        // }
+        ]
     },
 
-    schema: {
-        // TODO: custom fields
-        name: { type: "string" },
-        dateOfBirth: { type: "date" }
-    }
+    "schema": {
+        "name": { "type": "string" },
+        "dateOfBirth": { "type": "date" }
+    },
 
-    settings: {
-        // TODO: user defined (?) setting on the drawing.
-        // for example: 
-        // 1. fields shown next in the annotation.
+    "settings": {
     }
 }
