@@ -3,13 +3,13 @@
 var AppDispatcher = require('../dispatchers/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
-var merge = require('react/lib/merge');
+var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
 var _data = {};
 
-var AppStore = merge(EventEmitter.prototype, {
+var AppStore = _.extend(EventEmitter.prototype, {
 	
 	getData: function(){
 	return _data;

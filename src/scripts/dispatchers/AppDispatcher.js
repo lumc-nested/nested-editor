@@ -1,7 +1,8 @@
 'use strict';
 var Dispatcher = require('flux').Dispatcher;
-var copyProperties = require('react/lib/copyProperties');
-var AppDispatcher = copyProperties(new Dispatcher(), {
+var _ = require('lodash');
+
+var AppDispatcher = _.extend(new Dispatcher(), {
 
   /**
    * A bridge function between the views and the dispatcher, marking the action
