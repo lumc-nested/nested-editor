@@ -12,7 +12,7 @@ var AppActions = require('../actions/AppActions');
 
 // var MemberDetails = require('./MemberDetails.jsx');
 // var PedigreeWidgets = require('./PedigreeWidgets.jsx');
-// var PedigreCanvas = require('./PedigreeCanvas.jsx');
+var PedigreeCanvas = require('./PedigreeCanvas.jsx');
 
 
 
@@ -46,9 +46,7 @@ var PedigreeApp = React.createClass({
   render: function() {
     return (
       <div className='main'>
-        <p>
-          Here goes the canvas.
-        </p>
+        <PedigreeCanvas />
       </div>
     );
   }
