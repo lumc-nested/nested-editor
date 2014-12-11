@@ -18,7 +18,7 @@ module.exports = {
 
   debug: false,
   devtool: false,
-  entry: './src/scripts/components/PedigreeApp.jsx',
+  entry: './src/scripts/app.jsx',
 
   stats: {
     colors: true,

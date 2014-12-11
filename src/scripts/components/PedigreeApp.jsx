@@ -4,29 +4,54 @@
 
 'use strict';
 
-var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var React = require('react');
 
-// Export React so the devtools can find it
-(window !== window.top ? window.top : window).React = React;
 
-// CSS
-require('../../styles/normalize.css');
-require('../../styles/main.less');
+var AppStore = require('../stores/AppStore');
+var AppActions = require('../actions/AppActions');
 
-var imageURL = require('../../images/yeoman.png');
+// var MemberDetails = require('./MemberDetails.jsx');
+// var PedigreeWidgets = require('./PedigreeWidgets.jsx');
+// var PedigreCanvas = require('./PedigreeCanvas.jsx');
+
+
+
+function getAppState(){
+  return AppStore.getData();
+}
+
 
 var PedigreeApp = React.createClass({
+
+  getInitialState: function(){
+    return getAppState();
+  },
+
+  _onChange: function(){
+    this.setState(getAppState());
+  },
+
+  componentDidMount: function(){ 
+    AppStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function(){
+    AppStore.removeChangeListener(this._onChange);
+  },
+
+  handleClick: function(){
+    AppActions.exampleAction('Data from View');
+  },
+
   render: function() {
     return (
       <div className='main'>
-        <ReactTransitionGroup transitionName="fade">
-          <img src={imageURL} />
-        </ReactTransitionGroup>
+        <p>
+          Here goes the canvas.
+        </p>
       </div>
     );
   }
 });
-React.renderComponent(<PedigreeApp />, document.getElementById('content')); // jshint ignore:line
 
 module.exports = PedigreeApp;

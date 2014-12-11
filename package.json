@@ -10,6 +10,7 @@
   "mainInput": "PedigreeApp",
   "mainOutput": "main",
   "dependencies": {
+    "flux": "^2.0.1",
     "react": "~0.12.1"
   },
   "devDependencies": {
