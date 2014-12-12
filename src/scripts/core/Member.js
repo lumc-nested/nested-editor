@@ -22,7 +22,17 @@ Member.prototype = {
     Kinetic.Group.call(this, {});
 
     this._drawGender();
-    //this._drawDeath();
+    if (this.isDead()) {
+      this._drawDeath();
+    }
+  },
+
+  // TODO: this usage of dateOfDeath and deceased should be documented in the file schema.
+  // TODO: what if dateOfDeath is a boolean?
+  // TODO: do we want to use a custom column?
+  isDead: function() {
+    return this.member.dateOfDeath !== undefined ||
+          (this.member.deceased !== undefined && this.member.deceased);
   },
 
   _drawGender: function() {

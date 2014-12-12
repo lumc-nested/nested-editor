@@ -32,7 +32,7 @@ Stage.prototype = {
     padding = 10;
 
     legend = new Kinetic.Group({
-      x: this.width() - 200,
+      x: 20,
       y: 20,
       draggable: true
     });
@@ -41,14 +41,9 @@ Stage.prototype = {
     symbols = [
       [new Kinetic.Text({text: 'Male', fill: '#333', fontSize: 16}), new Member({'gender': 1})],
       [new Kinetic.Text({text: 'Female', fill: '#333', fontSize: 16}), new Member({'gender': 2})],
-      [new Kinetic.Text({text: 'Gender unknown', fill: '#333', fontSize: 16}), new Member({'gender': 0})]
+      [new Kinetic.Text({text: 'Gender unknown', fill: '#333', fontSize: 16}), new Member({'gender': 0})],
+      [new Kinetic.Text({text: 'Deceased', fill: '#333', fontSize: 16}), new Member({'gender': 1, 'deceased': true})]
     ];
-
-    // TODO: _drawDeath() should be called by the member constructor based on some property of the member.
-    // Once that's done, this symbol can be drawn as the others.
-    var dead = new Member({'gender': 1});
-    dead._drawDeath();
-    symbols.push([new Kinetic.Text({text: 'Deceased', fill: '#333', fontSize: 16}), dead]);
 
     // set symbol location and add to the legend group.
     _.each(symbols, function(symbol, index) {
