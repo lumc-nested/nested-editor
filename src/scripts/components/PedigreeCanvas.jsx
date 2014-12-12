@@ -2,8 +2,10 @@
 
 var React = require('react');
 var Kinetic = require('kinetic');
+var PedigreeUI = require('../core/UI.js');
+var _stage, _layer, _canvasID;
 
-var _stage, _layer;
+_canvasID = 'pedigree-canvas';
 
 var PedigreeCanvas = React.createClass({
 
@@ -11,26 +13,26 @@ var PedigreeCanvas = React.createClass({
         var _stage = new Kinetic.Stage({
             width: 650,
             height: 650,
-            container: 'pedigree-canvas',
+            container: _canvasID,
             fill: 'white'
         });
 
         var _layer = new Kinetic.Layer({});
 
-        var circle = new Kinetic.Circle({
-            x: 100, 
-            y: 100,
-            radius: 20,
-            stroke: 'indigo'
-        });
+        var male = new PedigreeUI.Member({'gender': 1});
+        male.setPosition({x: 100, y: 100});
+        var female = new PedigreeUI.Member({'gender': 2});
+        female.setPosition({x: 100, y: 200});
+        var unknownGender = new PedigreeUI.Member({'gender': 0});
+        unknownGender.setPosition({x: 100, y: 300});
 
-        _layer.add(circle);
+        _layer.add(male, female, unknownGender);
         _stage.add(_layer);
     },
 
     render: function() {
         return (
-            <div id="pedigree-canvas">
+            <div id={_canvasID}>
             </div>
         );
     }
