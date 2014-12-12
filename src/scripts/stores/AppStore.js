@@ -10,35 +10,35 @@ var CHANGE_EVENT = 'change';
 var _data = require('../../example.json');
 
 var AppStore = _.extend(EventEmitter.prototype, {
-	
-	getData: function(){
-	return _data;
-	},
+  
+  getData: function(){
+  return _data;
+  },
 
-	emitChange: function(){
-	this.emit(CHANGE_EVENT);
-	},
+  emitChange: function(){
+  this.emit(CHANGE_EVENT);
+  },
 
-	addChangeListener: function(callback){
-	this.on(CHANGE_EVENT, callback);
-	},
+  addChangeListener: function(callback){
+  this.on(CHANGE_EVENT, callback);
+  },
 
-	removeChangeListener: function(callback){
-	this.removeListener(CHANGE_EVENT, callback);
-	}
+  removeChangeListener: function(callback){
+  this.removeListener(CHANGE_EVENT, callback);
+  }
 });
 
 AppDispatcher.register(function(payload){
-	var action = payload.action;
-	console.log('STORE DISPATCHER REGISTER', action);
+  var action = payload.action;
+  console.log('STORE DISPATCHER REGISTER', action);
 
-	switch(action.actionType) {
-		case AppConstants.CHANGE_FOCUS:
-			_data.focus = action.focus;
-			break;
-	}
+  switch(action.actionType) {
+    case AppConstants.CHANGE_FOCUS:
+      _data.focus = action.focus;
+      break;
+  }
 
-	AppStore.emitChange();
+  AppStore.emitChange();
 
 });
 
