@@ -23,17 +23,6 @@ Member.prototype = {
 
     this._drawGender();
     //this._drawDeath();
-
-    // for debug.
-    var hitArea = new Kinetic.Rect({
-      position: {x: 0, y: 0},
-      width: size,
-      height: size,
-      stroke: 'grey',
-      strokeWidth: 1
-    });
-
-    this.add(hitArea);
   },
 
   _drawGender: function() {
@@ -46,7 +35,7 @@ Member.prototype = {
           position: {x: padding + strokeWidth, y: padding + strokeWidth},
           width: shapeSize,
           height: shapeSize
-        }); 
+        });
         break;
       case PC.Gender.Female:
         this.shape = new Kinetic.Circle({
@@ -76,6 +65,18 @@ Member.prototype = {
     });
 
     this.add(this.deathStrike);
+  },
+
+  _showHitArea: function() {// for debug.
+    var hitArea = new Kinetic.Rect({
+      position: {x: 0, y: 0},
+      width: size,
+      height: size,
+      stroke: 'grey',
+      strokeWidth: 1
+    });
+
+    this.add(hitArea);
   }
 };
 
