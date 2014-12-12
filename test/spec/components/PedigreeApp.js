@@ -1,14 +1,15 @@
 'use strict';
 
 describe('Main', function () {
-  var PedigreeApp, component;
+  var React, PedigreeApp, component;
 
   beforeEach(function () {
     var container = document.createElement('div');
     container.id = 'content';
     document.body.appendChild(container);
 
-    PedigreeApp = require('../../../src/scripts/components/PedigreeApp.jsx');
+    React = require('react');
+    PedigreeApp = React.createFactory(require('../../../src/scripts/components/PedigreeApp.jsx'));
     component = PedigreeApp();
   });
 

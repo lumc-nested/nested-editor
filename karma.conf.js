@@ -2,14 +2,16 @@
 
 module.exports = function (config) {
   config.set({
-    basePath: '',
+    basePath: 'test',
     frameworks: ['jasmine'],
     files: [
-      'test/helpers/**/*.js',
-      'test/spec/components/**/*.js'
+      'helpers/**/*.js',
+      'spec/components/**/*.js',
+      'spec/core/**/*.js'
     ],
     preprocessors: {
-      'test/spec/components/**/*.js': ['webpack']
+      'spec/components/**/*.js': ['webpack'],
+      'spec/core/**/*.js': ['webpack']
     },
     webpack: {
       cache: true,
@@ -29,6 +31,9 @@ module.exports = function (config) {
         }, {
           test: /\.jsx$/,
           loader: 'jsx-loader'
+        }, {
+          test: /\.json$/,
+          loader: 'json'
         }]
       }
     },
