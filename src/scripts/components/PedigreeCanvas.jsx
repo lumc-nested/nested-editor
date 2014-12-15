@@ -18,19 +18,7 @@ var PedigreeCanvas = React.createClass({
 
     stage.drawLegend();
 
-    stage.drawFamily({
-      "members": [
-        {
-          "id": 1,
-          "gender": 1
-        },
-        {
-          "id": 2,
-          "gender": 2
-        }
-      ]
-    });
-
+    stage.drawFamily(this.props.family);
   },
 
   render: function() {

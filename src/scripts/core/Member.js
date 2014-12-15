@@ -3,13 +3,14 @@ var PC = require('../constants/PedigreeConstants.js');
 
 
 // TODO: Constants, or user defined?
-var size = 40;
+var size = PC.MemberSize;
 var padding = 2;
 var strokeWidth = 2;
-var themeColor = 'indigo';
+var themeColor = PC.ThemeColor;
 
 var Member = function(member) {
   this.member = member;
+  this.id = member.id;
   this.shape = undefined;
   this.deathStrike = undefined;
   this.init();
@@ -65,6 +66,7 @@ Member.prototype = {
         break;
     }
     this.shape.stroke(themeColor);
+    this.shape.fill('#ffffff');
     this.add(this.shape);
   },
 

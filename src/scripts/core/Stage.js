@@ -1,7 +1,11 @@
 var Kinetic = require('kinetic');
 var _ = require('lodash');
+var PC = require('../constants/PedigreeConstants.js');
 var Legend = require('./Legend.js');
 var Member = require('./Member.js');
+var Nest = require('./Nest.js');
+
+var _members = [];
 
 var Stage = function(config) {
   this.drawingLayer = undefined;
@@ -36,10 +40,19 @@ Stage.prototype = {
   // TODO: location of the members are hard coded.
   drawFamily: function(family) {
     var layer = this.drawingLayer;
-    _.each(family.members, function(data, index){
-      var member = new Member(data);
-      member.setPosition({x: 200 + index * 50, y: 200});
-      layer.add(member);
+
+    _members = _.map(family.members, function(data) {
+      return new Member(data);
+    });
+
+    _nests = _.map(family.nests, function(data) {
+      return new Nest(data, _members);
+    });
+
+    _.each(_nests, function(nest, index) {
+      nest.doLayout();
+      nest.setPosition({x: 300 + index * 200, y: 200});
+      layer.add(nest);
     });
 
     layer.draw();

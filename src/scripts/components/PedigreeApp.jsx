@@ -46,7 +46,7 @@ var PedigreeApp = React.createClass({
   render: function() {
     return (
       <div className='main'>
-        <PedigreeCanvas />
+        <PedigreeCanvas family={this.state.data.family} focus={this.state.focus} />
       </div>
     );
   }

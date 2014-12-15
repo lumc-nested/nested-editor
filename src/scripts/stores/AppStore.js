@@ -7,24 +7,27 @@ var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
-var _data = require('../../example.json');
+var _data = require('../../simpleFamily.json');
 
 var AppStore = _.extend(EventEmitter.prototype, {
-  
+
   getData: function(){
-  return _data;
+    return {
+      data: _data,
+      focus: undefined
+    };
   },
 
   emitChange: function(){
-  this.emit(CHANGE_EVENT);
+    this.emit(CHANGE_EVENT);
   },
 
   addChangeListener: function(callback){
-  this.on(CHANGE_EVENT, callback);
+    this.on(CHANGE_EVENT, callback);
   },
 
   removeChangeListener: function(callback){
-  this.removeListener(CHANGE_EVENT, callback);
+    this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
@@ -34,7 +37,7 @@ AppDispatcher.register(function(payload){
 
   switch(action.actionType) {
     case AppConstants.CHANGE_FOCUS:
-      _data.focus = action.focus;
+      this.state.focus = action.focus;
       break;
   }
 
