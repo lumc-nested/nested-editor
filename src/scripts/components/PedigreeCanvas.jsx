@@ -10,13 +10,27 @@ _canvasID = 'pedigree-canvas';
 var PedigreeCanvas = React.createClass({
 
   componentDidMount: function() {
-    var _stage = new PedigreeUI.Stage({
+    var stage = new PedigreeUI.Stage({
       width: 800,
       height: 650,
       container: _canvasID
     });
 
-    _stage.drawLegend();
+    stage.drawLegend();
+
+    stage.drawFamily({
+      "members": [
+        {
+          "id": 1,
+          "gender": 1
+        },
+        {
+          "id": 2,
+          "gender": 2
+        }
+      ]
+    });
+
   },
 
   render: function() {
