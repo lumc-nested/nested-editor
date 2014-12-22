@@ -1,5 +1,6 @@
 var Kinetic = require('kinetic');
 var PC = require('../constants/PedigreeConstants.js');
+var AppActions = require('../actions/AppActions.js');
 
 
 // TODO: Constants, or user defined?
@@ -26,6 +27,8 @@ Member.prototype = {
     if (this.isDead()) {
       this._drawDeath();
     }
+
+    this.on('click', this.click);
   },
 
   // TODO: this usage of dateOfDeath and deceased should be documented in the file schema.
@@ -89,6 +92,14 @@ Member.prototype = {
     });
 
     this.add(hitArea);
+  },
+
+  click: function() {
+    AppActions.changeFocus(this.id);
+  },
+
+  focus: function() {
+    this.shape.strokeWidth(3);
   }
 };
 

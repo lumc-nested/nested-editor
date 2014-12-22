@@ -39,6 +39,20 @@ Stage.prototype = {
   // Draw family on stage.
   // TODO: location of the members are hard coded.
   drawFamily: function(family) {
+    this._prepareDrawingLayer(family);
+    this.drawingLayer.draw();
+  },
+
+  update: function(props) {
+    this.drawingLayer.clear();
+    this._prepareDrawingLayer(props.family);
+
+    var memberInFocus = _.find(_members, {id: props.focus});
+    memberInFocus.focus();
+    this.drawingLayer.draw();
+  },
+
+  _prepareDrawingLayer: function(family) {
     var layer = this.drawingLayer;
 
     _members = _.map(family.members, function(data) {
@@ -49,13 +63,15 @@ Stage.prototype = {
       return new Nest(data, _members);
     });
 
+    // remove members from previous draw.
+    layer.destroyChildren();
+
+    // add updated members.
     _.each(_nests, function(nest, index) {
       nest.doLayout();
       nest.setPosition({x: 300 + index * 200, y: 200});
       layer.add(nest);
     });
-
-    layer.draw();
   }
 };
 Kinetic.Util.extend(Stage, Kinetic.Stage);

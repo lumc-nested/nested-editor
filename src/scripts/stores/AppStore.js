@@ -7,15 +7,15 @@ var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
-var _data = require('../../simpleFamily.json');
+var _data = {
+  data: require('../../simpleFamily.json'),
+  focus: undefined
+};
 
 var AppStore = _.extend(EventEmitter.prototype, {
 
   getData: function(){
-    return {
-      data: _data,
-      focus: undefined
-    };
+    return _data;
   },
 
   emitChange: function(){
@@ -37,7 +37,7 @@ AppDispatcher.register(function(payload){
 
   switch(action.actionType) {
     case AppConstants.CHANGE_FOCUS:
-      this.state.focus = action.focus;
+      _data.focus = action.focus;
       break;
   }
 

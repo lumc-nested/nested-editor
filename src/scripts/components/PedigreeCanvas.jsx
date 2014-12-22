@@ -5,23 +5,32 @@ var Kinetic = require('kinetic');
 var PedigreeUI = require('../core/UI.js');
 var _stage, _canvasID;
 
-_canvasID = 'pedigree-canvas';
+var _canvasID = 'pedigree-canvas';
+var _stage;
 
 var PedigreeCanvas = React.createClass({
 
+  shouldComponentUpdate: function(nextProps, nextState) {
+    // let Kinetic handle the update.
+    _stage.update(nextProps);
+
+    return false;
+  },
+
   componentDidMount: function() {
-    var stage = new PedigreeUI.Stage({
+    _stage = new PedigreeUI.Stage({
       width: 800,
       height: 650,
       container: _canvasID
     });
 
-    stage.drawLegend();
+    _stage.drawLegend();
 
-    stage.drawFamily(this.props.family);
+    _stage.drawFamily(this.props.family);
   },
 
   render: function() {
+    console.log('render canvas component');
     return (
       <div id={_canvasID}></div>
     );

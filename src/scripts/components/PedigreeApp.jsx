@@ -29,6 +29,7 @@ var PedigreeApp = React.createClass({
 
   _onChange: function(){
     this.setState(getAppState());
+    console.log(this.state);
   },
 
   componentDidMount: function(){ 
@@ -37,10 +38,6 @@ var PedigreeApp = React.createClass({
 
   componentWillUnmount: function(){
     AppStore.removeChangeListener(this._onChange);
-  },
-
-  handleClick: function(){
-    AppActions.exampleAction('Data from View');
   },
 
   render: function() {

@@ -14,14 +14,19 @@
       {
         "id": 3,
         "gender": 1
+      },
+      {
+        "id": 4,
+        "gender": 2
       }
+
     ],
 
     "nests": [
       {
         "father": 2,
         "mother": 1,
-        "pregnancies": [[3]]
+        "pregnancies": [[3], [4]]
       }
     ]
   }
