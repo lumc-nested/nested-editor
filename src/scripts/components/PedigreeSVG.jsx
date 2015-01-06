@@ -50,14 +50,7 @@ function doLayout(family) {
     'partners': partners,
     'offsprings': offsprings
   };
-}
-
-
-var RelationshipLine = React.createClass({
-  render: function() {
-
-  }
-})
+};
 
 
 var Member = React.createClass({
