@@ -10,10 +10,12 @@
   "mainInput": "PedigreeApp",
   "mainOutput": "main",
   "dependencies": {
+    "d3": "^3.5.3",
     "flux": "^2.0.1",
     "kinetic": "^5.0.6",
     "lodash": "^2.4.1",
-    "react": "~0.12.1"
+    "react": "~0.12.1",
+    "snapsvg": "git://github.com/adobe-webplatform/Snap.svg.git#dev"
   },
   "devDependencies": {
     "css-loader": "~0.9.0",

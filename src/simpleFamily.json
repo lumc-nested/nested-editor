@@ -5,7 +5,8 @@
     "members": [
       {
         "id": 1,
-        "gender": 2
+        "gender": 2,
+        "deceased": true
       },
       {
         "id": 2,
@@ -16,10 +17,8 @@
         "gender": 1
       },
       {
-        "id": 4,
-        "gender": 2
+        "id": 4
       }
-
     ],
 
     "nests": [

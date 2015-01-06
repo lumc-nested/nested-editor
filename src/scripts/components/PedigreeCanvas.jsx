@@ -3,7 +3,6 @@
 var React = require('react');
 var Kinetic = require('kinetic');
 var PedigreeUI = require('../core/UI.js');
-var _stage, _canvasID;
 
 var _canvasID = 'pedigree-canvas';
 var _stage;
