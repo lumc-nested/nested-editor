@@ -8,7 +8,7 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 var _data = {
-  data: require('../../simpleFamily.json'),
+  data: require('../../example.json'),
   focus: undefined
 };
 

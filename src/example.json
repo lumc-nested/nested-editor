@@ -44,12 +44,12 @@
       {
       "father": 2,
       "mother": 1,
-      "preganencies": [[3], [4], [5]]
+      "pregnancies": [[3], [4], [5]]
       },
       {
       "father": 3,
       "mother": 6,
-      "preganencies": [[7]],
+      "pregnancies": [[7]],
       "consanguenous": true
       }
     ]
