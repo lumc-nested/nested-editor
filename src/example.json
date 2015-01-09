@@ -1,59 +1,57 @@
 {
-  "family": {
-    "id": 1,
-    "name": "some description",
-    "clinicianId": 1,
-    "proband": 4,
+  "id": 1,
+  "name": "some description",
+  "clinicianId": 1,
+  "proband": 4,
 
-    "members": [
-      {
-        "id": 1,
-        "gender": 2,
-        "name": "Jane Doe"
-      },
-      {
-        "id": 2,
-        "gender": 1,
-        "name": "John Smith",
-        "dateOfDeath": "2012-05-07"
-      },
-      {
-        "id": 3,
-        "gender": 1,
-        "dateOfBirth": "1977-04-27"
-      },
-      {
-        "id": 4,
-        "gender": 2
-      },
-      {
-        "id": 5,
-        "gender": 2
-      },
-      {
-        "id": 6,
-        "gender": 2
-      },
-      {
-        "id": 7,
-        "gender": 0
-      }
-    ],
+  "members": [
+    {
+      "id": 1,
+      "gender": 2,
+      "name": "Jane Doe"
+    },
+    {
+      "id": 2,
+      "gender": 1,
+      "name": "John Smith",
+      "dateOfDeath": "2012-05-07"
+    },
+    {
+      "id": 3,
+      "gender": 1,
+      "dateOfBirth": "1977-04-27"
+    },
+    {
+      "id": 4,
+      "gender": 2
+    },
+    {
+      "id": 5,
+      "gender": 2
+    },
+    {
+      "id": 6,
+      "gender": 2
+    },
+    {
+      "id": 7,
+      "gender": 0
+    }
+  ],
 
-    "nests": [
-      {
+  "nests": [
+    {
       "father": 2,
       "mother": 1,
       "pregnancies": [[3], [4], [5]]
-      },
-      {
+    },
+    {
       "father": 3,
       "mother": 6,
       "pregnancies": [[7]],
       "consanguenous": true
-      }
-    ]
-  },
+    }
+  ],
 
   "schema": {
     "name": { "type": "string" },

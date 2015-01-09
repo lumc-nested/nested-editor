@@ -1,32 +1,30 @@
 {
-  "family": {
-    "id": 1,
+  "id": 1,
 
-    "members": [
-      {
-        "id": 1,
-        "gender": 2,
-        "deceased": true
-      },
-      {
-        "id": 2,
-        "gender": 1
-      },
-      {
-        "id": 3,
-        "gender": 1
-      },
-      {
-        "id": 4
-      }
-    ],
+  "members": [
+    {
+      "id": 1,
+      "gender": 2,
+      "deceased": true
+    },
+    {
+      "id": 2,
+      "gender": 1
+    },
+    {
+      "id": 3,
+      "gender": 1
+    },
+    {
+      "id": 4
+    }
+  ],
 
-    "nests": [
-      {
-        "father": 2,
-        "mother": 1,
-        "pregnancies": [[3], [4]]
-      }
-    ]
-  }
+  "nests": [
+    {
+      "father": 2,
+      "mother": 1,
+      "pregnancies": [[3], [4]]
+    }
+  ]
 }

@@ -1,0 +1,71 @@
+{
+  "title": "pedigree",
+  "id": "https://pedigree.lumc.nl/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Schema for pedigree",
+  "type": "object",
+
+  "properties": {
+    "id": { "type": "string" },
+
+    "description": { "type": "string" },
+
+    "members" : {
+      "description": "Members in the pedigree.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "gender": {
+            "enum": [0, 1, 2],
+            "definitions": "0: Unknown or ambiguous, 1: male, 2: female"
+          },
+          "dateOfBirth": { "type": "string", "format": "date" },
+          "dateOfDeath": { "type": "string", "format": "date" },
+          "deceased": { "type": "boolean" },
+          "born": { "type": "boolean" },
+          "proband": { "type": "boolean" },
+          "consultand": { "type": "boolean" }
+        },
+
+        "required": ["id"]
+      }
+    },
+
+    "nests": {
+      "type": "array",
+      "definition": "A relationship unit.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "father": {
+            "type": "string",
+            "description": "Member ID of the father."
+          },
+          "mother": {
+            "type": "string",
+            "description": "Member ID of the mother."
+          },
+          "pregnancies": {
+            "type": "array",
+            "definition": "Pregnancies occured based on the father and mother",
+            "items": {
+              "type": "array",
+              "definition": "Zygotes of each pregnancy.",
+              "items": {
+                "type": "string",
+                "definition": "Member ID derived from each zygote."
+              }
+            }
+          },
+          "consanguenous": { "type": "boolean" }
+        },
+
+        "required": ["father", "mother"]
+      }
+    }
+  },
+
+  "required": ["id", "members", "nests"]
+}
