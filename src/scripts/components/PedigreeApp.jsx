@@ -11,11 +11,8 @@ var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
 
 // var MemberDetails = require('./MemberDetails.jsx');
-// var PedigreeWidgets = require('./PedigreeWidgets.jsx');
-// var Pedigree = require('./PedigreeCanvas.jsx');
-// var Pedigree = require('./PedigreeD3.jsx');
-// var Pedigree = require('./PedigreeSnap.jsx');
 var Pedigree = require('./PedigreeSVG.jsx');
+var Controls = require('./SVGControls.jsx');
 
 
 function getAppState(){
@@ -45,6 +42,7 @@ var PedigreeApp = React.createClass({
   render: function() {
     return (
       <div className='main'>
+        <Controls />
         <Pedigree family={this.state.data} focus={this.state.focus} />
       </div>
     );

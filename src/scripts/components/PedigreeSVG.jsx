@@ -37,20 +37,20 @@ function doLayout(family) {
       // found parents in the known generations.
 
       // update parent generation.
+      // TODO: handle member with multiple partners.
       var fatherIndex, motherIndex;
       fatherIndex = generations[parentGenerationIndex].indexOf(nest.father);
       if (fatherIndex >= 0) {
         generations[parentGenerationIndex].splice(fatherIndex + 1, 0, nest.mother);
       } else {
         motherIndex = generations[parentGenerationIndex].indexOf(nest.mother);
-        generations[parentGenerationIndex].splice( motherIndex - 1, 0, nest.father);
+        generations[parentGenerationIndex].splice( motherIndex, 0, nest.father);
       }
 
       // TODO:
       generations[parentGenerationIndex + 1] = _.union(generations[parentGenerationIndex + 1], children); // update child generation.
     }
   });
-  console.log(generations);
 
   // 2. determine member locationgs based on its order in a generation.
   var locations = [];

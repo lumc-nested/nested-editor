@@ -8,6 +8,12 @@ var AppActions = {
       actionType: AppConstants.CHANGE_FOCUS,
       focus: id
     });
+  },
+
+  addSpouse: function() {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_SPOUSE
+    });
   }
 };
 
