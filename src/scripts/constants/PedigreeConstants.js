@@ -5,8 +5,8 @@ module.exports = Object.freeze({
     'Female': 2
   },
 
-  'ParentDistance': 80,
-  'SiblingDistance': 60,
+  'ParentDistance': 100,
+  'SiblingDistance': 100,
   'GenerationDistance': 100,
   'MemberSize': 40,
 

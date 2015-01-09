@@ -1,5 +1,6 @@
 var React = require('react');
 var PC = require('../constants/PedigreeConstants.js');
+var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
 
 var _svgID ="pedigree";
@@ -107,14 +108,14 @@ var Member = React.createClass({
     var isDead = member.dateOfDeath !== undefined ||
                 (member.deceased !== undefined && member.deceased);
 
-    var DeathStrike = isDead ? <line x1="22" y1="-22" x2="-22" y2="22" /> : undefined;
+    var death = isDead ? <line x1="25" y1="-25" x2="-25" y2="25" /> : undefined;
     var transform = "translate(" + member.x + "," + member.y + ")";
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
     switch (member.gender) {
       case 1:
-        shape = <rect width="40" height="40" x="-20" y="-20" />;
+        shape = <rect width="36" height="36" x="-18" y="-18" />;
         break;
       case 2:
         shape = <circle r="20" />;
@@ -124,11 +125,15 @@ var Member = React.createClass({
     }
 
     return (
-      <g transform={transform}>
+      <g transform={transform} onClick={this.handleClick} className={this.props.focused ? "focus" : ""} >
         {shape}
-        {DeathStrike}
+        {death}
       </g>
     );
+  },
+
+  handleClick: function() {
+    AppActions.changeFocus(this.props.data.id);
   }
 });
 
@@ -141,8 +146,8 @@ var PedigreeSVG = React.createClass({
 
     var members = _.map(this.props.family.members, function(member) {
       _.extend(member, _.find(layout.locations, {id: member.id}));
-      return <Member data={member} key={member.id}/>;
-    });
+      return <Member data={member} focused={this.props.focus === member.id} key={member.id}/>;
+    }, this);
 
     var partners = _.map(layout.partners, function(d) {
       return <line x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />
@@ -158,7 +163,7 @@ var PedigreeSVG = React.createClass({
                        "l" + diffX + "," + 0 +      // sibship line
                        "l" + 0 + "," + diffY / 2;   // individual's line
 
-      return <path d={pathString} style={{"fill":"transparent"}} />;
+      return <path d={pathString} />;
     });
 
     return (
@@ -166,7 +171,6 @@ var PedigreeSVG = React.createClass({
         {partners}
         {offsprings}
         {members}
-        }
       </svg>
     );
   }
