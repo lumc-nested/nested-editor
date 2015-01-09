@@ -18,6 +18,7 @@
     "snapsvg": "git://github.com/adobe-webplatform/Snap.svg.git#dev"
   },
   "devDependencies": {
+    "bootstrap-webpack": "0.0.3",
     "css-loader": "~0.9.0",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.6.0",

@@ -18,6 +18,7 @@ module.exports = {
   debug: true,
   devtool: false,
   entry: [
+      "bootstrap-webpack!./bootstrap.config.js",
       'webpack/hot/only-dev-server',
       './src/scripts/app.jsx'
   ],
@@ -51,7 +52,19 @@ module.exports = {
     }, {
       test: /\.json$/,
       loader: 'json'
-    }]
+    }, {
+      test: /\.woff$/,
+      loader: "url-loader?limit=10000&minetype=application/font-woff"
+    }, {
+      test: /\.ttf$/,
+      loader: "file-loader"
+    }, {
+      test: /\.eot$/,
+      loader: "file-loader"
+    }, {
+      test: /\.svg$/,
+      loader: "file-loader" }
+    ]
   },
 
   plugins: [
