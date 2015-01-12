@@ -14,7 +14,8 @@ module.exports = {
 
     // core
     "type": true,
-    "scafforlding": true,
+    "scaffolding": true,
+    "grid": true,
     "buttons": true,
 
     // components

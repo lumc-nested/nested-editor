@@ -81,7 +81,7 @@ var PedigreeSVG = React.createClass({
     });
 
     return (
-      <svg id={_svgID} width="800" height="650">
+      <svg id={_svgID} width="100%" height="100%">
         {partners}
         {offsprings}
         {members}
