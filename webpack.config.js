@@ -18,7 +18,7 @@ module.exports = {
   debug: true,
   devtool: false,
   entry: [
-      "bootstrap-webpack!./bootstrap.config.js",
+      '!bootstrap-webpack!./bootstrap.config.js',
       'webpack/hot/only-dev-server',
       './src/scripts/app.jsx'
   ],
@@ -33,10 +33,16 @@ module.exports = {
   },
   module: {
     preLoaders: [{
-      test: '\\.js$',
-      exclude: 'node_modules',
+      // skip bootstrap.config.js due to incapatibility with bootstrap-webpack index loader
+      test: /[^config]\.js$/,
+      exclude: /node_modules/,
       loader: 'jshint'
+    }, {
+      test: /\.jsx$/,
+      exclude: /node_modules/,
+      loader: 'jsxhint'
     }],
+
     loaders: [{
       test: /\.jsx$/,
       loader: 'react-hot!jsx-loader?harmony'

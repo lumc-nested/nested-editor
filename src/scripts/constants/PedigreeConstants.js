@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = Object.freeze({
   'Gender': {
     'Unknown': 0,
@@ -11,4 +13,4 @@ module.exports = Object.freeze({
   'MemberSize': 40,
 
   'ThemeColor': 'indigo'
-})
+});

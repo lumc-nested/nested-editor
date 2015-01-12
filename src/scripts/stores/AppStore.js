@@ -9,7 +9,7 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 var _data = require('../../example.json');
-var _focus = undefined;
+var _focus;
 
 
 var _addSpouse = function() {
@@ -24,15 +24,15 @@ var _addSpouse = function() {
 
     switch(member.gender) {
       case PedigreeConstants.Gender.Male:
-        newMember["gender"] = PedigreeConstants.Gender.Female;
+        newMember.gender = PedigreeConstants.Gender.Female;
         newNest = { "father": member.id, "mother": newMember.id };
         break;
       case PedigreeConstants.Gender.Female:
-        newMember["gender"] = PedigreeConstants.Gender.Male;
+        newMember.gender = PedigreeConstants.Gender.Male;
         newNest = { "father": newMember.id, "mother": member.id };
         break;
       case PedigreeConstants.Gender.Unknown:
-        newMember["gender"] = PedigreeConstants.Gender.Unknown;
+        newMember.gender = PedigreeConstants.Gender.Unknown;
         newNest = { "father": member.id, "mother": newMember.id };
         break;
     }

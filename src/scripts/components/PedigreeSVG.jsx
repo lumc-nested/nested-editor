@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react');
 var PC = require('../constants/PedigreeConstants.js');
 var AppActions = require('../actions/AppActions.js');
@@ -73,16 +75,16 @@ function doLayout(family) {
     var f = _.find(locations, {id: nest.father});
     var m = _.find(locations, {id: nest.mother});
 
-    partners.push([f['x'], f['y'], m['x'], m['y']]);
+    partners.push([f.x, f.y, m.x, m.y]);
 
     _.each(nest.pregnancies, function(preg) {
       _.each(preg, function(child) {
         var c = _.find(locations, {id: child});
         offsprings.push([
-          Math.min(f['x'], m['x']) + Math.abs(m['x'] - f['x']) / 2,
-          Math.min(f['y'], m['y']) + Math.abs(m['y'] - f['y']) / 2,
-          c['x'],
-          c['y']
+          Math.min(f.x, m.x) + Math.abs(m.x - f.x) / 2,
+          Math.min(f.y, m.y) + Math.abs(m.y - f.y) / 2,
+          c.x,
+          c.y
         ]);
       });
     });
@@ -95,7 +97,7 @@ function doLayout(family) {
     'partners': partners,
     'offsprings': offsprings
   };
-};
+}
 
 
 var Member = React.createClass({
@@ -150,7 +152,7 @@ var PedigreeSVG = React.createClass({
     }, this);
 
     var partners = _.map(layout.partners, function(d) {
-      return <line x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />
+      return <line x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />;
     });
 
     var offsprings = _.map(layout.offsprings, function(d) {
