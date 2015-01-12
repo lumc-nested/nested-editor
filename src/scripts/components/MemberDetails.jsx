@@ -8,7 +8,7 @@ var _detailsID = 'member-details';
 var MemberDetails = React.createClass({
   getSelected: function() {
     return _.find(this.props.family.members, function(member) {
-      return member.id === this.props.focus;
+      return member._id === this.props.focus;
     }, this);
   },
 
