@@ -9,8 +9,13 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 var _data = require('../../example.json');
+var _counter = 0;
 var _focus;
 
+var _newId = function() {
+  _counter += 1;
+  return _counter;
+};
 
 var _addSpouse = function() {
   if (_focus === undefined) {
@@ -19,21 +24,21 @@ var _addSpouse = function() {
   } else {
     var member, newMember, newNest;
 
-    member =  _.find(_data.members, {id: _focus});
-    newMember = { "id":  _.uniqueId("tmp_") };
+    member =  _.find(_data.members, {_id: _focus});
+    newMember = { "_id":  _newId() };
 
     switch(member.gender) {
       case PedigreeConstants.Gender.Male:
         newMember.gender = PedigreeConstants.Gender.Female;
-        newNest = { "father": member.id, "mother": newMember.id };
+        newNest = { "father": member._id, "mother": newMember._id };
         break;
       case PedigreeConstants.Gender.Female:
         newMember.gender = PedigreeConstants.Gender.Male;
-        newNest = { "father": newMember.id, "mother": member.id };
+        newNest = { "father": newMember._id, "mother": member._id };
         break;
       case PedigreeConstants.Gender.Unknown:
         newMember.gender = PedigreeConstants.Gender.Unknown;
-        newNest = { "father": member.id, "mother": newMember.id };
+        newNest = { "father": member._id, "mother": newMember._id };
         break;
     }
 
@@ -46,6 +51,9 @@ var _addSpouse = function() {
 var AppStore = _.extend(EventEmitter.prototype, {
 
   getData: function(){
+    // initialize the counter.
+    _counter = _.max(_.pluck(_data.members, "_id"));
+
     return {
       "data": _data,
       "focus": _focus
