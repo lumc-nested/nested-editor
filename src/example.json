@@ -6,35 +6,39 @@
 
   "members": [
     {
-      "id": 1,
+      "_id": 1,
       "gender": 2,
       "name": "Jane Doe"
     },
     {
-      "id": 2,
+      "_id": 2,
       "gender": 1,
       "name": "John Smith",
       "dateOfDeath": "2012-05-07"
     },
     {
-      "id": 3,
+      "_id": 3,
       "gender": 1,
       "dateOfBirth": "1977-04-27"
     },
     {
-      "id": 4,
+      "_id": 4,
       "gender": 2
     },
     {
-      "id": 5,
+      "_id": 5,
       "gender": 2
     },
     {
-      "id": 6,
+      "_id": 6,
       "gender": 2
     },
     {
-      "id": 7,
+      "_id": 7,
+      "gender": 2
+    },
+    {
+      "_id": 8,
       "gender": 0
     }
   ],
@@ -43,19 +47,26 @@
     {
       "father": 2,
       "mother": 1,
-      "pregnancies": [[3], [4], [5]]
+      "pregnancies": [
+        { "zygotes": [3] },
+        { "zygotes": [4] },
+        {
+          "zygotes": [5, 6],
+          "monozygotic": true
+        }
+      ]
     },
     {
       "father": 3,
-      "mother": 6,
-      "pregnancies": [[7]],
+      "mother": 7,
+      "pregnancies": [{ "zygotes" : [8] }],
       "consanguenous": true
     }
   ],
 
   "schema": {
     "name": { "type": "string" },
-    "dateOfBirth": { "type": "date" }
+    "dateOfBirth": { "type": "string", "pattern": "date" }
   },
 
   "settings": {

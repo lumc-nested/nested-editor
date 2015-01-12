@@ -15,7 +15,7 @@ function doLayout(family) {
   var generations = [[]];
   _.each(family.nests, function(nest){
     var parents = [nest.father, nest.mother];
-    var children = _.flatten(nest.pregnancies);
+    var children = _.flatten(_.pluck(nest.pregnancies, "zygotes"));
 
     var parentGenerationIndex = _.max(_.map(generations, function(current, index) {
       if (_.intersection(parents, current).length > 0) {
@@ -60,7 +60,7 @@ function doLayout(family) {
     _.each(gen, function(p, j) {
       // TODO: Current approach is too naive.
       locations.push({
-        id: p,
+        _id: p,
         x: 100 + j * PC.SiblingDistance,
         y: 100 + i * PC.GenerationDistance
       });
@@ -72,14 +72,14 @@ function doLayout(family) {
   var offsprings = [];
 
   _.each(family.nests, function(nest) {
-    var f = _.find(locations, {id: nest.father});
-    var m = _.find(locations, {id: nest.mother});
+    var f = _.find(locations, {_id: nest.father});
+    var m = _.find(locations, {_id: nest.mother});
 
     partners.push([f.x, f.y, m.x, m.y]);
 
     _.each(nest.pregnancies, function(preg) {
-      _.each(preg, function(child) {
-        var c = _.find(locations, {id: child});
+      _.each(preg.zygotes, function(child) {
+        var c = _.find(locations, { _id: child });
         offsprings.push([
           Math.min(f.x, m.x) + Math.abs(m.x - f.x) / 2,
           Math.min(f.y, m.y) + Math.abs(m.y - f.y) / 2,
@@ -135,7 +135,7 @@ var Member = React.createClass({
   },
 
   handleClick: function() {
-    AppActions.changeFocus(this.props.data.id);
+    AppActions.changeFocus(this.props.data._id);
   }
 });
 
@@ -147,8 +147,8 @@ var PedigreeSVG = React.createClass({
     console.log(layout);
 
     var members = _.map(this.props.family.members, function(member) {
-      _.extend(member, _.find(layout.locations, {id: member.id}));
-      return <Member data={member} focused={this.props.focus === member.id} key={member.id}/>;
+      _.extend(member, _.find(layout.locations, {_id: member._id}));
+      return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);
 
     var partners = _.map(layout.partners, function(d) {
