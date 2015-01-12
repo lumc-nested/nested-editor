@@ -4,68 +4,115 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Schema for pedigree",
   "type": "object",
+  "required": ["id", "members", "nests"],
 
   "properties": {
     "id": { "type": "string" },
-
     "description": { "type": "string" },
 
     "members" : {
-      "description": "Members in the pedigree.",
+      "description": "Members in a pedigree.",
       "type": "array",
       "items": {
         "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "gender": {
-            "enum": [0, 1, 2],
-            "definitions": "0: Unknown or ambiguous, 1: male, 2: female"
-          },
-          "dateOfBirth": { "type": "string", "format": "date" },
-          "dateOfDeath": { "type": "string", "format": "date" },
-          "deceased": { "type": "boolean" },
-          "born": { "type": "boolean" },
-          "proband": { "type": "boolean" },
-          "consultand": { "type": "boolean" }
-        },
-
-        "required": ["id"]
+        "description": "An individual or a group.",
+        "oneOf": [
+          { "$ref": "#/definitions/individual" },
+          { "$ref": "#/definitions/group" }
+        ]
       }
     },
 
     "nests": {
       "type": "array",
-      "definition": "A relationship unit.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "father": {
-            "type": "string",
-            "description": "Member ID of the father."
-          },
-          "mother": {
-            "type": "string",
-            "description": "Member ID of the mother."
-          },
-          "pregnancies": {
-            "type": "array",
-            "definition": "Pregnancies occured based on the father and mother",
-            "items": {
-              "type": "array",
-              "definition": "Zygotes of each pregnancy.",
-              "items": {
-                "type": "string",
-                "definition": "Member ID derived from each zygote."
-              }
-            }
-          },
-          "consanguenous": { "type": "boolean" }
-        },
-
-        "required": ["father", "mother"]
-      }
+      "description": "A relationship unit.",
+      "items": { "$ref": "#/definitions/nest" }
     }
   },
 
-  "required": ["id", "members", "nests"]
+
+  "definitions": {
+    "individual": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number",
+          "description": "Internal id used by the softward. Do not edit it unless you know what you are doing."
+        },
+        "externalID" : {
+          "type": "string",
+          "description": "User defined identifier that may be linked to external data source."
+        },
+        "gender": {
+          "enum": [0, 1, 2],
+          "description": "0: Unknown or ambiguous, 1: male, 2: female"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date"
+        },
+        "dateOfDeath": {
+          "type": "string",
+          "format": "date",
+          "description": "If given, 'deceased' property is ignored."
+        },
+        "deceased": { "type": "boolean" },
+        "born": { "type": "boolean" },
+        "proband": { "type": "boolean" },
+        "consultand": { "type": "boolean" },
+        "affected": { "type": "boolean" }
+      },
+
+      "required": ["_id"]
+    },
+
+    "group": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number"
+        },
+
+        "gender": {
+          "enum": [0, 1, 2],
+          "description": "0: Unknown or ambiguous, 1: male, 2: female"
+        },
+
+        "numberOfIndividuals" : {
+          "type": "number",
+          "description": "Number of individuals represented by this group. If undefined, 'n' is used."
+        }
+      },
+
+      "required": ["_id"]
+    },
+
+    "nest": {
+      "type": "object",
+      "properties": {
+        "father": {
+          "type": "string",
+          "description": "Member ID of the father."
+        },
+        "mother": {
+          "type": "string",
+          "description": "Member ID of the mother."
+        },
+        "pregnancies": {
+          "type": "array",
+          "description": "Pregnancies occured based on the father and mother",
+          "items": {
+            "type": "object",
+            "description": "A pregnancy.",
+            "properties": {
+              "zygotes" : { "type": "array" }
+            }
+          }
+        },
+        "consanguenous": { "type": "boolean" }
+      },
+
+      "required": ["father", "mother"]
+    }
+  }
 }
