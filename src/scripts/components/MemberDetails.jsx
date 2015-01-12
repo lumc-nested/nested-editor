@@ -1,7 +1,11 @@
 'use strict';
 
 var React = require('react');
+var validate = require('plexus-validate');
+var Form = require('plexus-form');
 var _ = require('lodash');
+
+var schema = require('../../schema.json');
 
 var _detailsID = 'member-details';
 
@@ -12,6 +16,22 @@ var MemberDetails = React.createClass({
     }, this);
   },
 
+  getInitialState: function() {
+    var individual_schema = schema.definitions.individual;
+
+    return {
+      schema: _.assign(individual_schema, {
+        "properties": _.omit(individual_schema.properties, "_id")
+      })
+    };
+  },
+
+  onFormSubmit: function(data, value, errors) {
+    // Todo: Empty form fields are not in data and hence are not removed or
+    //   deleted from the selected member.
+    _.assign(this.getSelected(), data);
+  },
+
   render: function() {
     var selected = this.getSelected();
 
@@ -19,23 +39,15 @@ var MemberDetails = React.createClass({
       return <div id={_detailsID}><p>No member selected</p></div>;
     }
 
-    var name = selected.name || 'No Name';
-
-    var gender;
-    switch (selected.gender) {
-      case 1:
-        gender = 'male';
-        break;
-      case 2:
-        gender = 'female';
-        break;
-      default:
-        gender = 'gender unknown';
-    }
-
     return (
       <div id={_detailsID}>
-        <p>Selected member: {name} ({gender})</p>
+        <Form
+          buttons={['Save']}
+          schema={this.state.schema}
+          validate={validate}
+          values={selected}
+          onSubmit={this.onFormSubmit}
+        />
       </div>
     );
   }

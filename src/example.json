@@ -60,7 +60,7 @@
       "father": 3,
       "mother": 7,
       "pregnancies": [{ "zygotes" : [8] }],
-      "consanguenous": true
+      "consanguineous": true
     }
   ],
 

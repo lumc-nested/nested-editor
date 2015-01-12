@@ -1,16 +1,22 @@
 {
-  "title": "pedigree",
+  "title": "Pedigree",
   "id": "https://pedigree.lumc.nl/schema#",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Schema for pedigree",
+  "description": "Schema for Pedigree",
   "type": "object",
   "required": ["id", "members", "nests"],
 
   "properties": {
-    "id": { "type": "string" },
-    "description": { "type": "string" },
-
+    "id": {
+      "title": "ID",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
     "members" : {
+      "title": "Members",
       "description": "Members in a pedigree.",
       "type": "array",
       "items": {
@@ -22,68 +28,92 @@
         ]
       }
     },
-
     "nests": {
+      "title": "Nests",
       "type": "array",
       "description": "A relationship unit.",
       "items": { "$ref": "#/definitions/nest" }
     }
   },
 
-
   "definitions": {
     "individual": {
+      "title": "Individual",
       "type": "object",
       "properties": {
         "_id": {
+          "title": "Internal ID",
           "type": "number",
           "description": "Internal id used by the softward. Do not edit it unless you know what you are doing."
         },
         "externalID" : {
+          "title": "External ID",
           "type": "string",
           "description": "User defined identifier that may be linked to external data source."
         },
         "gender": {
+          "title": "Gender",
           "enum": [0, 1, 2],
-          "description": "0: Unknown or ambiguous, 1: male, 2: female"
+          "enumNames": ["Unknown or ambiguous", "Male", "Female"]
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
         },
         "dateOfBirth": {
+          "title": "Date of birth",
           "type": "string",
           "format": "date"
         },
         "dateOfDeath": {
+          "title": "Date of death",
           "type": "string",
           "format": "date",
           "description": "If given, 'deceased' property is ignored."
         },
-        "deceased": { "type": "boolean" },
-        "born": { "type": "boolean" },
-        "proband": { "type": "boolean" },
-        "consultand": { "type": "boolean" },
-        "affected": { "type": "boolean" }
+        "deceased": {
+          "title": "Deceased",
+          "type": "boolean"
+        },
+        "born": {
+          "title": "Born",
+          "type": "boolean"
+        },
+        "proband": {
+          "title": "Proband",
+          "type": "boolean"
+        },
+        "consultand": {
+          "title": "Consultand",
+          "type": "boolean"
+        },
+        "affected": {
+          "title": "Affected",
+          "type": "boolean"
+        }
       },
-
       "required": ["_id"]
     },
 
     "group": {
+      "title": "Group",
       "type": "object",
       "properties": {
         "_id": {
+          "title": "Internal ID",
           "type": "number"
         },
-
         "gender": {
+          "title": "Gender",
           "enum": [0, 1, 2],
-          "description": "0: Unknown or ambiguous, 1: male, 2: female"
+          "enumNames": ["Unknown or ambiguous", "Male", "Female"]
         },
-
         "numberOfIndividuals" : {
+          "title": "Count",
           "type": "number",
           "description": "Number of individuals represented by this group. If undefined, 'n' is used."
         }
       },
-
       "required": ["_id"]
     },
 
@@ -91,27 +121,35 @@
       "type": "object",
       "properties": {
         "father": {
+          "title": "Father",
           "type": "string",
           "description": "Member ID of the father."
         },
         "mother": {
+          "title": "Mother",
           "type": "string",
           "description": "Member ID of the mother."
         },
         "pregnancies": {
+          "title": "Pregnancies",
           "type": "array",
           "description": "Pregnancies occured based on the father and mother",
           "items": {
+            "title": "Pregnancy",
             "type": "object",
             "description": "A pregnancy.",
             "properties": {
-              "zygotes" : { "type": "array" }
+              "zygotes": {
+                "title": "Zygotes",
+                "type": "array"
+              }
             }
           }
         },
-        "consanguenous": { "type": "boolean" }
+        "consanguineous": {
+          "title": "Consanguineous",
+          "type": "boolean" }
       },
-
       "required": ["father", "mother"]
     }
   }
