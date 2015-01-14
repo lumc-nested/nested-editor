@@ -16,7 +16,7 @@ module.exports = {
 
   cache: true,
   debug: true,
-  devtool: false,
+  devtool: 'source-map',
   entry: [
       '!bootstrap-webpack!./bootstrap.config.js',
       'webpack/hot/only-dev-server',
