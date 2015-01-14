@@ -55,7 +55,7 @@ function doLayout(family) {
       // TODO: Current approach is too naive.
       locations.push({
         _id: p,
-        x: 100 + j * PC.SiblingDistance,
+        x: 100 + j * PC.MemberDistance,
         y: 100 + i * PC.GenerationDistance
       });
     });

@@ -7,8 +7,7 @@ module.exports = Object.freeze({
     'Female': 2
   },
 
-  'ParentDistance': 100,
-  'SiblingDistance': 100,
+  'MemberDistance': 100,
   'GenerationDistance': 100,
   'MemberSize': 40,
 
