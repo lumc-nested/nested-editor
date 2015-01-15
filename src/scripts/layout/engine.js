@@ -9,7 +9,7 @@ function doLayout(family) {
   var generations = [[]];
   _.each(family.nests, function(nest){
     var parents = [nest.father, nest.mother];
-    var children = _.flatten(_.pluck(nest.pregnancies, "zygotes"));
+    var children = nest.children();
 
     var parentGenerationIndex = _.max(_.map(generations, function(current, index) {
       if (_.intersection(parents, current).length > 0) {
@@ -54,7 +54,7 @@ function doLayout(family) {
     _.each(gen, function(p, j) {
       // TODO: Current approach is too naive.
       locations.push({
-        _id: p,
+        _id: p._id,
         x: 100 + j * PC.MemberDistance,
         y: 100 + i * PC.GenerationDistance
       });
@@ -66,14 +66,14 @@ function doLayout(family) {
   var offsprings = [];
 
   _.each(family.nests, function(nest) {
-    var f = _.find(locations, {_id: nest.father});
-    var m = _.find(locations, {_id: nest.mother});
+    var f = _.find(locations, {_id: nest.father._id});
+    var m = _.find(locations, {_id: nest.mother._id});
 
     partners.push([f.x, f.y, m.x, m.y]);
 
     _.each(nest.pregnancies, function(preg) {
       _.each(preg.zygotes, function(child) {
-        var c = _.find(locations, { _id: child });
+        var c = _.find(locations, { _id: child._id });
         offsprings.push([
           Math.min(f.x, m.x) + Math.abs(m.x - f.x) / 2,
           Math.min(f.y, m.y) + Math.abs(m.y - f.y) / 2,

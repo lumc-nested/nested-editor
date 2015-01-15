@@ -49,10 +49,10 @@ var PedigreeApp = React.createClass({
         </div>
         <div className="row">
           <div className="col-md-8">
-            <Pedigree family={this.state.data} focus={this.state.focus} />
+            <Pedigree pedigree={this.state.pedigree} focus={this.state.focus} />
           </div>
           <div className="col-md-4">
-            <MemberDetails family={this.state.data} focus={this.state.focus} />
+            <MemberDetails pedigree={this.state.pedigree} focus={this.state.focus} />
           </div>
         </div>
       </div>

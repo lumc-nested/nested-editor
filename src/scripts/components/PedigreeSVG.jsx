@@ -57,10 +57,10 @@ var PedigreeSVG = React.createClass({
 
   render: function() {
 
-    var layout = doLayout(this.props.family);
+    var layout = doLayout(this.props.pedigree);
     console.log(layout);
 
-    var members = _.map(this.props.family.members, function(member) {
+    var members = _.map(this.props.pedigree.members, function(member) {
       _.extend(member, _.find(layout.locations, {_id: member._id}));
       return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);

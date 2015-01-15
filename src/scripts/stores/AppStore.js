@@ -5,12 +5,20 @@ var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var PedigreeConstants = require('../constants/PedigreeConstants');
 var _ = require('lodash');
+var Pedigree = require('../core/Pedigree.js');
+var Member = require('../core/Member.js');
+var Nest = require('../core/Nest.js');
+
+var Individual = Member.Individual;
 
 var CHANGE_EVENT = 'change';
 
+// TODO: at some point this shoudl be replaced by a call to backend sever.
 var _data = require('../../../examples/example.json');
+
+
 var _counter = 0;
-var _focus;
+var _pedigree, _focus;
 
 var _newId = function() {
   _counter += 1;
@@ -22,28 +30,33 @@ var _addSpouse = function() {
     // do nothing
     console.log('no member is selected.');
   } else {
-    var member, newMember, newNest;
+    var member, spouse, spouseData, nest;
 
-    member =  _.find(_data.members, {_id: _focus});
-    newMember = { "_id":  _newId() };
+    member =  _pedigree.members[_focus];
+    spouseData = {
+      _id: _newId()
+    };
 
     switch(member.gender) {
       case PedigreeConstants.Gender.Male:
-        newMember.gender = PedigreeConstants.Gender.Female;
-        newNest = { "father": member._id, "mother": newMember._id };
+        spouseData.gender = PedigreeConstants.Gender.Female;
+        spouse = new Individual(spouseData);
+        nest = new Nest(member, spouse);
         break;
       case PedigreeConstants.Gender.Female:
-        newMember.gender = PedigreeConstants.Gender.Male;
-        newNest = { "father": newMember._id, "mother": member._id };
+        spouseData.gender = PedigreeConstants.Gender.Male;
+        spouse = new Individual(spouseData);
+        nest = new Nest(spouse, member);
         break;
       case PedigreeConstants.Gender.Unknown:
-        newMember.gender = PedigreeConstants.Gender.Unknown;
-        newNest = { "father": member._id, "mother": newMember._id };
+        spouseData.gender = PedigreeConstants.Gender.Unknown;
+        spouse = new Individual(spouseData);
+        nest = new Nest(member, spouse);
         break;
     }
 
-    _data.members.push(newMember);
-    _data.nests.push(newNest);
+    _pedigree.members[spouse._id] = spouse;
+    _pedigree.nests.push(nest);
   }
 };
 
@@ -54,8 +67,13 @@ var AppStore = _.extend(EventEmitter.prototype, {
     // initialize the counter.
     _counter = _.max(_.pluck(_data.members, "_id"));
 
+    // initialize pedigree.
+    if (_pedigree === undefined) {
+      _pedigree = new Pedigree(_data);
+    }
+
     return {
-      "data": _data,
+      "pedigree": _pedigree,
       "focus": _focus
     };
   },
