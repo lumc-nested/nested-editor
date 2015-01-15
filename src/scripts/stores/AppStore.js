@@ -8,7 +8,7 @@ var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
-var _data = require('../../example.json');
+var _data = require('../../../examples/example.json');
 var _counter = 0;
 var _focus;
 
