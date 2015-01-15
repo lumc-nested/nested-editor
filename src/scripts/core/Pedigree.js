@@ -50,26 +50,6 @@ Pedigree.prototype = {
       // create a nest.
       var nest = new Nest(father, mother, pregnancies, nestProps.consanguenous);
 
-      // flattened children list.
-      var children = nest.children();
-
-      // add parents' relationships.
-      father.addSpouse(mother);
-      father.addChildren(children);
-      mother.addSpouse(father);
-      mother.addChildren(children);
-
-      _.each(children, function(child, index) {
-        child.sibIndex = index;
-
-        // child's relationships with other family membes.
-        child.father = father;
-        child.mother = mother;
-
-        // link to slibings.
-        child.siblings = _.where(children, function(c) { return c._id !== child._id; });
-      });
-
       // add nest to the pedigree.
       that.nests.push(nest);
     });

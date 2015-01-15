@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 var Member = function(data) {
   this._id = data._id;
-  this.data = data;
+  this.data = _.omit(data, "_id");
 };
 
 Member.prototype = {
