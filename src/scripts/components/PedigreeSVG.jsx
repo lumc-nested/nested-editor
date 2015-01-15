@@ -19,15 +19,13 @@ var Member = React.createClass({
     var shape;
 
     var member = this.props.data;
-    var isDead = member.dateOfDeath !== undefined ||
-                (member.deceased !== undefined && member.deceased);
 
-    var death = isDead ? <line x1="25" y1="-25" x2="-25" y2="25" /> : undefined;
+    var death = member.isDead() ? <line x1="25" y1="-25" x2="-25" y2="25" /> : undefined;
     var transform = "translate(" + member.x + "," + member.y + ")";
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
-    switch (member.gender) {
+    switch (member.gender()) {
       case 1:
         shape = <rect width="36" height="36" x="-18" y="-18" />;
         break;

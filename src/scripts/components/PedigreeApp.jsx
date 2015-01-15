@@ -52,7 +52,7 @@ var PedigreeApp = React.createClass({
             <Pedigree pedigree={this.state.pedigree} focus={this.state.focus} />
           </div>
           <div className="col-md-4">
-            <MemberDetails pedigree={this.state.pedigree} focus={this.state.focus} />
+            <MemberDetails selected={this.state.pedigree.members[this.state.focus]} />
           </div>
         </div>
       </div>

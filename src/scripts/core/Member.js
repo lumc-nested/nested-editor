@@ -2,21 +2,26 @@
 
 var _ = require('lodash');
 
-var Member = function(config) {
-  _.extend(this, config);
+var Member = function(data) {
+  this._id = data._id;
+  this.data = data;
 };
 
 Member.prototype = {
 
   isDead: function() {
-    return this.dateOfDeath !== undefined ||
-           (this.deceased !== undefined && this.deceased);
+    return this.data.dateOfDeath !== undefined ||
+           (this.data.deceased !== undefined && this.data.deceased);
+  },
+
+  gender: function() {
+    return this.data.gender;
   }
 };
 
 
-var Individual = function(config) {
-  Member.call(this, config);
+var Individual = function(data) {
+  Member.call(this, data);
   this.spouses = [];
   this.children = [];
 };
@@ -41,8 +46,8 @@ Individual.prototype = _.extend(Member.prototype, {
 });
 
 
-var Group = function(config) {
-  Member.call(this, config);
+var Group = function(data) {
+  Member.call(this, data);
 };
 
 Group.prototype = _.extend(Member.prototype, {});

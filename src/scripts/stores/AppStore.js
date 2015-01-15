@@ -37,7 +37,7 @@ var _addSpouse = function() {
       _id: _newId()
     };
 
-    switch(member.gender) {
+    switch(member.gender()) {
       case PedigreeConstants.Gender.Male:
         spouseData.gender = PedigreeConstants.Gender.Female;
         spouse = new Individual(spouseData);
@@ -48,6 +48,7 @@ var _addSpouse = function() {
         spouse = new Individual(spouseData);
         nest = new Nest(spouse, member);
         break;
+      default:
       case PedigreeConstants.Gender.Unknown:
         spouseData.gender = PedigreeConstants.Gender.Unknown;
         spouse = new Individual(spouseData);

@@ -10,11 +10,6 @@ var schema = require('../../schema.json');
 var _detailsID = 'member-details';
 
 var MemberDetails = React.createClass({
-  getSelected: function() {
-    return _.find(this.props.pedigree.members, function(member) {
-      return member._id === this.props.focus;
-    }, this);
-  },
 
   getInitialState: function() {
     var individual_schema = schema.definitions.individual;
@@ -29,11 +24,11 @@ var MemberDetails = React.createClass({
   onFormSubmit: function(data, value, errors) {
     // Todo: Empty form fields are not in data and hence are not removed or
     //   deleted from the selected member.
-    _.assign(this.getSelected(), data);
+    _.assign(this.props.selected.data, data);
   },
 
   render: function() {
-    var selected = this.getSelected();
+    var selected = this.props.selected;
 
     if (selected === undefined) {
       return <div id={_detailsID}><p>No member selected</p></div>;
@@ -45,7 +40,7 @@ var MemberDetails = React.createClass({
           buttons={['Save']}
           schema={this.state.schema}
           validate={validate}
-          values={selected}
+          values={selected.data}
           onSubmit={this.onFormSubmit}
         />
       </div>
