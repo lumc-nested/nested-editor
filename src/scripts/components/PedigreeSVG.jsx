@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var PC = require('../constants/PedigreeConstants.js');
 var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
 var doLayout = require('../layout/engine.js');

@@ -103,6 +103,9 @@ AppDispatcher.register(function(payload){
     case AppConstants.ADD_SPOUSE:
       _addSpouse();
       break;
+    case AppConstants.UPDATE_MEMBER:
+      _pedigree.members[action.data._id] = _.omit(action.data, "_id");
+      break;
   }
 
   AppStore.emitChange();

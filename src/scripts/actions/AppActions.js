@@ -15,6 +15,13 @@ var AppActions = {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_SPOUSE
     });
+  },
+
+  updateMember: function(data) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_MEMBER,
+      data: data
+    });
   }
 };
 

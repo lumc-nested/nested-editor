@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var AppActions = require('../actions/AppActions.js');
 var validate = require('plexus-validate');
 var Form = require('plexus-form');
 var _ = require('lodash');
@@ -24,7 +25,7 @@ var MemberDetails = React.createClass({
   onFormSubmit: function(data, value, errors) {
     // Todo: Empty form fields are not in data and hence are not removed or
     //   deleted from the selected member.
-    _.assign(this.props.selected.data, data);
+    AppActions.updateMember(data);
   },
 
   render: function() {
