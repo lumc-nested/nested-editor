@@ -104,7 +104,7 @@ AppDispatcher.register(function(payload){
       _addSpouse();
       break;
     case AppConstants.UPDATE_MEMBER:
-      _pedigree.members[action.data._id] = _.omit(action.data, "_id");
+      _pedigree.members[_focus].data = action.data;
       break;
   }
 
