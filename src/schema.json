@@ -43,7 +43,7 @@
       "properties": {
         "_id": {
           "title": "Internal ID",
-          "type": "number",
+          "type": "integer",
           "description": "Internal id used by the softward. Do not edit it unless you know what you are doing."
         },
         "externalID" : {
@@ -102,7 +102,7 @@
       "properties": {
         "_id": {
           "title": "Internal ID",
-          "type": "number"
+          "type": "integer"
         },
         "gender": {
           "title": "Gender",
@@ -111,7 +111,7 @@
         },
         "numberOfIndividuals" : {
           "title": "Count",
-          "type": "number",
+          "type": "integer",
           "description": "Number of individuals represented by this group. If undefined, 'n' is used."
         }
       },
