@@ -53,6 +53,7 @@
         },
         "gender": {
           "title": "Gender",
+          "type": "integer",
           "enum": [0, 1, 2],
           "enumNames": ["Unknown or ambiguous", "Male", "Female"]
         },
