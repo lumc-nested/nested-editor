@@ -43,7 +43,8 @@ var Member = React.createClass({
     );
   },
 
-  handleClick: function() {
+  handleClick: function(e) {
+    e.stopPropagation();
     AppActions.changeFocus(this.props.data._id);
   }
 });
@@ -80,12 +81,16 @@ var PedigreeSVG = React.createClass({
     });
 
     return (
-      <svg id={_svgID} width="100%" height="100%">
+      <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>
         {partners}
         {offsprings}
         {members}
       </svg>
     );
+  },
+
+  handleClick: function() {
+    AppActions.changeFocus();
   }
 });
 
