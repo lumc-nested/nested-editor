@@ -31,7 +31,7 @@ var MemberDetails = React.createClass({
   render: function() {
     var selected = this.props.selected;
 
-    if (selected === undefined) {
+    if (typeof selected === 'undefined') {
       return <div id={_detailsID}><p>No member selected</p></div>;
     }
 
