@@ -7,12 +7,30 @@ var AppActions = require('../actions/AppActions');
 require('../../styles/svgControls.less');
 
 var Controls = React.createClass({
+  loadPedigree: function(e) {
+    var reader = new FileReader();
+    var file = e.target.files[0];
+
+    reader.onload = function(e) {
+      var data = JSON.parse(e.target.result);
+      AppActions.loadPedigree(data);
+    }.bind(this);
+
+    if (file) {
+      reader.readAsText(file);
+    }
+  },
+
   addSpouse: function() {
     AppActions.addSpouse();
   },
 
   render: function() {
-    var buttons = [];
+    var buttons = [
+      <span key="loadPedigree" className="btn btn-default btn-file">
+        Load pedigree <input type="file" onChange={this.loadPedigree} />
+      </span>
+    ];
 
     if (typeof this.props.selected !== 'undefined') {
       buttons.push(

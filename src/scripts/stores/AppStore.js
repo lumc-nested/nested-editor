@@ -25,6 +25,13 @@ var _newId = function() {
   return _counter;
 };
 
+var _loadPedigree = function(data) {
+  // Todo: Refactor, this is a bit ugly.
+  _pedigree = undefined;
+  _focus = undefined;
+  _data = data;
+};
+
 var _addSpouse = function() {
   if (_focus === undefined) {
     // do nothing
@@ -97,6 +104,9 @@ AppDispatcher.register(function(payload){
   console.log('STORE DISPATCHER REGISTER', action);
 
   switch(action.actionType) {
+    case AppConstants.LOAD_PEDIGREE:
+      _loadPedigree(action.data);
+      break;
     case AppConstants.CHANGE_FOCUS:
       _focus = action.focus;
       break;
