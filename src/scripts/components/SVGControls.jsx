@@ -16,7 +16,7 @@ var Controls = React.createClass({
 
     if (typeof this.props.selected !== 'undefined') {
       buttons.push(
-        <button type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
+        <button key="addSpouse" type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
       );
     }
 

@@ -63,11 +63,11 @@ var PedigreeSVG = React.createClass({
       return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);
 
-    var partners = _.map(layout.partners, function(d) {
-      return <line x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />;
+    var partners = _.map(layout.partners, function(d, i) {
+      return <line key={i} x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />;
     });
 
-    var offsprings = _.map(layout.offsprings, function(d) {
+    var offsprings = _.map(layout.offsprings, function(d, i) {
 
       var diffX = d[2] - d[0],
           diffY = d[3] - d[1];
@@ -77,7 +77,7 @@ var PedigreeSVG = React.createClass({
                        "l" + diffX + "," + 0 +      // sibship line
                        "l" + 0 + "," + diffY / 2;   // individual's line
 
-      return <path d={pathString} />;
+      return <path key={i} d={pathString} />;
     });
 
     return (
