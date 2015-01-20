@@ -12,10 +12,18 @@ var Controls = React.createClass({
   },
 
   render: function() {
+    var buttons = [];
+
+    if (typeof this.props.selected !== 'undefined') {
+      buttons.push(
+        <button type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
+      );
+    }
+
     return (
       <div id="svg-controls">
         <div className="btn-group" role="group" aria-label="..." >
-          <button type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
+          {buttons}
         </div>
       </div>
     );

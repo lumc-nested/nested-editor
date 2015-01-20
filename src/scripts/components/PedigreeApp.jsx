@@ -44,7 +44,7 @@ var PedigreeApp = React.createClass({
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <Controls />
+            <Controls selected={this.state.pedigree.members[this.state.focus]} />
           </div>
         </div>
         <div className="row">
