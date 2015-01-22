@@ -3,6 +3,7 @@
 var React = require('react');
 var AppActions = require('../actions/AppActions');
 var PedigreeParser = require("../parsers/PedigreeParser.js");
+var PedParser = require("../parsers/PedParser.js");
 
 // CSS
 require('../../styles/svgControls.less');
@@ -13,7 +14,13 @@ var Controls = React.createClass({
     var file = e.target.files[0];
 
     reader.onload = function(e) {
-      var pedigree = PedigreeParser.parse(e.target.result);
+      var parser, pedigree;
+      if (file.name.split(".").pop() === "ped") {
+        parser = PedParser;
+      } else {
+        parser = PedigreeParser;
+      }
+      pedigree = parser.parse(e.target.result);
       AppActions.loadPedigree(pedigree);
     }.bind(this);
 

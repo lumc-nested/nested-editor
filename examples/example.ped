@@ -1,0 +1,6 @@
+# Example family in PED format.
+family1  grandfather  0           0            1  2  A A  G G  A C
+family1  grandmother  0           0            2  2  A A  A G  0 0
+family1  father       grandfather grandmother  1  2  A A  G G  A C
+family1  mother       0           0            2  2  A A  A G  0 0
+family1  child        father      mother       0  2  A A  G G  A C

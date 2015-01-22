@@ -59,6 +59,9 @@ module.exports = {
       test: /\.json$/,
       loader: 'json'
     }, {
+      test: /\.pegjs$/,
+      loader: 'pegjs-loader'
+    }, {
       test: /\.woff$/,
       loader: "url-loader?limit=10000&minetype=application/font-woff"
     }, {
