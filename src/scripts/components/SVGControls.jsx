@@ -2,6 +2,7 @@
 
 var React = require('react');
 var AppActions = require('../actions/AppActions');
+var PedigreeParser = require("../parsers/PedigreeParser.js");
 
 // CSS
 require('../../styles/svgControls.less');
@@ -12,8 +13,8 @@ var Controls = React.createClass({
     var file = e.target.files[0];
 
     reader.onload = function(e) {
-      var data = JSON.parse(e.target.result);
-      AppActions.loadPedigree(data);
+      var pedigree = PedigreeParser.parse(e.target.result);
+      AppActions.loadPedigree(pedigree);
     }.bind(this);
 
     if (file) {

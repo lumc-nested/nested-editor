@@ -4,10 +4,10 @@ var AppDispatcher = require('../dispatchers/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 
 var AppActions = {
-  loadPedigree: function(data) {
+  loadPedigree: function(pedigree) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.LOAD_PEDIGREE,
-      data: data
+      pedigree: pedigree
     });
   },
 

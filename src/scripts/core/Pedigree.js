@@ -8,54 +8,19 @@ var Pregnancy = require('./Pregnancy.js');
 var Individual = Member.Individual;
 var Group = Member.Group;
 
-/**
- * Pedigree object based on the JSON data.
- */
+var Pedigree = function(members, nests) {
+  /*
+    Todo:
 
-var Pedigree = function(data) {
-  this.data = data;
-  this.members = {};
-  this.nests = [];
-  this.init(data);
+    For the members structure, I think we should choose one of:
+
+    1. An array of objects where the objects all have an "_id" field.
+    2. An associative array of objects where the ID of the object is its key.
+
+    We probably shouldn't have both (as we have now?).
+  */
+  this.members = members;
+  this.nests = nests;
 };
-
-Pedigree.prototype = {
-  init: function(data) {
-    var that = this;
-
-    // create member objects.
-    _.each(data.members, function(memberProps) {
-      if (_.has(memberProps, "numberOfIndividuals")) {
-        that.members[memberProps._id] = new Group(memberProps);
-      } else {
-        that.members[memberProps._id] = new Individual(memberProps);
-      }
-    });
-
-    // creat nest objects.
-    _.each(data.nests, function(nestProps) {
-
-      var father = that.members[nestProps.father];
-      var mother = that.members[nestProps.mother];
-
-      var pregnancies = _.map(nestProps.pregnancies, function(pregProps) {
-        var zygotes = _.map(pregProps.zygotes, function(zygote) {
-          var child = that.members[zygote];
-          return child;
-        });
-
-        return new Pregnancy(zygotes);
-      });
-
-      // create a nest.
-      var nest = new Nest(father, mother, pregnancies, nestProps.consanguenous);
-
-      // add nest to the pedigree.
-      that.nests.push(nest);
-    });
-  }
-};
-
-
 
 module.exports = Pedigree;

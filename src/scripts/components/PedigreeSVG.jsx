@@ -54,6 +54,11 @@ var PedigreeSVG = React.createClass({
 
 
   render: function() {
+    if (this.props.pedigree === undefined) {
+      return (
+        <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick} />
+      );
+    }
 
     var layout = doLayout(this.props.pedigree);
     console.log(layout);

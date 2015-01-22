@@ -5,7 +5,6 @@ var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var PedigreeConstants = require('../constants/PedigreeConstants');
 var _ = require('lodash');
-var Pedigree = require('../core/Pedigree.js');
 var Member = require('../core/Member.js');
 var Nest = require('../core/Nest.js');
 
@@ -14,7 +13,7 @@ var Individual = Member.Individual;
 var CHANGE_EVENT = 'change';
 
 // TODO: at some point this shoudl be replaced by a call to backend sever.
-var _data = require('../../../examples/example.json');
+//var _data = require('../../../examples/example.json');
 
 
 var _counter = 0;
@@ -25,11 +24,10 @@ var _newId = function() {
   return _counter;
 };
 
-var _loadPedigree = function(data) {
-  // Todo: Refactor, this is a bit ugly.
-  _pedigree = undefined;
+var _loadPedigree = function(pedigree) {
+  _pedigree = pedigree;
   _focus = undefined;
-  _data = data;
+  _counter = _.max(_.pluck(pedigree.members, "_id"));
 };
 
 var _addSpouse = function() {
@@ -70,16 +68,7 @@ var _addSpouse = function() {
 
 
 var AppStore = _.extend(EventEmitter.prototype, {
-
   getData: function(){
-    // initialize the counter.
-    _counter = _.max(_.pluck(_data.members, "_id"));
-
-    // initialize pedigree.
-    if (_pedigree === undefined) {
-      _pedigree = new Pedigree(_data);
-    }
-
     return {
       "pedigree": _pedigree,
       "focus": _focus
@@ -105,7 +94,7 @@ AppDispatcher.register(function(payload){
 
   switch(action.actionType) {
     case AppConstants.LOAD_PEDIGREE:
-      _loadPedigree(action.data);
+      _loadPedigree(action.pedigree);
       break;
     case AppConstants.CHANGE_FOCUS:
       _focus = action.focus;
