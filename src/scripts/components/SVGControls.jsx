@@ -34,9 +34,11 @@ var Controls = React.createClass({
   },
 
   render: function() {
+    // Note: The `accept` attribute with file extensions only works in
+    //   Google Chrome and Internet Explorer 10+.
     var buttons = [
       <span key="loadPedigree" className="btn btn-default btn-file">
-        Load pedigree <input type="file" onChange={this.loadPedigree} />
+        Load pedigree <input type="file" accept=".json,.ped" onChange={this.loadPedigree} />
       </span>
     ];
 
