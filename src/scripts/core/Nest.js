@@ -30,9 +30,12 @@ Nest.prototype = {
 
     // add parents' relationships.
     this.father.addSpouse(this.mother);
+    this.father.addOwnNest(this);
     this.father.addChildren(children);
+
     this.mother.addSpouse(this.father);
     this.mother.addChildren(children);
+    this.mother.addOwnNest(this);
 
     _.each(children, function(child, index) {
       child.sibIndex = index;
@@ -40,6 +43,7 @@ Nest.prototype = {
       // child's relationships with other family membes.
       child.father = this.father;
       child.mother = this.mother;
+      child.parentNest = this;
 
       // link to slibings.
       child.siblings = _.where(children, function(c) { return c._id !== child._id; });

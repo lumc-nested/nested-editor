@@ -16,6 +16,10 @@ Member.prototype = {
 
   gender: function() {
     return this.data.gender;
+  },
+
+  hasParents: function() {
+    return this.father !== undefined || this.mother !== undefined;
   }
 };
 
@@ -24,9 +28,13 @@ var Individual = function(data) {
   Member.call(this, data);
   this.spouses = [];
   this.children = [];
+  this.parentNest = undefined;
+  this.ownNests = [];
 };
 
-Individual.prototype = _.extend(Member.prototype, {
+Individual.prototype = _.create(Member.prototype, {
+  constructor: Individual,
+
   addSpouse: function(member) {
     this.spouses.push(member);
   },
@@ -36,7 +44,11 @@ Individual.prototype = _.extend(Member.prototype, {
     this.children.push(children);
   },
 
-  hasSpouse: function() {
+  addOwnNest: function(nest) {
+    this.ownNests.push(nest);
+  },
+
+  hasSpouses: function() {
     return this.spouses.length > 0;
   },
 
@@ -50,7 +62,19 @@ var Group = function(data) {
   Member.call(this, data);
 };
 
-Group.prototype = _.extend(Member.prototype, {});
+Group.prototype = _.create(Member.prototype, {
+  constructor: Group,
+
+  hasSpouses: function() {
+    // a group cannot have spouse.
+    return false;
+  },
+
+  hasChildren: function() {
+    // a group cannot have children.
+    return false;
+  }
+});
 
 
 module.exports = {
