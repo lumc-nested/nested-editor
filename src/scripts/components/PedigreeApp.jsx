@@ -40,11 +40,13 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
+    var selected = this.state.pedigree ? this.state.pedigree.members[this.state.focus] : undefined;
+
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <Controls selected={this.state.pedigree.members[this.state.focus]} />
+            <Controls selected={selected} />
           </div>
         </div>
         <div className="row">
@@ -52,7 +54,7 @@ var PedigreeApp = React.createClass({
             <Pedigree pedigree={this.state.pedigree} focus={this.state.focus} />
           </div>
           <div className="col-md-4">
-            <MemberDetails selected={this.state.pedigree.members[this.state.focus]} />
+            <MemberDetails selected={selected} />
           </div>
         </div>
       </div>

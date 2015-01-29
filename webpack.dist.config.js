@@ -62,6 +62,9 @@ module.exports = {
     }, {
       test: /\.json$/,
       loader: 'json'
+    }, {
+      test: /\.pegjs$/,
+      loader: 'pegjs-loader'
     }]
   }
 };

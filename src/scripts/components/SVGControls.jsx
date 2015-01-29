@@ -2,6 +2,8 @@
 
 var React = require('react');
 var AppActions = require('../actions/AppActions');
+var PedigreeParser = require("../parsers/PedigreeParser.js");
+var PedParser = require("../parsers/PedParser.js");
 
 // CSS
 require('../../styles/svgControls.less');
@@ -12,8 +14,14 @@ var Controls = React.createClass({
     var file = e.target.files[0];
 
     reader.onload = function(e) {
-      var data = JSON.parse(e.target.result);
-      AppActions.loadPedigree(data);
+      var parser, pedigree;
+      if (file.name.split(".").pop() === "ped") {
+        parser = PedParser;
+      } else {
+        parser = PedigreeParser;
+      }
+      pedigree = parser.parse(e.target.result);
+      AppActions.loadPedigree(pedigree);
     }.bind(this);
 
     if (file) {
@@ -26,9 +34,11 @@ var Controls = React.createClass({
   },
 
   render: function() {
+    // Note: The `accept` attribute with file extensions only works in
+    //   Google Chrome and Internet Explorer 10+.
     var buttons = [
       <span key="loadPedigree" className="btn btn-default btn-file">
-        Load pedigree <input type="file" onChange={this.loadPedigree} />
+        Load pedigree <input type="file" accept=".json,.ped" onChange={this.loadPedigree} />
       </span>
     ];
 
