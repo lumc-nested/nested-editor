@@ -3,7 +3,7 @@
 var React = require('react');
 var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
-var doLayout = require('../layout/engine.js');
+var doLayout = require('../layout/simple.js');
 
 var _svgID ="pedigree";
 
