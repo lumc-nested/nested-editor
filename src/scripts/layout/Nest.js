@@ -29,13 +29,13 @@ Nest.prototype = {
     var children = this.children();
 
     // add parents' relationships.
-    this.father.addSpouse(this.mother);
-    this.father.addOwnNest(this);
+    this.father.addMate(this.mother);
+    this.father.addMatingNest(this);
     this.father.addChildren(children);
 
-    this.mother.addSpouse(this.father);
+    this.mother.addMate(this.father);
     this.mother.addChildren(children);
-    this.mother.addOwnNest(this);
+    this.mother.addMatingNest(this);
 
     _.each(children, function(child, index) {
       child.sibIndex = index;
