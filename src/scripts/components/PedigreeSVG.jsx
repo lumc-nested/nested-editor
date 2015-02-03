@@ -1,9 +1,11 @@
 'use strict';
 
 var React = require('react');
-var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
+var AppActions = require('../actions/AppActions.js');
+var PC = require('../constants/PedigreeConstants.js');
 var doLayout = require('../layout/simple.js');
+var LayoutEngine = require('../layout/Engine.js');
 
 var _svgID ="pedigree";
 
@@ -20,7 +22,7 @@ var Member = React.createClass({
     var member = this.props.data;
 
     var death = member.isDead() ? <line x1="25" y1="-25" x2="-25" y2="25" /> : undefined;
-    var transform = "translate(" + member.x + "," + member.y + ")";
+    var transform = "translate(" + member.location.x + "," + member.location.y + ")";
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
@@ -60,36 +62,54 @@ var PedigreeSVG = React.createClass({
       );
     }
 
-    var layout = doLayout(this.props.pedigree);
-    console.log(layout);
+    var engine = new LayoutEngine(this.props.pedigree);
+
+    // TODO: get the dimentions from html
+    var windowWidth = 750;
+    var windowHeight = 650;
+
+    engine.arrange(750, 650);
 
     var members = _.map(this.props.pedigree.members, function(member) {
-      _.extend(member, _.find(layout.locations, {_id: member._id}));
       return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);
 
-    var partners = _.map(layout.partners, function(d, i) {
-      return <line key={i} x1={d[0]} y1={d[1]} x2={d[2]} y2={d[3]} />;
+    var partners = _.map(this.props.pedigree.nests, function(nest, index) {
+      return <line key={index}
+                   x1={nest.father.location.x}
+                   y1={nest.father.location.y}
+                   x2={nest.mother.location.x}
+                   y2={nest.mother.location.y} />;
     });
 
-    var offsprings = _.map(layout.offsprings, function(d, i) {
+    var offsprings = [];
+    _.each(this.props.pedigree.nests, function(nest) {
+      _.each(nest.children(), function(child) {
 
-      var diffX = d[2] - d[0],
-          diffY = d[3] - d[1];
+        var d = [nest.location.x, nest.location.y, child.location.x, child.location.y];
 
-      var pathString = "M" + d[0] + "," + d[1] +    // start position
-                       "l" + 0 + "," + diffY / 2 +  // line of desent
-                       "l" + diffX + "," + 0 +      // sibship line
-                       "l" + 0 + "," + diffY / 2;   // individual's line
+        var diffX = d[2] - d[0],
+            diffY = d[3] - d[1];
 
-      return <path key={i} d={pathString} />;
+        var pathString = "M" + d[0] + "," + d[1] +    // start position
+                         "l" + 0 + "," + diffY / 2 +  // line of desent
+                         "l" + diffX + "," + 0 +      // sibship line
+                         "l" + 0 + "," + diffY / 2;   // individual's line
+
+        offsprings.push(<path d={pathString} />);
+      });
     });
+
+    var leftmost = _.min(this.props.pedigree.members, function(m) { return m.location.x; }).location.x;
+    var translate = "translate(" + (leftmost < 50 ? Math.abs(leftmost - 50) : 0) + ",50)";
 
     return (
       <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>
-        {partners}
-        {offsprings}
-        {members}
+        <g transform={translate}>
+          {partners}
+          {offsprings}
+          {members}
+        </g>
       </svg>
     );
   },

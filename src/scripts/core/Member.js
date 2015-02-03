@@ -16,27 +16,23 @@ Member.prototype = {
 
   gender: function() {
     return this.data.gender;
-  },
-
-  hasParents: function() {
-    return this.father !== undefined || this.mother !== undefined;
   }
 };
 
 
 var Individual = function(data) {
   Member.call(this, data);
-  this.spouses = [];
+  this.mates = [];
   this.children = [];
   this.parentNest = undefined;
-  this.ownNests = [];
+  this.matingNests = [];
 };
 
 Individual.prototype = _.create(Member.prototype, {
   constructor: Individual,
 
-  addSpouse: function(member) {
-    this.spouses.push(member);
+  addMate: function(member) {
+    this.mates.push(member);
   },
 
   addChildren: function(children) {
@@ -44,16 +40,20 @@ Individual.prototype = _.create(Member.prototype, {
     this.children.push(children);
   },
 
-  addOwnNest: function(nest) {
-    this.ownNests.push(nest);
+  addMatingNest: function(nest) {
+    this.matingNests.push(nest);
   },
 
-  hasSpouses: function() {
-    return this.spouses.length > 0;
+  hasMates: function() {
+    return this.mates.length > 0;
   },
 
   hasChildren: function() {
     return _.flatten(this.children).length > 0;
+  },
+
+  hasParents: function() {
+    return this.parentNest !== undefined;
   }
 });
 
@@ -65,7 +65,7 @@ var Group = function(data) {
 Group.prototype = _.create(Member.prototype, {
   constructor: Group,
 
-  hasSpouses: function() {
+  hasMates: function() {
     // a group cannot have spouse.
     return false;
   },
