@@ -1,15 +1,7 @@
 'use strict';
 
-var React = require('react');
 var _ = require('lodash');
 var parser = require("./ped.pegjs");
-
-var Pedigree = require('../core/Pedigree.js');
-var Member = require('../core/Member.js');
-var Nest = require('../core/Nest.js');
-var Pregnancy = require('../core/Pregnancy.js');
-
-var Individual = Member.Individual;
 
 var _counter = 0;
 
@@ -28,14 +20,12 @@ var parse = function(text) {
     return entry[1];
   }).value();
 
-  var members = {};
-
-  _.each(pedMembers, function(member) {
-    members[member.id] = new Individual({
+  var members = _.map(pedMembers, function(member) {
+    return {
       "_id": member.id,
       "externalID": member.member,
       "gender": member.gender
-    });
+    };
   });
 
   // While building the nests with their pregnancies, this array holds
@@ -57,7 +47,7 @@ var parse = function(text) {
     }
 
     var nest = _.find(nests, {"father": father.id, "mother": mother.id});
-    var pregnancy = new Pregnancy([members[member.id]]);
+    var pregnancy = {"zygotes": [member.id]};
 
     if (nest === undefined) {
       nests.push({
@@ -70,14 +60,7 @@ var parse = function(text) {
     }
   });
 
-  return new Pedigree(members, _.map(nests, function(nest) {
-    return new Nest(
-      members[nest.father],
-      members[nest.mother],
-      nest.pregnancies,
-      false
-    );
-  }));
+  return {"members": members, "nests": nests};
 };
 
 module.exports = {"parse": parse};

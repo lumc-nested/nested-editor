@@ -5,10 +5,7 @@ var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var PedigreeConstants = require('../constants/PedigreeConstants');
 var _ = require('lodash');
-var Member = require('../core/Member.js');
-var Nest = require('../core/Nest.js');
 
-var Individual = Member.Individual;
 
 var CHANGE_EVENT = 'change';
 
@@ -35,33 +32,30 @@ var _addSpouse = function() {
     // do nothing
     console.log('no member is selected.');
   } else {
-    var member, spouse, spouseData, nest;
+    var member, spouse, nest;
 
-    member =  _pedigree.members[_focus];
-    spouseData = {
+    member =  _.find(_pedigree.members, {"_id": _focus});
+    spouse = {
       _id: _newId()
     };
 
-    switch(member.gender()) {
+    switch(member.gender) {
       case PedigreeConstants.Gender.Male:
-        spouseData.gender = PedigreeConstants.Gender.Female;
-        spouse = new Individual(spouseData);
-        nest = new Nest(member, spouse);
+        spouse.gender = PedigreeConstants.Gender.Female;
+        nest = {"father": member._id, "mother": spouse._id};
         break;
       case PedigreeConstants.Gender.Female:
-        spouseData.gender = PedigreeConstants.Gender.Male;
-        spouse = new Individual(spouseData);
-        nest = new Nest(spouse, member);
+        spouse.gender = PedigreeConstants.Gender.Male;
+        nest = {"father": spouse._id, "mother": member._id};
         break;
       default:
       case PedigreeConstants.Gender.Unknown:
-        spouseData.gender = PedigreeConstants.Gender.Unknown;
-        spouse = new Individual(spouseData);
-        nest = new Nest(member, spouse);
+        spouse.gender = PedigreeConstants.Gender.Unknown;
+        nest = {"father": member._id, "mother": spouse._id};
         break;
     }
 
-    _pedigree.members[spouse._id] = spouse;
+    _pedigree.members.push(spouse);
     _pedigree.nests.push(nest);
   }
 };

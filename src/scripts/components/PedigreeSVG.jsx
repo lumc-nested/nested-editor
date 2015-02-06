@@ -4,6 +4,7 @@ var React = require('react');
 var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
 var doLayout = require('../layout/engine.js');
+var PedigreeGraph = require('../core/Pedigree.js');
 
 var _svgID ="pedigree";
 
@@ -60,10 +61,12 @@ var PedigreeSVG = React.createClass({
       );
     }
 
-    var layout = doLayout(this.props.pedigree);
+    var graph = new PedigreeGraph(this.props.pedigree);
+
+    var layout = doLayout(graph);
     console.log(layout);
 
-    var members = _.map(this.props.pedigree.members, function(member) {
+    var members = _.map(graph.members, function(member) {
       _.extend(member, _.find(layout.locations, {_id: member._id}));
       return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);
