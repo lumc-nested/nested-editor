@@ -40,6 +40,22 @@
     {
       "_id": 8,
       "gender": 0
+    },
+    {
+      "_id": 9,
+      "gender": 1
+    },
+    {
+      "_id": 10,
+      "gender": 2
+    },
+    {
+      "_id": 11,
+      "gender": 1
+    },
+    {
+      "_id": 12,
+      "gender": 1
     }
   ],
 
@@ -61,6 +77,11 @@
       "mother": 7,
       "pregnancies": [{ "zygotes" : [8] }],
       "consanguineous": true
+    },
+    {
+      "father": 9,
+      "mother": 6,
+      "pregnancies": [{"zygotes": [10, 11, 12]}]
     }
   ],
 
