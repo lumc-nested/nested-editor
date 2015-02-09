@@ -4,7 +4,7 @@ var React = require('react');
 var AppActions = require('../actions/AppActions.js');
 var _ = require('lodash');
 var doLayout = require('../layout/engine.js');
-var PedigreeGraph = require('../core/Pedigree.js');
+var PedigreeGraph = require('../layout/Pedigree.js');
 
 var _svgID ="pedigree";
 
