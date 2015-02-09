@@ -17,24 +17,32 @@ var Member = React.createClass({
 
   render: function() {
 
-    var shape;
+    var shape, death;
 
     var member = this.props.data;
+    var size = PC.MemberSize;
+    var radius = PC.MemberSize / 2;
+    var paddedRadius = radius + PC.MemberPadding;
 
-    var death = member.isDead() ? <line x1="25" y1="-25" x2="-25" y2="25" /> : undefined;
+    if (member.isDead()) {
+      death = <line x1={paddedRadius} y1={-paddedRadius} x2={-paddedRadius} y2={paddedRadius} />;
+    }
+
     var transform = "translate(" + member.location.x + "," + member.location.y + ")";
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
     switch (member.gender()) {
       case 1:
-        shape = <rect width="36" height="36" x="-18" y="-18" />;
+        // the rectangle looks bigger than the other two. shrink it a bit.
+        shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
         break;
       case 2:
-        shape = <circle r="20" />;
+        shape = <circle r={radius} />;
         break;
       default:
-        shape = <polygon points="-20,0,0,20,20,0,0,-20" />;
+        var points = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(",");
+        shape = <polygon points={points} />;
     }
 
     return (
@@ -101,8 +109,11 @@ var PedigreeSVG = React.createClass({
       });
     });
 
-    var leftmost = _.min(graph.members, function(m) { return m.location.x; }).location.x;
-    var translate = "translate(" + (leftmost < 50 ? Math.abs(leftmost - 50) : 0) + ",50)";
+    var xs = _.pluck(graph.members, function(m) { return m.location.x; });
+    var leftmost = _.min(xs);
+    var rightmost = _.max(xs);
+    var shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
+    var translate = "translate(" + shift + ",50)";
 
     return (
       <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>

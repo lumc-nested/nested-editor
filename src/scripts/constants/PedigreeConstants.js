@@ -7,9 +7,10 @@ module.exports = Object.freeze({
     'Female': 2
   },
 
-  'MemberDistance': 100,
+  'MemberDistance': 80,
   'GenerationDistance': 100,
-  'MemberSize': 40,
+  'MemberSize': 28,
+  'MemberPadding': 2,
 
   'ThemeColor': 'indigo'
 });
