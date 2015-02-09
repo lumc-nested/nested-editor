@@ -3,20 +3,20 @@
 var _ = require('lodash');
 var parser = require("./ped.pegjs");
 
-var _counter = 0;
-
-var _newId = function() {
-  _counter += 1;
-  return _counter;
-};
-
 var parse = function(text) {
+  var lastId = 0;
+
+  var newId = function() {
+    lastId += 1;
+    return lastId;
+  };
+
   var document = parser.parse(text);
 
   var pedMembers = _(document).filter(function(entry) {
     return entry[0] === "member";
   }).map(function(entry) {
-    entry[1].id = _newId();
+    entry[1].id = newId();
     return entry[1];
   }).value();
 
