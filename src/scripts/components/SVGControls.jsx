@@ -13,6 +13,10 @@ var Controls = React.createClass({
     var reader = new FileReader();
     var file = e.target.files[0];
 
+    // Clear input element so we are called again even when re-opening the
+    // same file.
+    e.target.value = null;
+
     reader.onload = function(e) {
       var parser, pedigree;
       if (file.name.split(".").pop() === "ped") {
