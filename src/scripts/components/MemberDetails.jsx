@@ -41,7 +41,7 @@ var MemberDetails = React.createClass({
           buttons={['Save']}
           schema={this.state.schema}
           validate={validate}
-          values={selected.data}
+          values={selected}
           onSubmit={this.onFormSubmit}
         />
       </div>

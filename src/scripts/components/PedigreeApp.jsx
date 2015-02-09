@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var _ = require('lodash');
 
 
 var AppStore = require('../stores/AppStore');
@@ -40,7 +41,11 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
-    var selected = this.state.pedigree ? this.state.pedigree.members[this.state.focus] : undefined;
+    var selected;
+
+    if (this.state.pedigree) {
+      selected = _.find(this.state.pedigree.members, {"_id": this.state.focus});
+    }
 
     return (
       <div className="container">

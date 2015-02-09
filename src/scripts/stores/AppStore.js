@@ -65,6 +65,11 @@ var _addSpouse = function() {
   }
 };
 
+var _updateMember = function(data) {
+  var member = _.find(_pedigree.members, {"_id": _focus});
+  _.assign(member, data);
+};
+
 
 var AppStore = _.extend(EventEmitter.prototype, {
   getData: function(){
@@ -102,7 +107,7 @@ AppDispatcher.register(function(payload){
       _addSpouse();
       break;
     case AppConstants.UPDATE_MEMBER:
-      _pedigree.members[_focus].data = action.data;
+      _updateMember(action.data);
       break;
   }
 
