@@ -62,7 +62,7 @@ module.exports = function (grunt) {
       },
       dev: {
         path: 'http://localhost:<%= connect.options.port %>/webpack-dev-server/',
-        app: 'Google Chrome'
+        app: 'google-chrome'
       },
       dist: {
         path: 'http://localhost:<%= connect.options.port %>/'
