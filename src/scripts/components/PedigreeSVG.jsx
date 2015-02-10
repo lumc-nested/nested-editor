@@ -52,13 +52,23 @@ var PedigreeSVG = React.createClass({
     // TODO: get the dimentions from html
     var windowWidth = 750;
     var windowHeight = 650;
+    var focus = this.props.focus;
+    var focused;
 
+    // is it focused on a member?
+    focused = focus !== undefined && focus.level === PC.FocusLevel.Member;
     var members = _.map(this.state.layout.members, function(member) {
-      return <MemberSVG data={member} focused={this.props.focus === member._id} key={member._id}/>;
-    }, this);
+      return <MemberSVG data={member}
+                        focused={focused && focus.key === member._id}
+                        key={member._id}/>;
+    });
 
+    // is it focused on a nest?
+    focused = focus !== undefined && focus.level === PC.FocusLevel.Nest;
     var nests = _.map(this.state.layout.nests, function(nest, index) {
-      return <NestSVG data={nest} key={index}/>;
+      return <NestSVG data={nest}
+                      focused={focused && focus.key.father === nest.father._id && focus.key.mother === nest.mother._id}
+                      key={index}/>;
     });
 
     var xs = _.pluck(this.state.layout.members, function(m) { return m.location.x; });

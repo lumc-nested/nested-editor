@@ -4,6 +4,7 @@ var React = require('react');
 var AppActions = require('../actions/AppActions');
 var PedigreeParser = require("../parsers/PedigreeParser.js");
 var PedParser = require("../parsers/PedParser.js");
+var PC = require("../constants/PedigreeConstants");
 
 // CSS
 require('../../styles/svgControls.less');
@@ -37,6 +38,10 @@ var Controls = React.createClass({
     AppActions.addSpouse();
   },
 
+  addChild: function() {
+    AppActions.addChild();
+  },
+
   render: function() {
     // Note: The `accept` attribute with file extensions only works in
     //   Google Chrome and Internet Explorer 10+.
@@ -46,10 +51,20 @@ var Controls = React.createClass({
       </span>
     ];
 
-    if (typeof this.props.selected !== 'undefined') {
-      buttons.push(
-        <button key="addSpouse" type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
-      );
+    if (this.props.focus !== undefined) {
+      switch (this.props.focus.level) {
+        case PC.FocusLevel.Member:
+          buttons.push(
+            <button key="addSpouse" type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
+          );
+          break;
+
+        case PC.FocusLevel.Nest:
+          buttons.push(
+            <button key="addChild" type="button" className="btn btn-default" onClick={this.addChild}>Add child</button>
+          );
+          break;
+      }
     }
 
     return (

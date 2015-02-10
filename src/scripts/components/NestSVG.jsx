@@ -2,7 +2,8 @@
 
 var React = require('react');
 var _ = require('lodash');
-
+var AppActions = require('../actions/AppActions.js');
+var PC = require('../constants/PedigreeConstants.js');
 
 var NestSVG = React.createClass({
   render: function() {
@@ -31,11 +32,22 @@ var NestSVG = React.createClass({
     });
 
     return (
-      <g>
+      <g onClick={this.handleClick} className={this.props.focused ? "focus" : ""} >
         {mating}
         {offsprings}
       </g>
     );
+  },
+
+  handleClick: function(e) {
+    e.stopPropagation();
+    AppActions.changeFocus({
+      'level': PC.FocusLevel.Nest,
+      'key': {
+        father: this.props.data.father._id,
+        mother: this.props.data.mother._id
+      }
+    });
   }
 });
 

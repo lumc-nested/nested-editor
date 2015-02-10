@@ -10,6 +10,7 @@ var _ = require('lodash');
 
 var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
+var PC = require("../constants/PedigreeConstants");
 
 var MemberDetails = require('./MemberDetails.jsx');
 var Pedigree = require('./PedigreeSVG.jsx');
@@ -29,7 +30,6 @@ var PedigreeApp = React.createClass({
 
   _onChange: function(){
     this.setState(getAppState());
-    console.log(this.state);
   },
 
   componentDidMount: function(){ 
@@ -41,17 +41,20 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
-    var selected;
+    console.log(this.state);
+    var selectedMember;
 
-    if (this.state.pedigree) {
-      selected = _.find(this.state.pedigree.members, {"_id": this.state.focus});
+    if (this.state.focus !== undefined &&
+        this.state.focus.level === PC.FocusLevel.Member &&
+        this.state.pedigree) {
+      selectedMember = _.find(this.state.pedigree.members, {"_id": this.state.focus.key});
     }
 
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <Controls selected={selected} />
+            <Controls focus={this.state.focus} />
           </div>
         </div>
         <div className="row">
@@ -59,7 +62,7 @@ var PedigreeApp = React.createClass({
             <Pedigree pedigree={this.state.pedigree} focus={this.state.focus} />
           </div>
           <div className="col-md-4">
-            <MemberDetails selected={selected} />
+            <MemberDetails selected={selectedMember} />
           </div>
         </div>
       </div>

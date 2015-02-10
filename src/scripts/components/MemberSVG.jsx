@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-
 var AppActions = require('../actions/AppActions.js');
 var PC = require('../constants/PedigreeConstants.js');
 
@@ -60,7 +59,10 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    AppActions.changeFocus(this.props.data._id);
+    AppActions.changeFocus({
+      "level": PC.FocusLevel.Member,
+      "key": this.props.data._id
+    });
   }
 });
 

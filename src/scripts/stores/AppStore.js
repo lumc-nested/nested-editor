@@ -28,13 +28,10 @@ var _loadPedigree = function(pedigree) {
 };
 
 var _addSpouse = function() {
-  if (_focus === undefined) {
-    // do nothing
-    console.log('no member is selected.');
-  } else {
+  if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
     var member, spouse, nest;
 
-    member =  _.find(_pedigree.members, {"_id": _focus});
+    member =  _.find(_pedigree.members, {"_id": _focus.key});
     spouse = {
       _id: _newId()
     };
@@ -55,6 +52,8 @@ var _addSpouse = function() {
         break;
     }
 
+    nest.pregnancies = [];
+
     _pedigree.members.push(spouse);
     _pedigree.nests.push(nest);
 
@@ -64,9 +63,33 @@ var _addSpouse = function() {
   }
 };
 
+var _addChild = function() {
+
+  // TODO: how to arrange children order?
+
+  if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Nest) {
+    var child = {
+      _id: _newId()
+    };
+
+    var nest = _.find(_pedigree.nests, {"father": _focus.key.father, "mother": _focus.key.mother});
+    nest.pregnancies.push({
+      "zygotes" : [child._id]
+    });
+
+    _pedigree.members.push(child);
+
+    // simulating immutable data here to trigger re-layout.
+    // TODO: do it with real immutable data.
+    _pedigree = _.clone(_pedigree);
+  }
+};
+
 var _updateMember = function(data) {
-  var member = _.find(_pedigree.members, {"_id": _focus});
-  _.assign(member, data);
+  if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
+    var member = _.find(_pedigree.members, {"_id": _focus.key});
+    _.assign(member, data);
+  }
 };
 
 
@@ -108,6 +131,11 @@ AppDispatcher.register(function(payload){
     case AppConstants.UPDATE_MEMBER:
       _updateMember(action.data);
       break;
+    case AppConstants.ADD_CHILD:
+      _addChild();
+      break;
+    default:
+      console.log("Not implemented yet");
   }
 
   AppStore.emitChange();

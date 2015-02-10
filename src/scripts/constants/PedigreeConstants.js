@@ -12,5 +12,10 @@ module.exports = Object.freeze({
   'MemberSize': 28,
   'MemberPadding': 2,
 
-  'ThemeColor': 'indigo'
+  'ThemeColor': 'indigo',
+
+  'FocusLevel' : {
+    'Member': 0,
+    'Nest': 1
+  }
 });

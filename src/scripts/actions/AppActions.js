@@ -11,16 +11,22 @@ var AppActions = {
     });
   },
 
-  changeFocus: function(id){
+  changeFocus: function(focus){
     AppDispatcher.handleViewAction({
       actionType: AppConstants.CHANGE_FOCUS,
-      focus: id
+      focus: focus
     });
   },
 
   addSpouse: function() {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_SPOUSE
+    });
+  },
+
+  addChild: function() {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_CHILD
     });
   },
 
