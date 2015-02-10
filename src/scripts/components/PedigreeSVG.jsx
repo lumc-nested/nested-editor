@@ -4,7 +4,6 @@ var React = require('react');
 var _ = require('lodash');
 var AppActions = require('../actions/AppActions.js');
 var PC = require('../constants/PedigreeConstants.js');
-var PedigreeGraph = require('../layout/Pedigree.js');
 var LayoutEngine = require('../layout/Engine.js');
 
 var _svgID ="pedigree";
@@ -74,6 +73,32 @@ var Member = React.createClass({
 
 var PedigreeSVG = React.createClass({
 
+  getInitialState: function() {
+
+    var layout = {};
+
+    if (this.props.peidgree !== undefined) {
+      var engine = new LayoutEngine(this.props.pedigree);
+      layout = engine.arrange();
+    }
+
+    return {
+      "layout": layout
+    };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    // require immutable objects.
+    if (this.props.pedigree !== nextProps.pedigree) {
+      console.log("redo layout");
+      var engine = new LayoutEngine(nextProps.pedigree);
+
+      this.setState({
+        layout: engine.arrange()
+      });
+    }
+  },
+
 
   render: function() {
     if (this.props.pedigree === undefined) {
@@ -82,20 +107,15 @@ var PedigreeSVG = React.createClass({
       );
     }
 
-    var graph = new PedigreeGraph(this.props.pedigree);
-    var engine = new LayoutEngine(graph);
-
     // TODO: get the dimentions from html
     var windowWidth = 750;
     var windowHeight = 650;
 
-    engine.arrange(750, 650);
-
-    var members = _.map(graph.members, function(member) {
+    var members = _.map(this.state.layout.members, function(member) {
       return <Member data={member} focused={this.props.focus === member._id} key={member._id}/>;
     }, this);
 
-    var partners = _.map(graph.nests, function(nest, index) {
+    var partners = _.map(this.state.layout.nests, function(nest, index) {
       return <line key={index}
                    x1={nest.father.location.x}
                    y1={nest.father.location.y}
@@ -104,7 +124,7 @@ var PedigreeSVG = React.createClass({
     });
 
     var offsprings = [];
-    _.each(graph.nests, function(nest) {
+    _.each(this.state.layout.nests, function(nest) {
       _.each(nest.children(), function(child) {
 
         var d = [nest.location.x, nest.location.y, child.location.x, child.location.y];
@@ -121,7 +141,7 @@ var PedigreeSVG = React.createClass({
       });
     });
 
-    var xs = _.pluck(graph.members, function(m) { return m.location.x; });
+    var xs = _.pluck(this.state.layout.members, function(m) { return m.location.x; });
     var leftmost = _.min(xs);
     var rightmost = _.max(xs);
     var shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);

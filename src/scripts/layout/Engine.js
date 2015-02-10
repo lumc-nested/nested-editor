@@ -2,13 +2,15 @@
 
 var _ = require('lodash');
 var PC = require('../constants/PedigreeConstants.js');
+var Pedigree = require('./Pedigree.js');
 
 var Female = PC.Gender.Female;
 var Male = PC.Gender.Male;
 var Unknown = PC.Gender.Unknown;
 
-var Engine = function(pedigree) {
-  this.pedigree = pedigree;
+var Engine = function(data) {
+
+  this.pedigree = new Pedigree(data);
   this.leftEdge = 50;
   this.topEdge = 50;
   this.start = {
@@ -27,12 +29,13 @@ Engine.prototype = {
     });
   },
 
-  arrange: function(maxWidth, maxHeight){
+  arrange: function(){
 
     var roots = this.findRoots();
     _.each(roots, function(nest) {
-      this.arrangeNest(nest, 0, maxWidth / 2);
+      this.arrangeNest(nest, 0, 50);
     }, this);
+    return this.pedigree;
   },
 
   arrangeNest: function(nest, generationIndex, center) {

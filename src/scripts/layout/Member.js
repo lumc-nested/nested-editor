@@ -23,7 +23,7 @@ Member.prototype = {
   },
 
   isConsultand: function() {
-    return this.data.consultant;
+    return this.data.consultand;
   }
 };
 

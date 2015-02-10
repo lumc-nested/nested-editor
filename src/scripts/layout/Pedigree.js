@@ -19,15 +19,17 @@ var Pedigree = function(data) {
 
     We probably shouldn't have both (as we have now?).
   */
+  this.data = data;
   this.members = {};
   this.nests = [];
 
-  this.init(data);
+  this.init();
 };
 
 Pedigree.prototype = {
 
-  init: function(data) {
+  init: function() {
+    var data = this.data;
 
     var members = {};
 

@@ -58,10 +58,9 @@ var _addSpouse = function() {
     _pedigree.members.push(spouse);
     _pedigree.nests.push(nest);
 
-    // remove current layout
-    _.each(_pedigree.members, function(member) {
-      delete member.location;
-    });
+    // simulating immutable data here to trigger re-layout.
+    // TODO: do it with real immutable data.
+    _pedigree = _.clone(_pedigree);
   }
 };
 
