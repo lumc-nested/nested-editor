@@ -2,7 +2,6 @@
   "id": 1,
   "name": "some description",
   "clinicianId": 1,
-  "proband": 4,
 
   "members": [
     {
@@ -19,7 +18,8 @@
     {
       "_id": 3,
       "gender": 1,
-      "dateOfBirth": "1977-04-27"
+      "dateOfBirth": "1977-04-27",
+      "consultand": true
     },
     {
       "_id": 4,
@@ -31,7 +31,8 @@
     },
     {
       "_id": 6,
-      "gender": 2
+      "gender": 2,
+      "proband": true
     },
     {
       "_id": 7,
@@ -39,7 +40,8 @@
     },
     {
       "_id": 8,
-      "gender": 0
+      "gender": 0,
+      "consultand": true
     },
     {
       "_id": 9,

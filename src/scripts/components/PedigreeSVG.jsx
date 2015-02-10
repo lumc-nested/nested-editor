@@ -12,12 +12,13 @@ var _svgID ="pedigree";
 require('../../styles/pedigreeSVG.less');
 
 
+var arrowPath = "M" + (-PC.MemberSize / 2 - 10) + "," + (PC.MemberSize / 2 + 10) + "l9,-9l-3,6l-3,-3l6,-3";
 
 var Member = React.createClass({
 
   render: function() {
 
-    var shape, death;
+    var shape, death, arrow, p;
 
     var member = this.props.data;
     var size = PC.MemberSize;
@@ -26,6 +27,15 @@ var Member = React.createClass({
 
     if (member.isDead()) {
       death = <line x1={paddedRadius} y1={-paddedRadius} x2={-paddedRadius} y2={paddedRadius} />;
+    }
+
+    if (member.isProband()) {
+      arrow = <path className="arrow" d={arrowPath} />;
+      p = <text className="proband" x={-radius - 18} y={radius + 10}>P</text>;
+    }
+
+    if (member.isConsultand()) {
+      arrow = <path className="arrow" d={arrowPath} />;
     }
 
     var transform = "translate(" + member.location.x + "," + member.location.y + ")";
@@ -49,6 +59,8 @@ var Member = React.createClass({
       <g transform={transform} onClick={this.handleClick} className={this.props.focused ? "focus" : ""} >
         {shape}
         {death}
+        {arrow}
+        {p}
       </g>
     );
   },

@@ -16,6 +16,14 @@ Member.prototype = {
 
   gender: function() {
     return this.data.gender;
+  },
+
+  isProband: function() {
+    return this.data.proband;
+  },
+
+  isConsultand: function() {
+    return this.data.consultant;
   }
 };
 
