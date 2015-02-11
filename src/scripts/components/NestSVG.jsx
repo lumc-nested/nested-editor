@@ -28,7 +28,7 @@ var NestSVG = React.createClass({
                        "l" + diffX + "," + 0 +      // sibship line
                        "l" + 0 + "," + diffY / 2;   // individual's line
 
-      offsprings.push(<path d={pathString} />);
+      offsprings.push(<path d={pathString} key={child.sibindex}/>);
     });
 
     return (
