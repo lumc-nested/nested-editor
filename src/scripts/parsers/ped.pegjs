@@ -37,11 +37,11 @@ gender = "1" { return 1 }
        / nonwhitespace { return 0 }
 
 genotype =
-  spacing !"0" a:nonwhitespace spacing !"0" b:nonwhitespace
+  spacing !missingallele a:nonwhitespace spacing !missingallele b:nonwhitespace
   { return [a, b] }
 
 missinggenotype =
-  spacing "0" whitespace "0"
+  spacing missingallele whitespace missingallele
   { return undefined }
 
 phenotype = chars:nonwhitespace+ { return chars.join("") }
@@ -50,6 +50,7 @@ name = chars:namechar+ { return chars.join("") }
 nonwhitespace = !whitespace char:. { return char }
 nonnewline = !newline char:. { return char }
 
+missingallele = [0.]
 namechar = [a-zA-Z0-9_-]
 whitespace = (spacing / newline)+
 spacing = [ \t]+
