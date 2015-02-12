@@ -45,12 +45,12 @@ missinggenotype =
   { return undefined }
 
 phenotype = chars:nonwhitespace+ { return chars.join("") }
-name = chars:alphanum+ { return chars.join("") }
+name = chars:namechar+ { return chars.join("") }
 
 nonwhitespace = !whitespace char:. { return char }
 nonnewline = !newline char:. { return char }
 
-alphanum = [a-zA-Z0-9]
+namechar = [a-zA-Z0-9_-]
 whitespace = (spacing / newline)+
 spacing = [ \t]+
 newline = "\r"? "\n"
