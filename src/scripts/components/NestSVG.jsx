@@ -15,7 +15,7 @@ var NestSVG = React.createClass({
                        x2={nest.mother.location.x}
                        y2={nest.mother.location.y} />;
 
-    var offsprings = [];
+    var offsprings = {};
     _.each(nest.children(), function(child) {
 
       var d = [nest.location.x, nest.location.y, child.location.x, child.location.y];
@@ -28,7 +28,7 @@ var NestSVG = React.createClass({
                        "l" + diffX + "," + 0 +      // sibship line
                        "l" + 0 + "," + diffY / 2;   // individual's line
 
-      offsprings.push(<path d={pathString} key={child.sibindex}/>);
+      offsprings['offspring-' + child.sibIndex] = <path d={pathString} />;
     });
 
     return (

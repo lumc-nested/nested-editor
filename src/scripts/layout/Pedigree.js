@@ -22,6 +22,7 @@ var Pedigree = function(data) {
   this.data = data;
   this.members = {};
   this.nests = [];
+  this.id = data.id || 1;
 
   this.init();
 };

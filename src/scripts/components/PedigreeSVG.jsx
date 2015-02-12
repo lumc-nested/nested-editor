@@ -60,7 +60,7 @@ var PedigreeSVG = React.createClass({
     var members = _.map(this.state.layout.members, function(member) {
       return <MemberSVG data={member}
                         focused={focused && focus.key === member._id}
-                        key={member._id}/>;
+                        key={'member-' + member._id}/>;
     });
 
     // is it focused on a nest?
@@ -68,7 +68,7 @@ var PedigreeSVG = React.createClass({
     var nests = _.map(this.state.layout.nests, function(nest, index) {
       return <NestSVG data={nest}
                       focused={focused && focus.key.father === nest.father._id && focus.key.mother === nest.mother._id}
-                      key={index}/>;
+                      key={'nest-' + index}/>;
     });
 
     var xs = _.pluck(this.state.layout.members, function(m) { return m.location.x; });
@@ -79,7 +79,7 @@ var PedigreeSVG = React.createClass({
 
     return (
       <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>
-        <g transform={translate}>
+        <g transform={translate} key={'pedigree-' + this.state.layout.id}>
           {nests}
           {members}
         </g>
