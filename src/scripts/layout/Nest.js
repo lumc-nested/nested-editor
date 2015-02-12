@@ -7,6 +7,7 @@ var Nest = function(father, mother, pregnancies, consanguenous) {
   this.mother = mother;
   this.pregnancies = pregnancies;
   this.consanguenous = consanguenous;
+  this.flip = false; // by default all nests show father to the left of mother
 
   // private
   var children;
@@ -29,11 +30,9 @@ Nest.prototype = {
     var children = this.children();
 
     // add parents' relationships.
-    this.father.addMate(this.mother);
     this.father.addMatingNest(this);
     this.father.addChildren(children);
 
-    this.mother.addMate(this.father);
     this.mother.addChildren(children);
     this.mother.addMatingNest(this);
 
@@ -48,6 +47,18 @@ Nest.prototype = {
       // link to slibings.
       child.siblings = _.where(children, function(c) { return c._id !== child._id; });
     }, this);
+  },
+
+  shouldFlip: function() {
+    // by default, father should be the left of the mother,
+    // except:
+    // 1. child is the oldest male sibling and his mate has parents.
+    // 2. child is the youngest female sibling and her mate has parents.
+
+    return (this.father.hasSiblings() && this.father.sibIndex === 0 && this.mother.hasParents()) ||
+           (this.father.hasSiblings() && this.mother.sibIndex !== undefined &&
+            this.mother.sibIndex === this.mother.parentNest.children().length - 1 &&
+            this.father.hasParents());
   }
 };
 

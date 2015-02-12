@@ -66,7 +66,6 @@ Pedigree.prototype = {
 
     this.nests = nests;
   }
-
 };
 
 module.exports = Pedigree;

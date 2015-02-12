@@ -4,6 +4,8 @@ var _ = require('lodash');
 
 var Member = function(data) {
   this._id = data._id;
+  this.siblings = [];
+  this.parentNest = undefined;
   this.data = _.omit(data, "_id");
 };
 
@@ -24,24 +26,26 @@ Member.prototype = {
 
   isConsultand: function() {
     return this.data.consultand;
+  },
+
+  hasParents: function() {
+    return this.parentNest !== undefined;
+  },
+
+  hasSiblings: function() {
+    return this.siblings.length > 0;
   }
 };
 
 
 var Individual = function(data) {
   Member.call(this, data);
-  this.mates = [];
   this.children = [];
-  this.parentNest = undefined;
   this.matingNests = [];
 };
 
 Individual.prototype = _.create(Member.prototype, {
   constructor: Individual,
-
-  addMate: function(member) {
-    this.mates.push(member);
-  },
 
   addChildren: function(children) {
     // TODO: should this be a flat list?
@@ -53,16 +57,13 @@ Individual.prototype = _.create(Member.prototype, {
   },
 
   hasMates: function() {
-    return this.mates.length > 0;
+    return this.matingNests.length > 0;
   },
 
   hasChildren: function() {
     return _.flatten(this.children).length > 0;
   },
 
-  hasParents: function() {
-    return this.parentNest !== undefined;
-  }
 });
 
 
