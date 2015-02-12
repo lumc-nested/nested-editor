@@ -90,6 +90,10 @@ var _updateMember = function(data) {
     var member = _.find(_pedigree.members, {"_id": _focus.key});
     _.assign(member, data);
   }
+
+  // simulating immutable data here to trigger re-layout.
+  // TODO: do it with real immutable data.
+  _pedigree = _.clone(_pedigree);
 };
 
 
