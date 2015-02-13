@@ -19,7 +19,7 @@ var PedigreeSVG = React.createClass({
 
     var layout = {};
 
-    if (this.props.peidgree !== undefined) {
+    if (this.props.pedigree !== undefined) {
       var engine = new LayoutEngine(this.props.pedigree);
       layout = engine.arrange();
     }
