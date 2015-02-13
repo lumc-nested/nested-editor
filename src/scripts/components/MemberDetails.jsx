@@ -13,11 +13,11 @@ var _detailsID = 'member-details';
 var MemberDetails = React.createClass({
 
   getInitialState: function() {
-    var individual_schema = schema.definitions.individual;
+    var individualSchema = schema.definitions.individual;
 
     return {
-      schema: _.assign(individual_schema, {
-        "properties": _.omit(individual_schema.properties, "_id")
+      schema: _.assign(individualSchema, {
+        "properties": _.omit(individualSchema.properties, "_id")
       })
     };
   },
