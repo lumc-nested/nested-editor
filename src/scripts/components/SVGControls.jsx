@@ -63,7 +63,7 @@ var Controls = React.createClass({
                            </span>;
 
     if (this.props.focus !== undefined) {
-      switch (this.props.focus.level) {
+      switch (this.props.focus.get('level')) {
         case PC.FocusLevel.Member:
           buttons.addSpouse = <Button key='addSpouse'
                                       onClick={this.addSpouse}>Add spouse</Button>;

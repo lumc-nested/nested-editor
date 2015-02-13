@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var _ = require('lodash');
 
 
 var AppStore = require('../stores/AppStore');
@@ -40,25 +39,28 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
+    var focus = this.state.focus;
     var selectedMember;
     console.log(this.state);
 
-    if (this.state.focus !== undefined &&
-        this.state.focus.level === PC.FocusLevel.Member &&
+    if (focus !== undefined &&
+        focus.get('level') === PC.FocusLevel.Member &&
         this.state.pedigree) {
-      selectedMember = _.find(this.state.pedigree.members, {'_id': this.state.focus.key});
+      selectedMember = this.state.pedigree.get('members').find(function(member) {
+        return member.get('_id') === focus.get('key');
+      });
     }
 
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <Controls focus={this.state.focus} />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <Controls focus={focus} />
           </div>
         </div>
-        <div className='row'>
-          <div className='col-md-8'>
-            <Pedigree pedigree={this.state.pedigree} focus={this.state.focus} />
+        <div className="row">
+          <div className="col-md-8">
+            <Pedigree pedigree={this.state.pedigree} focus={focus} />
           </div>
           <div className='col-md-4'>
             <MemberDetails selected={selectedMember} />
