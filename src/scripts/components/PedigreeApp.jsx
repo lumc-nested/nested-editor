@@ -43,6 +43,8 @@ var PedigreeApp = React.createClass({
 
   render: function() {
     var focus = this.state.focus;
+    var undoAction = this.state.undoAction;
+    var redoAction = this.state.redoAction;
     var selectedMember;
     console.log(this.state);
 
@@ -56,7 +58,7 @@ var PedigreeApp = React.createClass({
       <Grid>
         <Row>
           <Col md={12}>
-            <Controls focus={focus} />
+            <Controls focus={focus} undoAction={undoAction} redoAction={redoAction} />
           </Col>
         </Row>
         <Row>

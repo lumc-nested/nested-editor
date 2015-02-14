@@ -36,6 +36,18 @@ var AppActions = {
       actionType: AppConstants.UPDATE_MEMBER,
       data: data
     });
+  },
+
+  undo: function() {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UNDO
+    });
+  },
+
+  redo: function() {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REDO
+    });
   }
 };
 
