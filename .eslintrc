@@ -21,7 +21,7 @@ rules:
   camelcase: 2
   new-cap:
     - 1
-    - capIsNewExceptions: [Map, List]
+    - capIsNewExceptions: [List, Map, Range]
   comma-style: 2
   no-comma-dangle: 1
   consistent-this: [2, self]

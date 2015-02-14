@@ -14,14 +14,25 @@ var CHANGE_EVENT = 'change';
 // var _data = require('../../../examples/example.json');
 
 
-var _counter = 0;
-var _pedigree, _focus;
+var _pedigree, _focus, _ids;
+
+
+// Returns an infinite Immutable.IndexedSeq of strings that are not in ids.
+var _freeIds = function(ids) {
+  return Immutable.Range(1).map(function(number) {
+    return 'id_' + number.toString();
+  }).filterNot(function(id) {
+    return ids.contains(id);
+  });
+};
+
 
 var _newId = function() {
-  // Todo: Generate new id given list of existing ids.
-  _counter += 1;
-  return _counter;
+  var id = _ids.first();
+  _ids = _ids.rest();
+  return id;
 };
+
 
 var _loadPedigree = function(pedigree) {
   // Where do we use Immutable and where do we convert to plain JS objects?
@@ -31,9 +42,9 @@ var _loadPedigree = function(pedigree) {
   // Todo: Make both members and nests maps (keys id and father,mother).
   _pedigree = Immutable.fromJS(pedigree);
   _focus = undefined;
-  _counter = _pedigree.get('members').map(function(member) {
+  _ids = _freeIds(_pedigree.get('members').map(function(member) {
     return member.get('_id');
-  }).max();
+  }));
 };
 
 var _addSpouse = function() {
