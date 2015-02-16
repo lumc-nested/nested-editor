@@ -18,7 +18,6 @@ module.exports = {
   debug: true,
   devtool: 'source-map',
   entry: [
-      '!bootstrap-webpack!./bootstrap.config.js',
       'webpack/hot/only-dev-server',
       './src/scripts/app.jsx'
   ],
@@ -33,8 +32,7 @@ module.exports = {
   },
   module: {
     preLoaders: [{
-      // skip bootstrap.config.js due to incapatibility with bootstrap-webpack index loader
-      test: /[^config]\.js$/,
+      test: /\.js$/,
       exclude: /node_modules/,
       loader: 'jshint'
     }, {
