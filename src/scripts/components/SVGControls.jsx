@@ -1,10 +1,15 @@
 'use strict';
 
 var React = require('react');
+var ReactBootstrap = require('react-bootstrap');
 var AppActions = require('../actions/AppActions');
-var PedigreeParser = require("../parsers/PedigreeParser.js");
-var PedParser = require("../parsers/PedParser.js");
-var PC = require("../constants/PedigreeConstants");
+var PedigreeParser = require('../parsers/PedigreeParser.js');
+var PedParser = require('../parsers/PedParser.js');
+var PC = require('../constants/PedigreeConstants');
+
+var DropdownButton = ReactBootstrap.DropdownButton;
+var MenuItem = ReactBootstrap.MenuItem;
+var Button = ReactBootstrap.Button;
 
 // CSS
 require('../../styles/svgControls.less');
@@ -20,7 +25,7 @@ var Controls = React.createClass({
 
     reader.onload = function(e) {
       var parser, pedigree;
-      if (file.name.split(".").pop() === "ped") {
+      if (file.name.split('.').pop() === 'ped') {
         parser = PedParser;
       } else {
         parser = PedigreeParser;
@@ -39,37 +44,47 @@ var Controls = React.createClass({
   },
 
   addChild: function() {
-    AppActions.addChild();
+    AppActions.addChild(PC.Gender.Unknown);
+  },
+
+  addSon: function() {
+    AppActions.addChild(PC.Gender.Male);
+  },
+
+  addDaughter: function() {
+    AppActions.addChild(PC.Gender.Female);
   },
 
   render: function() {
     // Note: The `accept` attribute with file extensions only works in
     //   Google Chrome and Internet Explorer 10+.
-    var buttons = [
-      <span key="loadPedigree" className="btn btn-default btn-file">
-        Load pedigree <input type="file" accept=".json,.ped" onChange={this.loadPedigree} />
-      </span>
-    ];
+    var buttons = {};
+
+    buttons.loadPedigree = <span key='loadPedigree' className='btn btn-default btn-file'>Load pedigree
+                              <input type='file' accept='.json,.ped' onChange={this.loadPedigree} />
+                           </span>;
 
     if (this.props.focus !== undefined) {
       switch (this.props.focus.level) {
         case PC.FocusLevel.Member:
-          buttons.push(
-            <button key="addSpouse" type="button" className="btn btn-default" onClick={this.addSpouse}>Add spouse</button>
-          );
+          buttons.addSpouse = <Button key='addSpouse'
+                                      onClick={this.addSpouse}>Add spouse</Button>;
           break;
 
         case PC.FocusLevel.Nest:
-          buttons.push(
-            <button key="addChild" type="button" className="btn btn-default" onClick={this.addChild}>Add child</button>
-          );
+
+          buttons.addChild = <DropdownButton title='Add child'>
+                              <MenuItem eventKey='1' onClick={this.addSon}>Male</MenuItem>
+                              <MenuItem eventKey='2' onClick={this.addDaughter}>Female</MenuItem>
+                              <MenuItem eventKey='2' onClick={this.addChild}>Unknown</MenuItem>
+                            </DropdownButton>;
           break;
       }
     }
 
     return (
-      <div id="svg-controls">
-        <div className="btn-group" role="group" aria-label="..." >
+      <div id='svg-controls'>
+        <div className='btn-group' role='group' aria-label='...' >
           {buttons}
         </div>
       </div>

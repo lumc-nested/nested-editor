@@ -24,9 +24,10 @@ var AppActions = {
     });
   },
 
-  addChild: function() {
+  addChild: function(gender) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_CHILD
+      actionType: AppConstants.ADD_CHILD,
+      gender: gender
     });
   },
 

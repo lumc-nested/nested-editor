@@ -63,13 +63,14 @@ var _addSpouse = function() {
   }
 };
 
-var _addChild = function() {
+var _addChild = function(gender) {
 
   // TODO: how to arrange children order?
 
   if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Nest) {
     var child = {
-      _id: _newId()
+      _id: _newId(),
+      gender: gender
     };
 
     var nest = _.find(_pedigree.nests, {"father": _focus.key.father, "mother": _focus.key.mother});
@@ -136,10 +137,10 @@ AppDispatcher.register(function(payload){
       _updateMember(action.data);
       break;
     case AppConstants.ADD_CHILD:
-      _addChild();
+      _addChild(action.gender);
       break;
     default:
-      console.log("Not implemented yet");
+      console.log('Not implemented yet');
   }
 
   AppStore.emitChange();
