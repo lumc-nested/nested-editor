@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var Constants = require('../constants/PedigreeConstants.js');
 
 var GenerationEngine = function(graph) {
   this.graph = graph;
@@ -20,6 +19,7 @@ var _addMemberToGeneration = function(generations, index, member) {
 
 var _determineChildrenGenerations = function(children, generationIndex, generations) {
   _.each(children, function(child) {
+    var mateNest;
     if (!child.hasMates()) {
       _addMemberToGeneration(generations, generationIndex, child);
     } else {
@@ -28,7 +28,7 @@ var _determineChildrenGenerations = function(children, generationIndex, generati
         // except:
         // 1. child is the oldest male sibling and his mate has parents.
         // 2. child is the youngest female sibling and her mate has parents.
-        var mateNest = child.matingNests[0];
+        mateNest = child.matingNests[0];
 
         if (mateNest.shouldFlip()) {
           _addMemberToGeneration(generations, generationIndex, mateNest.mother);
@@ -82,6 +82,7 @@ GenerationEngine.prototype = {
   },
 
   determineGenerations: function() {
+    var generationIndex;
     var generations = [];
     var startingNest = this.findBridgeNests();
 
@@ -90,7 +91,7 @@ GenerationEngine.prototype = {
       startingNest = this.findRootNest();
     }
 
-    var generationIndex = _determinParentsGenerations(startingNest, 0, generations);
+    generationIndex = _determinParentsGenerations(startingNest, 0, generations);
     _determineChildrenGenerations(startingNest.children(), generationIndex + 1, generations);
 
     console.log(generations);

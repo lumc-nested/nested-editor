@@ -2,11 +2,14 @@
 
 var _ = require('lodash');
 
-var Member = function(data) {
+var Member, Individual, Group;
+
+
+Member = function(data) {
   this._id = data._id;
   this.siblings = [];
   this.parentNest = undefined;
-  this.data = _.omit(data, "_id");
+  this.data = _.omit(data, '_id');
 };
 
 Member.prototype = {
@@ -38,7 +41,7 @@ Member.prototype = {
 };
 
 
-var Individual = function(data) {
+Individual = function(data) {
   Member.call(this, data);
   this.children = [];
   this.matingNests = [];
@@ -62,12 +65,11 @@ Individual.prototype = _.create(Member.prototype, {
 
   hasChildren: function() {
     return _.flatten(this.children).length > 0;
-  },
-
+  }
 });
 
 
-var Group = function(data) {
+Group = function(data) {
   Member.call(this, data);
 };
 
@@ -87,6 +89,6 @@ Group.prototype = _.create(Member.prototype, {
 
 
 module.exports = {
-  "Individual": Individual,
-  "Group": Group
+  'Individual': Individual,
+  'Group': Group
 };

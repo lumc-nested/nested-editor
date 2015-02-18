@@ -4,4 +4,4 @@ var parse = function(text) {
   return JSON.parse(text);
 };
 
-module.exports = {"parse": parse};
+module.exports = {'parse': parse};

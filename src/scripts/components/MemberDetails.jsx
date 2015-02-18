@@ -17,12 +17,12 @@ var MemberDetails = React.createClass({
 
     return {
       schema: _.assign(individualSchema, {
-        "properties": _.omit(individualSchema.properties, "_id")
+        'properties': _.omit(individualSchema.properties, '_id')
       })
     };
   },
 
-  onFormSubmit: function(data, value, errors) {
+  onFormSubmit: function(data) {
     // Todo: Empty form fields are not in data and hence are not removed or
     //   deleted from the selected member.
     AppActions.updateMember(data);

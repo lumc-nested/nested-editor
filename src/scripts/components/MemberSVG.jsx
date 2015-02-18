@@ -4,17 +4,18 @@ var React = require('react');
 var AppActions = require('../actions/AppActions.js');
 var PC = require('../constants/PedigreeConstants.js');
 
-var arrowPath = "M" + (-PC.MemberSize / 2 - 10) + "," + (PC.MemberSize / 2 + 10) + "l9,-9l-3,6l-3,-3l6,-3";
+var arrowPath = 'M' + (-PC.MemberSize / 2 - 10) + ',' + (PC.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
 var size = PC.MemberSize;
 var radius = PC.MemberSize / 2;
 var paddedRadius = radius + PC.MemberPadding;
-var diamondPoints = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(",");
+var diamondPoints = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(',');
+
 
 var MemberSVG = React.createClass({
 
   render: function() {
 
-    var shape, death, arrow, p;
+    var shape, death, arrow, p, transform;
 
     var member = this.props.data;
 
@@ -31,24 +32,24 @@ var MemberSVG = React.createClass({
       arrow = <path className="arrow" d={arrowPath} />;
     }
 
-    var transform = "translate(" + member.location.x + "," + member.location.y + ")";
+    transform = 'translate(' + member.location.x + ',' + member.location.y + ')';
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
     switch (member.gender()) {
-      case 1:
-        // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
-        break;
-      case 2:
-        shape = <circle r={radius} />;
-        break;
-      default:
-        shape = <polygon points={diamondPoints} />;
+    case 1:
+      // the rectangle looks bigger than the other two. shrink it a bit.
+      shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
+      break;
+    case 2:
+      shape = <circle r={radius} />;
+      break;
+    default:
+      shape = <polygon points={diamondPoints} />;
     }
 
     return (
-      <g transform={transform} onClick={this.handleClick} className={this.props.focused ? "focus" : ""} >
+      <g transform={transform} onClick={this.handleClick} className={this.props.focused ? 'focus' : ''} >
         {shape}
         {death}
         {arrow}
@@ -60,8 +61,8 @@ var MemberSVG = React.createClass({
   handleClick: function(e) {
     e.stopPropagation();
     AppActions.changeFocus({
-      "level": PC.FocusLevel.Member,
-      "key": this.props.data._id
+      'level': PC.FocusLevel.Member,
+      'key': this.props.data._id
     });
   }
 });
