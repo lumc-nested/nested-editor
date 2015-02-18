@@ -48,7 +48,12 @@ module.exports = {
     }],
 
     loaders: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader?optional=selfContained'
+    }, {
       test: /\.jsx$/,
+      exclude: /node_modules/,
       loader: 'jsx-loader?harmony'
     }, {
       test: /\.css$/,

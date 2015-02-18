@@ -44,7 +44,12 @@ module.exports = {
     }],
 
     loaders: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader?optional=selfContained'
+    }, {
       test: /\.jsx$/,
+      exclude: /node_modules/,
       loader: 'react-hot!jsx-loader?harmony'
     }, {
       test: /\.less/,
