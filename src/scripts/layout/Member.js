@@ -2,7 +2,9 @@
 
 var _ = require('lodash');
 
-var Member, Individual, Group;
+var Member;
+var Individual;
+var Group;
 
 
 Member = function(data) {

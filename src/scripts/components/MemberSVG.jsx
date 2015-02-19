@@ -14,8 +14,11 @@ var diamondPoints = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(',');
 var MemberSVG = React.createClass({
 
   render: function() {
-
-    var shape, death, arrow, p, transform;
+    var shape;
+    var death;
+    var arrow;
+    var p;
+    var transform;
 
     var member = this.props.data;
 
@@ -37,15 +40,15 @@ var MemberSVG = React.createClass({
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
     switch (member.gender()) {
-    case 1:
-      // the rectangle looks bigger than the other two. shrink it a bit.
-      shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
-      break;
-    case 2:
-      shape = <circle r={radius} />;
-      break;
-    default:
-      shape = <polygon points={diamondPoints} />;
+      case 1:
+        // the rectangle looks bigger than the other two. shrink it a bit.
+        shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
+        break;
+      case 2:
+        shape = <circle r={radius} />;
+        break;
+      default:
+        shape = <polygon points={diamondPoints} />;
     }
 
     return (

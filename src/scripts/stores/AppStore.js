@@ -14,7 +14,8 @@ var CHANGE_EVENT = 'change';
 
 
 var _counter = 0;
-var _pedigree, _focus;
+var _pedigree;
+var _focus;
 
 var _newId = function() {
   _counter += 1;
@@ -28,7 +29,9 @@ var _loadPedigree = function(pedigree) {
 };
 
 var _addSpouse = function() {
-  var member, spouse, nest;
+  var member;
+  var spouse;
+  var nest;
 
   if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
     member = _.find(_pedigree.members, {'_id': _focus.key});
@@ -37,19 +40,19 @@ var _addSpouse = function() {
     };
 
     switch (member.gender) {
-    case PedigreeConstants.Gender.Male:
-      spouse.gender = PedigreeConstants.Gender.Female;
-      nest = {'father': member._id, 'mother': spouse._id};
-      break;
-    case PedigreeConstants.Gender.Female:
-      spouse.gender = PedigreeConstants.Gender.Male;
-      nest = {'father': spouse._id, 'mother': member._id};
-      break;
-    default:
-    case PedigreeConstants.Gender.Unknown:
-      spouse.gender = PedigreeConstants.Gender.Unknown;
-      nest = {'father': member._id, 'mother': spouse._id};
-      break;
+      case PedigreeConstants.Gender.Male:
+        spouse.gender = PedigreeConstants.Gender.Female;
+        nest = {'father': member._id, 'mother': spouse._id};
+        break;
+      case PedigreeConstants.Gender.Female:
+        spouse.gender = PedigreeConstants.Gender.Male;
+        nest = {'father': spouse._id, 'mother': member._id};
+        break;
+      default:
+      case PedigreeConstants.Gender.Unknown:
+        spouse.gender = PedigreeConstants.Gender.Unknown;
+        nest = {'father': member._id, 'mother': spouse._id};
+        break;
     }
 
     nest.pregnancies = [];
@@ -127,23 +130,23 @@ AppDispatcher.register(function(payload) {
   console.log('STORE DISPATCHER REGISTER', action);
 
   switch (action.actionType) {
-  case AppConstants.LOAD_PEDIGREE:
-    _loadPedigree(action.pedigree);
-    break;
-  case AppConstants.CHANGE_FOCUS:
-    _focus = action.focus;
-    break;
-  case AppConstants.ADD_SPOUSE:
-    _addSpouse();
-    break;
-  case AppConstants.UPDATE_MEMBER:
-    _updateMember(action.data);
-    break;
-  case AppConstants.ADD_CHILD:
-    _addChild(action.gender);
-    break;
-  default:
-    console.log('Not implemented yet');
+    case AppConstants.LOAD_PEDIGREE:
+      _loadPedigree(action.pedigree);
+      break;
+    case AppConstants.CHANGE_FOCUS:
+      _focus = action.focus;
+      break;
+    case AppConstants.ADD_SPOUSE:
+      _addSpouse();
+      break;
+    case AppConstants.UPDATE_MEMBER:
+      _updateMember(action.data);
+      break;
+    case AppConstants.ADD_CHILD:
+      _addChild(action.gender);
+      break;
+    default:
+      console.log('Not implemented yet');
   }
 
   AppStore.emitChange();
