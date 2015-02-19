@@ -5,7 +5,7 @@
 'use strict';
 
 var React = require('react');
-
+var ReactBootstrap = require('react-bootstrap');
 
 var AppStore = require('../stores/AppStore');
 var PC = require('../constants/PedigreeConstants');
@@ -14,6 +14,9 @@ var MemberDetails = require('./MemberDetails.jsx');
 var Pedigree = require('./PedigreeSVG.jsx');
 var Controls = require('./SVGControls.jsx');
 
+var Grid = ReactBootstrap.Grid;
+var Row = ReactBootstrap.Row;
+var Col = ReactBootstrap.Col;
 
 var getAppState = function() {
   return AppStore.getData();
@@ -50,21 +53,21 @@ var PedigreeApp = React.createClass({
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      <Grid>
+        <Row>
+          <Col md="12">
             <Controls focus={focus} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8">
+          </Col>
+        </Row>
+        <Row>
+          <Col md="8">
             <Pedigree pedigree={this.state.pedigree} focus={focus} />
-          </div>
-          <div className='col-md-4'>
+          </Col>
+          <Col md="4">
             <MemberDetails selected={selectedMember} />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 });

@@ -10,6 +10,7 @@ var PC = require('../constants/PedigreeConstants');
 var DropdownButton = ReactBootstrap.DropdownButton;
 var MenuItem = ReactBootstrap.MenuItem;
 var Button = ReactBootstrap.Button;
+var ButtonGroup = ReactBootstrap.ButtonGroup;
 
 
 var Controls = React.createClass({
@@ -58,33 +59,33 @@ var Controls = React.createClass({
     //   Google Chrome and Internet Explorer 10+.
     var buttons = {};
 
-    buttons.loadPedigree = <span key='loadPedigree' className='btn btn-default btn-file'>Load pedigree
-                              <input type='file' accept='.json,.ped' onChange={this.loadPedigree} />
-                           </span>;
+    buttons.loadPedigree = <Button className="btn-file">
+                              Load pedigree
+                              <input type="file" accept=".json,.ped" onChange={this.loadPedigree} />
+                           </Button>;
 
     if (this.props.focus !== undefined) {
       switch (this.props.focus.get('level')) {
         case PC.FocusLevel.Member:
-          buttons.addSpouse = <Button key='addSpouse'
-                                      onClick={this.addSpouse}>Add spouse</Button>;
+          buttons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
           break;
 
         case PC.FocusLevel.Nest:
 
-          buttons.addChild = <DropdownButton title='Add child'>
-                              <MenuItem eventKey='1' onClick={this.addSon}>Male</MenuItem>
-                              <MenuItem eventKey='2' onClick={this.addDaughter}>Female</MenuItem>
-                              <MenuItem eventKey='2' onClick={this.addChild}>Unknown</MenuItem>
+          buttons.addChild = <DropdownButton title="Add child">
+                              <MenuItem eventKey="1" onClick={this.addSon}>Male</MenuItem>
+                              <MenuItem eventKey="2" onClick={this.addDaughter}>Female</MenuItem>
+                              <MenuItem eventKey="3" onClick={this.addChild}>Unknown</MenuItem>
                             </DropdownButton>;
           break;
       }
     }
 
     return (
-      <div id='svg-controls'>
-        <div className='btn-group' role='group' aria-label='...' >
+      <div id="svg-controls">
+        <ButtonGroup>
           {buttons}
-        </div>
+        </ButtonGroup>
       </div>
     );
   }
