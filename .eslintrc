@@ -1,0 +1,42 @@
+# ESLint has many default rules that are not listed in this file
+# Documentation for all ESLint rules can be found at http://eslint.org/docs/rules/
+env:
+  browser: true
+  node: true
+rules:
+  no-reserved-keys: 1   # ok in es5, dangerous in es3
+  vars-on-top: 1
+  eqeqeq: 1
+  radix: 1
+  no-eq-null: 2
+  no-self-compare: 2
+  no-void: 2
+  no-new-object: 2
+  no-reserved-keys: 1
+  no-array-constructor: 1
+  no-inner-declarations: [1, 'both']
+  no-shadow-restricted-names: 1
+  brace-style: 1
+  semi: [1, 'always']
+  camelcase: 2
+  new-cap: 1
+  comma-style: 2
+  no-comma-dangle: 1
+  consistent-this: [2, 'self']
+  no-underscore-dangle: 0
+  quotes: [2, 'single']
+  curly: 1
+  indent: [2, 2, {indentSwitchCase: true}]
+  no-mixed-spaces-and-tabs: 2
+  space-after-keywords: 2
+  space-before-blocks: 2
+  space-in-brackets: 2
+  space-in-parens: 2
+  spaced-line-comment: 2
+  eol-last: 1
+  max-depth: [1, 4]
+  max-len: [1, 120]
+  max-params: [1, 4]
+ecmaFeatures:
+  arrowFunctions: true
+  jsx: true

@@ -3,19 +3,19 @@
 var _ = require('lodash');
 
 var Nest = function(father, mother, pregnancies, consanguenous) {
+  // private
+  var children;
+
   this.father = father;
   this.mother = mother;
   this.pregnancies = pregnancies;
   this.consanguenous = consanguenous;
   this.flip = false; // by default all nests show father to the left of mother
 
-  // private
-  var children;
-
   // function to access the private children property.
   this.children = function() {
     if (children === undefined) {
-      children = _.flatten(_.pluck(this.pregnancies, "zygotes"));
+      children = _.flatten(_.pluck(this.pregnancies, 'zygotes'));
     }
     return children;
   };
@@ -45,7 +45,9 @@ Nest.prototype = {
       child.parentNest = this;
 
       // link to slibings.
-      child.siblings = _.where(children, function(c) { return c._id !== child._id; });
+      child.siblings = _.where(children, function(c) {
+        return c._id !== child._id;
+      });
     }, this);
   },
 

@@ -8,9 +8,7 @@ var LayoutEngine = require('../layout/Engine.js');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
 
-var _svgID ="pedigree";
-
-require('../../styles/pedigreeSVG.less');
+var _svgID = 'pedigree';
 
 
 var PedigreeSVG = React.createClass({
@@ -18,22 +16,24 @@ var PedigreeSVG = React.createClass({
   getInitialState: function() {
 
     var layout = {};
+    var engine;
 
     if (this.props.pedigree !== undefined) {
-      var engine = new LayoutEngine(this.props.pedigree);
+      engine = new LayoutEngine(this.props.pedigree);
       layout = engine.arrange();
     }
 
     return {
-      "layout": layout
+      'layout': layout
     };
   },
 
   componentWillReceiveProps: function(nextProps) {
     // require immutable objects.
+    var engine;
     if (this.props.pedigree !== nextProps.pedigree) {
-      console.log("redo layout");
-      var engine = new LayoutEngine(nextProps.pedigree);
+      engine = new LayoutEngine(nextProps.pedigree);
+      console.log('redo layout');
 
       this.setState({
         layout: engine.arrange()
@@ -43,21 +43,27 @@ var PedigreeSVG = React.createClass({
 
 
   render: function() {
+    // TODO: get the dimentions from html
+    var windowWidth = 750;
+    var focus = this.props.focus;
+    var focused;
+    var members;
+    var nests;
+    var xs;
+    var leftmost;
+    var rightmost;
+    var shift;
+    var translate;
+
     if (this.props.pedigree === undefined) {
       return (
         <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick} />
       );
     }
 
-    // TODO: get the dimentions from html
-    var windowWidth = 750;
-    var windowHeight = 650;
-    var focus = this.props.focus;
-    var focused;
-
     // is it focused on a member?
     focused = focus !== undefined && focus.level === PC.FocusLevel.Member;
-    var members = _.map(this.state.layout.members, function(member) {
+    members = _.map(this.state.layout.members, function(member) {
       return <MemberSVG data={member}
                         focused={focused && focus.key === member._id}
                         key={'member-' + member._id}/>;
@@ -65,17 +71,19 @@ var PedigreeSVG = React.createClass({
 
     // is it focused on a nest?
     focused = focus !== undefined && focus.level === PC.FocusLevel.Nest;
-    var nests = _.map(this.state.layout.nests, function(nest, index) {
+    nests = _.map(this.state.layout.nests, function(nest, index) {
       return <NestSVG data={nest}
                       focused={focused && focus.key.father === nest.father._id && focus.key.mother === nest.mother._id}
                       key={'nest-' + index}/>;
     });
 
-    var xs = _.pluck(this.state.layout.members, function(m) { return m.location.x; });
-    var leftmost = _.min(xs);
-    var rightmost = _.max(xs);
-    var shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
-    var translate = "translate(" + shift + ",50)";
+    xs = _.pluck(this.state.layout.members, function(m) {
+      return m.location.x;
+    });
+    leftmost = _.min(xs);
+    rightmost = _.max(xs);
+    shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
+    translate = 'translate(' + shift + ',50)';
 
     return (
       <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>
@@ -91,5 +99,9 @@ var PedigreeSVG = React.createClass({
     AppActions.changeFocus();
   }
 });
+
+
+require('../../styles/pedigreeSVG.less');
+
 
 module.exports = PedigreeSVG;

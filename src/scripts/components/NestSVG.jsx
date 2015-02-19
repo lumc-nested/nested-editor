@@ -23,16 +23,16 @@ var NestSVG = React.createClass({
       var diffX = d[2] - d[0],
           diffY = d[3] - d[1];
 
-      var pathString = "M" + d[0] + "," + d[1] +    // start position
-                       "l" + 0 + "," + diffY / 2 +  // line of desent
-                       "l" + diffX + "," + 0 +      // sibship line
-                       "l" + 0 + "," + diffY / 2;   // individual's line
+      var pathString = 'M' + d[0] + ',' + d[1] +    // start position
+                       'l' + 0 + ',' + diffY / 2 +  // line of desent
+                       'l' + diffX + ',' + 0 +      // sibship line
+                       'l' + 0 + ',' + diffY / 2;   // individual's line
 
       offsprings['offspring-' + child.sibIndex] = <path d={pathString} />;
     });
 
     return (
-      <g onClick={this.handleClick} className={this.props.focused ? "focus" : ""} >
+      <g onClick={this.handleClick} className={this.props.focused ? 'focus' : ''} >
         {mating}
         {offsprings}
       </g>

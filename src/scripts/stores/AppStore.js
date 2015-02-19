@@ -10,11 +10,12 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 // TODO: at some point this shoudl be replaced by a call to backend sever.
-//var _data = require('../../../examples/example.json');
+// var _data = require('../../../examples/example.json');
 
 
 var _counter = 0;
-var _pedigree, _focus;
+var _pedigree;
+var _focus;
 
 var _newId = function() {
   _counter += 1;
@@ -24,31 +25,33 @@ var _newId = function() {
 var _loadPedigree = function(pedigree) {
   _pedigree = pedigree;
   _focus = undefined;
-  _counter = _.max(_.pluck(pedigree.members, "_id"));
+  _counter = _.max(_.pluck(pedigree.members, '_id'));
 };
 
 var _addSpouse = function() {
-  if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
-    var member, spouse, nest;
+  var member;
+  var spouse;
+  var nest;
 
-    member =  _.find(_pedigree.members, {"_id": _focus.key});
+  if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
+    member = _.find(_pedigree.members, {'_id': _focus.key});
     spouse = {
       _id: _newId()
     };
 
-    switch(member.gender) {
+    switch (member.gender) {
       case PedigreeConstants.Gender.Male:
         spouse.gender = PedigreeConstants.Gender.Female;
-        nest = {"father": member._id, "mother": spouse._id};
+        nest = {'father': member._id, 'mother': spouse._id};
         break;
       case PedigreeConstants.Gender.Female:
         spouse.gender = PedigreeConstants.Gender.Male;
-        nest = {"father": spouse._id, "mother": member._id};
+        nest = {'father': spouse._id, 'mother': member._id};
         break;
       default:
       case PedigreeConstants.Gender.Unknown:
         spouse.gender = PedigreeConstants.Gender.Unknown;
-        nest = {"father": member._id, "mother": spouse._id};
+        nest = {'father': member._id, 'mother': spouse._id};
         break;
     }
 
@@ -64,18 +67,19 @@ var _addSpouse = function() {
 };
 
 var _addChild = function(gender) {
-
   // TODO: how to arrange children order?
+  var child;
+  var nest;
 
   if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Nest) {
-    var child = {
+    child = {
       _id: _newId(),
       gender: gender
     };
 
-    var nest = _.find(_pedigree.nests, {"father": _focus.key.father, "mother": _focus.key.mother});
+    nest = _.find(_pedigree.nests, {'father': _focus.key.father, 'mother': _focus.key.mother});
     nest.pregnancies.push({
-      "zygotes" : [child._id]
+      'zygotes': [child._id]
     });
 
     _pedigree.members.push(child);
@@ -87,8 +91,10 @@ var _addChild = function(gender) {
 };
 
 var _updateMember = function(data) {
+  var member;
+
   if (_focus !== undefined && _focus.level === PedigreeConstants.FocusLevel.Member) {
-    var member = _.find(_pedigree.members, {"_id": _focus.key});
+    member = _.find(_pedigree.members, {'_id': _focus.key});
     _.assign(member, data);
   }
 
@@ -99,31 +105,31 @@ var _updateMember = function(data) {
 
 
 var AppStore = _.extend(EventEmitter.prototype, {
-  getData: function(){
+  getData: function() {
     return {
-      "pedigree": _pedigree,
-      "focus": _focus
+      'pedigree': _pedigree,
+      'focus': _focus
     };
   },
 
-  emitChange: function(){
+  emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
 
-  addChangeListener: function(callback){
+  addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  removeChangeListener: function(callback){
+  removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
-AppDispatcher.register(function(payload){
+AppDispatcher.register(function(payload) {
   var action = payload.action;
   console.log('STORE DISPATCHER REGISTER', action);
 
-  switch(action.actionType) {
+  switch (action.actionType) {
     case AppConstants.LOAD_PEDIGREE:
       _loadPedigree(action.pedigree);
       break;
@@ -146,7 +152,6 @@ AppDispatcher.register(function(payload){
   AppStore.emitChange();
 
 });
-
 
 
 module.exports = AppStore;

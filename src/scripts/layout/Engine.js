@@ -5,9 +5,6 @@ var PC = require('../constants/PedigreeConstants.js');
 var Pedigree = require('./Pedigree.js');
 var GenerationEngine = require('./GenerationEngine.js');
 
-var Female = PC.Gender.Female;
-var Male = PC.Gender.Male;
-var Unknown = PC.Gender.Unknown;
 
 var Engine = function(data) {
   this.pedigree = new Pedigree(data);
@@ -15,7 +12,7 @@ var Engine = function(data) {
 
 Engine.prototype = {
 
-  arrange: function(){
+  arrange: function() {
     var ge = new GenerationEngine(this.pedigree);
     var generations = ge.determineGenerations();
     var left = 0;
@@ -35,25 +32,28 @@ Engine.prototype = {
   },
 
   arrangeNest: function(nest, generationIndex, center) {
+    var children = nest.children();
+    var numberOfSiblings = children.length;
+
+    var left;
+    var orderedChildrenWithMates;
+    var nestWidth;
+    var childrenWidth;
+    var flip;
 
     nest.location = {
       x: center,
       y: generationIndex * PC.GenerationDistance
     };
 
-    var children = nest.children();
-    var numberOfSiblings = children.length;
-
-    var left;
-
     if (numberOfSiblings > 0) {
       // first order the children along with their nests.
-      var orderedChildrenWithMates = this.getChildrenWithNests(nest);
+      orderedChildrenWithMates = this.getChildrenWithNests(nest);
 
-      var nestWidth = (this.getNestWidth(nest) - 1) * PC.MemberDistance;
+      nestWidth = (this.getNestWidth(nest) - 1) * PC.MemberDistance;
 
       left = nest.location.x - nestWidth / 2;
-      _.each(orderedChildrenWithMates, function(member, index) {
+      _.each(orderedChildrenWithMates, function(member) {
         if (member.location === undefined) {
           // this member has not been arranged from his/her nests.
           left = this.arrangeMember(member, generationIndex + 1, left);
@@ -65,12 +65,13 @@ Engine.prototype = {
 
       // recenter parents based on children's width
       // (ie., excluding children's mates on the edges.)
-      var childrenWidth = children[numberOfSiblings - 1].location.x - children[0].location.x;
+      childrenWidth = children[numberOfSiblings - 1].location.x - children[0].location.x;
 
       nest.location.x = children[0].location.x + childrenWidth / 2;
     }
 
-    var flip = nest.shouldFlip();
+    flip = nest.shouldFlip();
+
     if (nest.father.location === undefined) {
       nest.father.location = {
         x: flip ? nest.location.x + PC.MemberDistance / 2 : nest.location.x - PC.MemberDistance / 2,
@@ -89,6 +90,8 @@ Engine.prototype = {
   },
 
   arrangeMember: function(member, generationIndex, leftEdge) {
+    var currentLeft;
+
     // simple collision detection.
     // TODO: this assumes that the order defined by GenerationEngine is correct.
     if (member.left !== undefined &&
@@ -98,7 +101,7 @@ Engine.prototype = {
     }
 
     if (member.hasMates()) {
-      var currentLeft = leftEdge;
+      currentLeft = leftEdge;
       _.each(member.matingNests, function(nest) {
         currentLeft = this.arrangeNest(nest, generationIndex, currentLeft + PC.MemberDistance / 2);
       }, this);
@@ -117,22 +120,26 @@ Engine.prototype = {
 
   // return grid units
   getNestWidth: function(nest) {
+    var width;
+
     if (nest.children().length === 0) {
       return 2; // width of the parents
     } else {
-      var width = 0;
+      width = 0;
       _.each(nest.children(), function(child) {
         width += this.getMemberWidth(child);
       }, this);
 
-      //return _.max([2, width]); // at least width of two for the parents.
+      // return _.max([2, width]); // at least width of two for the parents.
       return width;
     }
   },
 
   getMemberWidth: function(member) {
+    var width;
+
     if (member.hasMates()) {
-      var width = 0;
+      width = 0;
       _.each(member.matingNests, function(nest) {
         width += this.getNestWidth(nest);
       }, this);
@@ -145,13 +152,15 @@ Engine.prototype = {
   },
 
   getChildrenWithNests: function(nest) {
+    var matingNest;
     var orderedChildrenWithMates = [];
+
     _.each(nest.children(), function(child) {
       if (!child.hasMates()) {
         // simple case
         orderedChildrenWithMates.push(child);
       } else if (child.matingNests.length === 1) {
-        var matingNest = child.matingNests[0];
+        matingNest = child.matingNests[0];
 
         if (matingNest.shouldFlip()) {
           orderedChildrenWithMates.push(matingNest.mother);
@@ -162,7 +171,7 @@ Engine.prototype = {
         }
 
       } else {
-        console.log("TODO: handle individual with more that one nest.");
+        console.log('TODO: handle individual with more that one nest.');
       }
     });
 

@@ -11,7 +11,7 @@ var AppActions = {
     });
   },
 
-  changeFocus: function(focus){
+  changeFocus: function(focus) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.CHANGE_FOCUS,
       focus: focus

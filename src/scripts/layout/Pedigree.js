@@ -30,13 +30,15 @@ var Pedigree = function(data) {
 Pedigree.prototype = {
 
   init: function() {
+    var nests;
+
     var data = this.data;
 
     var members = {};
 
     // Create member objects.
     _.each(data.members, function(memberProps) {
-      if (_.has(memberProps, "numberOfIndividuals")) {
+      if (_.has(memberProps, 'numberOfIndividuals')) {
         members[memberProps._id] = new Group(memberProps);
       } else {
         members[memberProps._id] = new Individual(memberProps);
@@ -45,9 +47,8 @@ Pedigree.prototype = {
 
     this.members = members;
 
-
     // Create nest objects.
-    var nests = _.map(data.nests, function(nestProps) {
+    nests = _.map(data.nests, function(nestProps) {
       var father = members[nestProps.father];
       var mother = members[nestProps.mother];
 

@@ -1,18 +1,14 @@
 'use strict';
 
 var React = require('react');
-
-
-// Export React so the devtools can find it
-(window !== window.top ? window.top : window).React = React;
+var PedigreeApp = require('./components/PedigreeApp.jsx');
 
 // CSS
 require('../styles/normalize.css');
 require('../styles/main.less');
 
-
-
-var PedigreeApp = require('./components/PedigreeApp.jsx');
+// Export React so the devtools can find it
+(window !== window.top ? window.top : window).React = React;
 
 React.render(<PedigreeApp />, document.getElementById('content')); // jshint ignore:line
 

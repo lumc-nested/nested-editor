@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var parser = require("./ped.pegjs");
+var parser = require('./ped.pegjs');
 
 var parse = function(text) {
   var lastId = 0;
@@ -14,7 +14,7 @@ var parse = function(text) {
   var document = parser.parse(text);
 
   var pedMembers = _(document).filter(function(entry) {
-    return entry[0] === "member";
+    return entry[0] === 'member';
   }).map(function(entry) {
     entry[1].id = newId();
     return entry[1];
@@ -22,9 +22,9 @@ var parse = function(text) {
 
   var members = _.map(pedMembers, function(member) {
     return {
-      "_id": member.id,
-      "externalID": member.member,
-      "gender": member.gender
+      '_id': member.id,
+      'externalID': member.member,
+      'gender': member.gender
     };
   });
 
@@ -36,31 +36,32 @@ var parse = function(text) {
   var nests = [];
 
   _.each(pedMembers, function(member) {
-    var father = _.find(pedMembers, {"family": member.family,
-                                     "member": member.father});
-    var mother = _.find(pedMembers, {"family": member.family,
-                                     "member": member.mother});
+    var nest, pregnancy;
+    var father = _.find(pedMembers, {'family': member.family,
+                                     'member': member.father});
+    var mother = _.find(pedMembers, {'family': member.family,
+                                     'member': member.mother});
 
     // Todo: What should we do when exactly one of the parents is defined?
     if (father === undefined || mother === undefined) {
       return;
     }
 
-    var nest = _.find(nests, {"father": father.id, "mother": mother.id});
-    var pregnancy = {"zygotes": [member.id]};
+    nest = _.find(nests, {'father': father.id, 'mother': mother.id});
+    pregnancy = {'zygotes': [member.id]};
 
     if (nest === undefined) {
       nests.push({
-        "father": father.id,
-        "mother": mother.id,
-        "pregnancies": [pregnancy]
+        'father': father.id,
+        'mother': mother.id,
+        'pregnancies': [pregnancy]
       });
     } else {
       nest.pregnancies.push(pregnancy);
     }
   });
 
-  return {"members": members, "nests": nests};
+  return {'members': members, 'nests': nests};
 };
 
-module.exports = {"parse": parse};
+module.exports = {'parse': parse};
