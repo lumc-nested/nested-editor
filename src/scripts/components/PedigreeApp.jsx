@@ -55,15 +55,15 @@ var PedigreeApp = React.createClass({
     return (
       <Grid>
         <Row>
-          <Col md="12">
+          <Col md={12}>
             <Controls focus={focus} />
           </Col>
         </Row>
         <Row>
-          <Col md="8">
+          <Col md={8}>
             <Pedigree pedigree={this.state.pedigree} focus={focus} />
           </Col>
-          <Col md="4">
+          <Col md={4}>
             <MemberDetails selected={selectedMember} />
           </Col>
         </Row>
