@@ -19,11 +19,7 @@ var _pedigree, _focus, _ids;
 
 // Returns an infinite Immutable.IndexedSeq of strings that are not in ids.
 var _freeIds = function(ids) {
-  return Immutable.Range(1).map(function(number) {
-    return 'id_' + number.toString();
-  }).filterNot(function(id) {
-    return ids.contains(id);
-  });
+  return Immutable.Range(1).map(n => 'id_' + n.toString()).filterNot(id => ids.contains(id));
 };
 
 
@@ -42,9 +38,7 @@ var _loadPedigree = function(pedigree) {
   // Todo: Make both members and nests maps (keys id and father,mother).
   _pedigree = Immutable.fromJS(pedigree);
   _focus = undefined;
-  _ids = _freeIds(_pedigree.get('members').map(function(member) {
-    return member.get('_id');
-  }));
+  _ids = _freeIds(_pedigree.get('members').map(m => m.get('_id')));
 };
 
 var _addSpouse = function() {
@@ -55,9 +49,7 @@ var _addSpouse = function() {
 
   if (_focus !== undefined && _focus.get('level') === PedigreeConstants.FocusLevel.Member) {
     id = _newId();
-    other = _pedigree.get('members').find(function(member) {
-      return member.get('_id') === _focus.get('key');
-    });
+    other = _pedigree.get('members').find(m => m.get('_id') === _focus.get('key'));
     nest = Immutable.Map({
       pregnancies: Immutable.List()
     });
@@ -87,14 +79,10 @@ var _addSpouse = function() {
         break;
     }
 
-    _pedigree = _pedigree.update('members', function(members) {
-      return members.push(Immutable.Map({
-        _id: id,
-        gender: gender
-      }));
-    }).update('nests', function(nests) {
-      return nests.push(nest);
-    });
+    _pedigree = _pedigree.update('members', ms => ms.push(Immutable.Map({
+      _id: id,
+      gender: gender
+    }))).update('nests', ns => ns.push(nest));
 
     // simulating immutable data here to trigger re-layout.
     // TODO: do it with real immutable data.
@@ -116,20 +104,16 @@ var _addChild = function(gender) {
       'zygotes': Immutable.List.of(id)
     });
 
-    _pedigree = _pedigree.update('members', function(members) {
-      return members.push(child);
-    }).update('nests', function(nests) {
-      return nests.map(function(nest) {
-        if (nest.get('father') === _focus.getIn(['key', 'father']) &&
-            nest.get('mother') === _focus.getIn(['key', 'mother'])) {
-          return nest.update('pregnancies', function(pregnancies) {
-            return pregnancies.push(pregnancy);
-          });
+    _pedigree = _pedigree.update('nests', ns => {
+      return ns.map(n => {
+        if (n.get('father') === _focus.getIn(['key', 'father']) &&
+            n.get('mother') === _focus.getIn(['key', 'mother'])) {
+          return n.update('pregnancies', ps => ps.push(pregnancy));
         } else {
-          return nest;
+          return n;
         }
       });
-    });
+    }).update('members', ms => ms.push(child));
 
     // simulating immutable data here to trigger re-layout.
     // TODO: do it with real immutable data.
@@ -139,14 +123,14 @@ var _addChild = function(gender) {
 
 var _updateMember = function(data) {
   if (_focus !== undefined && _focus.get('level') === PedigreeConstants.FocusLevel.Member) {
-    _pedigree = _pedigree.update('members', function(members) {
-      return members.map(function(member) {
-        if (member.get('_id') === _focus.get('key')) {
+    _pedigree = _pedigree.update('members', ms => {
+      return ms.map(m => {
+        if (m.get('_id') === _focus.get('key')) {
           // Todo: Make sure we're not introducing some nested mutable
           //   data here.
-          return member.merge(data);
+          return m.merge(data);
         } else {
-          return member;
+          return m;
         }
       });
     });

@@ -46,9 +46,7 @@ var PedigreeApp = React.createClass({
     if (focus !== undefined &&
         focus.get('level') === PC.FocusLevel.Member &&
         this.state.pedigree) {
-      selectedMember = this.state.pedigree.get('members').find(function(member) {
-        return member.get('_id') === focus.get('key');
-      });
+      selectedMember = this.state.pedigree.get('members').find(m => m.get('_id') === focus.get('key'));
     }
 
     return (
