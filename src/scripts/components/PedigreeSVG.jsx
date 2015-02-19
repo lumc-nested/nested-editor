@@ -14,12 +14,16 @@ var _svgID = 'pedigree';
 var PedigreeSVG = React.createClass({
 
   getInitialState: function() {
-
+    // Todo: Ideally the layout state we get from the LayoutEngine is an
+    // immutable object (or alternatively, we convert it to one). I think it
+    // would be best if our state would only contain layout data, it could
+    // be used for drawing together with the props.pedigree object.
     var layout = {};
     var engine;
 
     if (this.props.pedigree !== undefined) {
-      engine = new LayoutEngine(this.props.pedigree);
+      // Todo: Remove the need for .toJS()
+      engine = new LayoutEngine(this.props.pedigree.toJS());
       layout = engine.arrange();
     }
 
@@ -32,7 +36,8 @@ var PedigreeSVG = React.createClass({
     // require immutable objects.
     var engine;
     if (this.props.pedigree !== nextProps.pedigree) {
-      engine = new LayoutEngine(nextProps.pedigree);
+      // Todo: Remove the need for .toJS()
+      engine = new LayoutEngine(nextProps.pedigree.toJS());
       console.log('redo layout');
 
       this.setState({
@@ -62,18 +67,20 @@ var PedigreeSVG = React.createClass({
     }
 
     // is it focused on a member?
-    focused = focus !== undefined && focus.level === PC.FocusLevel.Member;
+    focused = focus !== undefined && focus.get('level') === PC.FocusLevel.Member;
     members = _.map(this.state.layout.members, function(member) {
       return <MemberSVG data={member}
-                        focused={focused && focus.key === member._id}
+                        focused={focused && focus.get('key') === member._id}
                         key={'member-' + member._id}/>;
     });
 
     // is it focused on a nest?
-    focused = focus !== undefined && focus.level === PC.FocusLevel.Nest;
+    focused = focus !== undefined && focus.get('level') === PC.FocusLevel.Nest;
     nests = _.map(this.state.layout.nests, function(nest, index) {
       return <NestSVG data={nest}
-                      focused={focused && focus.key.father === nest.father._id && focus.key.mother === nest.mother._id}
+                      focused={focused &&
+                               focus.getIn(['key', 'father']) === nest.father._id &&
+                               focus.getIn(['key', 'mother']) === nest.mother._id}
                       key={'nest-' + index}/>;
     });
 
