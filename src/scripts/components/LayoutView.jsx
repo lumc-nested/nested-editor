@@ -11,7 +11,7 @@ var NestSVG = require('./NestSVG');
 var _svgID = 'pedigree';
 
 
-var PedigreeSVG = React.createClass({
+var LayoutView = React.createClass({
 
   getInitialState: function() {
     // Todo: Ideally the layout state we get from the LayoutEngine is an
@@ -108,7 +108,7 @@ var PedigreeSVG = React.createClass({
 });
 
 
-require('../../styles/pedigreeSVG.less');
+require('../../styles/layout.less');
 
 
-module.exports = PedigreeSVG;
+module.exports = LayoutView;

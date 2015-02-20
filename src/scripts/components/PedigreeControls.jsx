@@ -16,7 +16,7 @@ var OverlayTrigger = ReactBootstrap.OverlayTrigger;
 var Icon = require('react-fa');
 
 
-var Controls = React.createClass({
+var PedigreeControls = React.createClass({
   addSpouse: function() {
     AppActions.addSpouse();
   },
@@ -82,25 +82,19 @@ var Controls = React.createClass({
     }
 
     return (
-      <div id="svg-controls">
-        <ButtonToolbar>
-          <ButtonGroup>
-            {buttons.undo}
-            {buttons.redo}
-          </ButtonGroup>
-          <ButtonGroup>
-            {buttons.addSpouse}
-            {buttons.addChild}
-          </ButtonGroup>
-        </ButtonToolbar>
-      </div>
+      <ButtonToolbar>
+        <ButtonGroup>
+          {buttons.undo}
+          {buttons.redo}
+        </ButtonGroup>
+        <ButtonGroup>
+          {buttons.addSpouse}
+          {buttons.addChild}
+        </ButtonGroup>
+      </ButtonToolbar>
     );
   }
 });
 
 
-// CSS
-require('../../styles/svgControls.less');
-
-
-module.exports = Controls;
+module.exports = PedigreeControls;

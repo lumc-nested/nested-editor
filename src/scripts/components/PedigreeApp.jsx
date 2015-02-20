@@ -14,8 +14,9 @@ var PedParser = require('../parsers/PedParser.js');
 var PC = require('../constants/PedigreeConstants');
 
 var MemberDetails = require('./MemberDetails.jsx');
-var Pedigree = require('./PedigreeSVG.jsx');
-var Controls = require('./SVGControls.jsx');
+var PedigreeControls = require('./PedigreeControls.jsx');
+var LayoutView = require('./LayoutView.jsx');
+var TableView = require('./TableView.jsx');
 
 var Grid = ReactBootstrap.Grid;
 var Row = ReactBootstrap.Row;
@@ -23,6 +24,8 @@ var Col = ReactBootstrap.Col;
 var Navbar = ReactBootstrap.Navbar;
 var Nav = ReactBootstrap.Nav;
 var NavItem = ReactBootstrap.NavItem;
+var TabbedArea = ReactBootstrap.TabbedArea;
+var TabPane = ReactBootstrap.TabPane;
 
 var getAppState = function() {
   return AppStore.getData();
@@ -104,8 +107,15 @@ var PedigreeApp = React.createClass({
               <MemberDetails selected={selectedMember} />
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
-              <Controls focus={focus} undoAction={undoAction} redoAction={redoAction} />
-              <Pedigree pedigree={this.state.pedigree} focus={focus} />
+              <PedigreeControls focus={focus} undoAction={undoAction} redoAction={redoAction} />
+              <TabbedArea className="main-area" defaultActiveKey="layoutView" animation={false}>
+                <TabPane eventKey="layoutView" tab="Layout">
+                  <LayoutView pedigree={this.state.pedigree} focus={focus} />
+                </TabPane>
+                <TabPane eventKey="tableView" tab="Table">
+                  <TableView pedigree={this.state.pedigree} focus={focus} />
+                </TabPane>
+              </TabbedArea>
             </Col>
           </Row>
         </Grid>
