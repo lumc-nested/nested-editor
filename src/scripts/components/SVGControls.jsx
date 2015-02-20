@@ -11,6 +11,10 @@ var DropdownButton = ReactBootstrap.DropdownButton;
 var MenuItem = ReactBootstrap.MenuItem;
 var Button = ReactBootstrap.Button;
 var ButtonGroup = ReactBootstrap.ButtonGroup;
+var Tooltip = ReactBootstrap.Tooltip;
+var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+
+var Icon = require('react-fa');
 
 
 var Controls = React.createClass({
@@ -54,10 +58,37 @@ var Controls = React.createClass({
     AppActions.addChild(PC.Gender.Female);
   },
 
+  undo: function() {
+    AppActions.undo();
+  },
+
+  redo: function() {
+    AppActions.redo();
+  },
+
   render: function() {
     // Note: The `accept` attribute with file extensions only works in
     //   Google Chrome and Internet Explorer 10+.
+    var tooltip;
     var buttons = {};
+
+    if (this.props.undoAction !== undefined) {
+      tooltip = <Tooltip>Undo <strong>{this.props.undoAction}</strong></Tooltip>;
+      buttons.undo = <OverlayTrigger placement="bottom" overlay={tooltip}>
+                       <Button key="undo" onClick={this.undo}><Icon name="undo" /></Button>
+                     </OverlayTrigger>;
+    } else {
+      buttons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
+    }
+
+    if (this.props.redoAction !== undefined) {
+      tooltip = <Tooltip>Redo <strong>{this.props.redoAction}</strong></Tooltip>;
+      buttons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
+                       <Button key="redo" onClick={this.redo}><Icon name="repeat" /></Button>
+                     </OverlayTrigger>;
+    } else {
+      buttons.redo = <Button key="redo" disabled><Icon name="repeat" /></Button>;
+    }
 
     buttons.loadPedigree = <Button className="btn-file">
                               Load pedigree
@@ -71,7 +102,6 @@ var Controls = React.createClass({
           break;
 
         case PC.FocusLevel.Nest:
-
           buttons.addChild = <DropdownButton title="Add child">
                               <MenuItem eventKey="1" onClick={this.addSon}>Male</MenuItem>
                               <MenuItem eventKey="2" onClick={this.addDaughter}>Female</MenuItem>

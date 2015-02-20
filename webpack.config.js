@@ -61,21 +61,15 @@ module.exports = {
       test: /\.pegjs$/,
       loader: 'pegjs-loader'
     }, {
-      test: /\.woff$/,
+      test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: "url-loader?limit=10000&minetype=application/font-woff"
     }, {
-      test: /\.woff2$/,
+      test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: "url-loader?limit=10000&minetype=application/font-woff2"
     }, {
-      test: /\.ttf$/,
+      test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: "file-loader"
-    }, {
-      test: /\.eot$/,
-      loader: "file-loader"
-    }, {
-      test: /\.svg$/,
-      loader: "file-loader" }
-    ]
+    }]
   },
 
   plugins: [
