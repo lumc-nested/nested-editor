@@ -1,18 +1,18 @@
 'use strict';
 
-var React = require('react');
+
 var _ = require('lodash');
-var AppActions = require('../actions/AppActions.js');
-var PC = require('../constants/PedigreeConstants.js');
-var LayoutEngine = require('../layout/Engine.js');
+var Immutable = require('immutable');
+var React = require('react');
+
+var AppActions = require('../actions/AppActions');
+var LayoutEngine = require('../layout/Engine');
+var PedigreeConstants = require('../constants/PedigreeConstants');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
 
-var _svgID = 'pedigree';
-
 
 var LayoutView = React.createClass({
-
   getInitialState: function() {
     // Todo: Ideally the layout state we get from the LayoutEngine is an
     // immutable object (or alternatively, we convert it to one). I think it
@@ -21,31 +21,25 @@ var LayoutView = React.createClass({
     var layout = {};
     var engine;
 
-    if (this.props.pedigree !== undefined) {
-      // Todo: Remove the need for .toJS()
-      engine = new LayoutEngine(this.props.pedigree.toJS());
+    // TODO: Layout engine shouldn't choke on empty pedigree.
+    if (this.props.pedigree.members.size > 0) {
+      engine = new LayoutEngine(this.props.pedigree);
       layout = engine.arrange();
     }
 
-    return {
-      'layout': layout
-    };
+    return {layout};
   },
 
   componentWillReceiveProps: function(nextProps) {
-    // require immutable objects.
     var engine;
-    if (this.props.pedigree !== nextProps.pedigree) {
-      // Todo: Remove the need for .toJS()
-      engine = new LayoutEngine(nextProps.pedigree.toJS());
+
+    if (!this.props.pedigree.equals(nextProps.pedigree)) {
+      engine = new LayoutEngine(nextProps.pedigree);
       console.log('redo layout');
 
-      this.setState({
-        layout: engine.arrange()
-      });
+      this.setState({layout: engine.arrange()});
     }
   },
-
 
   render: function() {
     // TODO: get the dimentions from html
@@ -60,27 +54,19 @@ var LayoutView = React.createClass({
     var shift;
     var translate;
 
-    if (this.props.pedigree === undefined) {
-      return (
-        <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick} />
-      );
-    }
-
-    // is it focused on a member?
-    focused = focus !== undefined && focus.get('level') === PC.FocusLevel.Member;
     members = _.map(this.state.layout.members, function(member) {
+      var isSelected = focus.level === PedigreeConstants.FocusLevel.Member &&
+                       focus.key === member._id;
       return <MemberSVG data={member}
-                        focused={focused && focus.get('key') === member._id}
+                        focused={isSelected}
                         key={'member-' + member._id}/>;
     });
 
-    // is it focused on a nest?
-    focused = focus !== undefined && focus.get('level') === PC.FocusLevel.Nest;
     nests = _.map(this.state.layout.nests, function(nest, index) {
+      var isSelected = focus.level === PedigreeConstants.FocusLevel.Nest &&
+                       focus.key.equals(Immutable.Set.of(nest.father._id, nest.mother._id));
       return <NestSVG data={nest}
-                      focused={focused &&
-                               focus.getIn(['key', 'father']) === nest.father._id &&
-                               focus.getIn(['key', 'mother']) === nest.mother._id}
+                      focused={isSelected}
                       key={'nest-' + index}/>;
     });
 
@@ -90,10 +76,10 @@ var LayoutView = React.createClass({
     leftmost = _.min(xs);
     rightmost = _.max(xs);
     shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
-    translate = 'translate(' + shift + ',50)';
+    translate = `translate(${shift},50)`;
 
     return (
-      <svg id={_svgID} width="100%" height="100%" onClick={this.handleClick}>
+      <svg id="layout" width="100%" height="100%" onClick={this.handleClick}>
         <g transform={translate} key={'pedigree-' + this.state.layout.id}>
           {nests}
           {members}
@@ -103,7 +89,7 @@ var LayoutView = React.createClass({
   },
 
   handleClick: function() {
-    AppActions.changeFocus();
+    AppActions.changeFocus(PedigreeConstants.FocusLevel.Pedigree);
   }
 });
 

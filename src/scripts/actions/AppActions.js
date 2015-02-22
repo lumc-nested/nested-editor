@@ -11,10 +11,11 @@ var AppActions = {
     });
   },
 
-  changeFocus: function(focus) {
+  changeFocus: function(level, key) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.CHANGE_FOCUS,
-      focus: focus
+      level: level,
+      key: key
     });
   },
 

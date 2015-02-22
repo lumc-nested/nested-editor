@@ -3,89 +3,71 @@
   "name": "some description",
   "clinicianId": 1,
 
-  "members": [
-    {
-      "_id": 1,
+  "members": {
+    "1": {
       "gender": 2,
       "name": "Jane Doe"
     },
-    {
-      "_id": 2,
+    "2": {
       "gender": 1,
       "name": "John Smith",
       "dateOfDeath": "2012-05-07"
     },
-    {
-      "_id": 3,
+    "3": {
       "gender": 1,
       "dateOfBirth": "1977-04-27",
       "consultand": true
     },
-    {
-      "_id": 4,
+    "4": {
       "gender": 2
     },
-    {
-      "_id": 5,
+    "5": {
       "gender": 2
     },
-    {
-      "_id": 6,
+    "6": {
       "gender": 2,
       "proband": true
     },
-    {
-      "_id": 7,
+    "7": {
       "gender": 2
     },
-    {
-      "_id": 8,
+    "8": {
       "gender": 0,
       "consultand": true
     },
-    {
-      "_id": 9,
+    "9": {
       "gender": 1
     },
-    {
-      "_id": 10,
+    "10": {
       "gender": 2
     },
-    {
-      "_id": 11,
+    "11": {
       "gender": 1
     },
-    {
-      "_id": 12,
+    "12": {
       "gender": 1
     }
-  ],
+  },
 
-  "nests": [
-    {
-      "father": 2,
-      "mother": 1,
+  "nests": {
+    "2,1": {
       "pregnancies": [
-        { "zygotes": [3] },
-        { "zygotes": [4] },
+        { "zygotes": ["3"] },
+        { "zygotes": ["4"] },
         {
-          "zygotes": [5, 6],
+          "zygotes": ["5", "6"],
           "monozygotic": true
         }
       ]
     },
-    {
-      "father": 3,
-      "mother": 7,
-      "pregnancies": [{ "zygotes" : [8] }],
+    "3,7": {
+      "pregnancies": [{ "zygotes" : ["8"] }],
       "consanguineous": true
     },
-    {
-      "father": 9,
-      "mother": 6,
-      "pregnancies": [{"zygotes": [10, 11, 12]}]
+    "9,6": {
+      "pregnancies": [{"zygotes": ["10", "11", "12"]}]
     }
-  ],
+  },
 
   "schema": {
     "name": { "type": "string" },

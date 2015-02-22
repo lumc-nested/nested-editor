@@ -1,36 +1,41 @@
 'use strict';
 
-var AppDispatcher = require('../dispatchers/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var AppConstants = require('../constants/AppConstants');
-var PedigreeConstants = require('../constants/PedigreeConstants');
-var Immutable = require('immutable');
-var _ = require('lodash');
 
+var _ = require('lodash');
+var EventEmitter = require('events').EventEmitter;
+var Immutable = require('immutable');
+
+var AppConstants = require('../constants/AppConstants');
+var AppDispatcher = require('../dispatchers/AppDispatcher');
+var Structures = require('../common/Structures');
+var PedigreeConstants = require('../constants/PedigreeConstants');
+
+
+var Nest = Structures.Nest;
+var Pedigree = Structures.Pedigree;
+var Pregnancy = Structures.Pregnancy;
 
 var CHANGE_EVENT = 'change';
 
 
-// Infinite Immutable.IndexedSeq of strings. Optionally pass a list of strings
-// that must not be used.
-var generateIds = function(ids) {
-  ids = ids || Immutable.List();
-  return Immutable.Range(1).map(n => 'id_' + n.toString()).filterNot(id => ids.contains(id));
-};
+var Focus = Immutable.Record({
+  level: PedigreeConstants.Pedigree,
+  key: undefined
+});
 
 
 var State = Immutable.Record({
-/* TODO: We should start with an empty pedigree, but the autolayout cannot handle
-   that yet.
-
-  pedigree: Immutable.Map({
-    members: Immutable.List(),
-    nests: Immutable.List()
+  pedigree: new Pedigree({
+    members: Immutable.Map({
+      id_1: Immutable.Map({gender: PedigreeConstants.Gender.Male}),
+      id_2: Immutable.Map({gender: PedigreeConstants.Gender.Female})
+    }),
+    nests: Immutable.Map([
+      [Immutable.Set.of('id_1', 'id_2'),
+       new Nest()]
+    ])
   }),
-*/
-  pedigree: undefined,
-  focus: undefined,
-  ids: generateIds()
+  focus: new Focus()
 });
 
 
@@ -49,30 +54,19 @@ var _undoStack = Immutable.Stack();
 var _redoStack = Immutable.Stack();
 
 
-// Get a new ID.
-// TODO: This bypasses _updateState, not sure if that's an issue. I think it
-//   would be better if changes to _state.ids are passed through _updateState
-//   together with any accompanying state changes. However, I'm not sure I
-//   like exposing that the id generator is part of the state.
-var _newId = function() {
-  var ids = _state.ids;
-  _state = _state.set('ids', ids.rest());
-  return ids.first();
+// Generate a new member key.
+var newMemberKey = function() {
+  var existingKeys = Immutable.Set.fromKeys(_state.pedigree.members);
+
+  return Immutable.Range(1)
+    .map(n => 'id_' + n.toString())
+    .filterNot(key => existingKeys.contains(key))
+    .first();
 };
 
 
 var _loadPedigree = function(pedigree) {
-  // Where do we use Immutable and where do we convert to plain JS objects?
-  // Current approach: use Immutable as much as possible in all stores and
-  // components. Convert to plain JS objects for code unrelated to Flux and
-  // third-party APIs.
-  // Todo: Make both members and nests maps (keys id and father,mother).
-  pedigree = Immutable.fromJS(pedigree);
-
-  _state = new State({
-    pedigree: pedigree,
-    ids: generateIds(pedigree.get('members').map(m => m.get('_id')))
-  });
+  _state = new State({pedigree});
   _undoStack = _undoStack.clear();
   _redoStack = _undoStack.clear();
 };
@@ -82,12 +76,8 @@ var _updateState = function(action, stateUpdate) {
   var oldState = _state;
 
   _state = _state.merge(stateUpdate);
-
   if (_state !== oldState) {
-    _undoStack = _undoStack.unshift(new StateChange({
-      action: action,
-      oldState: oldState
-    }));
+    _undoStack = _undoStack.unshift(new StateChange({action, oldState}));
     _redoStack = _redoStack.clear();
   }
 };
@@ -95,6 +85,7 @@ var _updateState = function(action, stateUpdate) {
 
 var _undo = function() {
   var change;
+
   if (_undoStack.size > 0) {
     change = _undoStack.peek();
     _redoStack = _redoStack.unshift(change.set('oldState', _state));
@@ -106,6 +97,7 @@ var _undo = function() {
 
 var _redo = function() {
   var change;
+
   if (_redoStack.size > 0) {
     change = _redoStack.peek();
     _undoStack = _undoStack.unshift(change.set('oldState', _state));
@@ -115,125 +107,75 @@ var _redo = function() {
 };
 
 
-var _changeFocus = function(focus) {
-  _state = _state.set('focus', Immutable.fromJS(focus));
+var _changeFocus = function(level, key) {
+  _state = _state.set('focus', new Focus({level, key}));
 };
 
 
 var _addSpouse = function() {
-  var id;
-  var other;
-  var nest;
-  var gender;
-  var pedigree;
+  var pedigree = _state.pedigree;
+  var member;
+  var spouse;
+  var spouseKey;
 
-  if (_state.focus !== undefined && _state.focus.get('level') === PedigreeConstants.FocusLevel.Member) {
-    id = _newId();
-    other = _state.pedigree.get('members').find(m => m.get('_id') === _state.focus.get('key'));
-    nest = Immutable.Map({
-      pregnancies: Immutable.List()
-    });
+  if (_state.focus.level === PedigreeConstants.FocusLevel.Member) {
+    member = pedigree.members.get(_state.focus.key);
 
-    switch (other.get('gender')) {
+    switch (member.get('gender')) {
       case PedigreeConstants.Gender.Male:
-        gender = PedigreeConstants.Gender.Female;
-        nest = nest.merge({
-          father: other.get('_id'),
-          mother: id
-        });
+        spouse = Immutable.Map({gender: PedigreeConstants.Gender.Female});
         break;
       case PedigreeConstants.Gender.Female:
-        gender = PedigreeConstants.Gender.Male;
-        nest = nest.merge({
-          father: id,
-          mother: other.get('_id')
-        });
+        spouse = Immutable.Map({gender: PedigreeConstants.Gender.Male});
         break;
       default:
       case PedigreeConstants.Gender.Unknown:
-        gender = PedigreeConstants.Gender.Unknown;
-        nest = nest.merge({
-          father: other.get('_id'),
-          mother: id
-        });
+        spouse = Immutable.Map({gender: PedigreeConstants.Gender.Unknown});
         break;
     }
 
-    pedigree = _state.pedigree.update('members', ms => ms.push(Immutable.Map({
-      _id: id,
-      gender: gender
-    }))).update('nests', ns => ns.push(nest));
+    spouseKey = newMemberKey();
+    pedigree = pedigree
+      .update('members', members => members.set(spouseKey, spouse))
+      .update('nests', nests => nests.set(Immutable.Set.of(_state.focus.key, spouseKey),
+                                          new Nest()));
 
-    _updateState('add spouse with id ' + id.toString(), {
-      'pedigree': pedigree
-    });
-
-    // simulating immutable data here to trigger re-layout.
-    // TODO: do it with real immutable data.
-    // _pedigree = _.clone(_pedigree);
+    _updateState('add spouse with id ' + spouseKey.toString(), {pedigree});
   }
 };
 
+
 var _addChild = function(gender) {
-  var id;
+  var pedigree = _state.pedigree;
   var child;
+  var childKey;
   var pregnancy;
-  var pedigree;
 
   // TODO: how to arrange children order?
 
-  if (_state.focus !== undefined && _state.focus.get('level') === PedigreeConstants.FocusLevel.Nest) {
-    id = _newId();
-    child = Immutable.Map({_id: id, gender: gender});
-    pregnancy = Immutable.Map({
-      'zygotes': Immutable.List.of(id)
-    });
+  if (_state.focus.level === PedigreeConstants.FocusLevel.Nest) {
+    child = Immutable.Map({gender});
+    childKey = newMemberKey();
 
-    pedigree = _state.pedigree.update('nests', ns => {
-      return ns.map(n => {
-        if (n.get('father') === _state.focus.getIn(['key', 'father']) &&
-            n.get('mother') === _state.focus.getIn(['key', 'mother'])) {
-          return n.update('pregnancies', ps => ps.push(pregnancy));
-        } else {
-          return n;
-        }
-      });
-    }).update('members', ms => ms.push(child));
+    pregnancy = new Pregnancy({zygotes: Immutable.List.of(childKey)});
 
-    _updateState('add child with id ' + id.toString(), {
-      'pedigree': pedigree
-    });
+    pedigree = pedigree
+      .update('members', members => members.set(childKey, child))
+      .updateIn(['nests', _state.focus.key, 'pregnancies'],
+                pregnancies => pregnancies.push(pregnancy));
 
-    // simulating immutable data here to trigger re-layout.
-    // TODO: do it with real immutable data.
-    // _pedigree = _.clone(_pedigree);
+    _updateState('add child with id ' + childKey.toString(), {pedigree});
   }
 };
 
+
 var _updateMember = function(data) {
-  var pedigree;
+  var pedigree = _state.pedigree;
 
-  if (_state.focus !== undefined && _state.focus.get('level') === PedigreeConstants.FocusLevel.Member) {
-    pedigree = _state.pedigree.update('members', ms => {
-      return ms.map(m => {
-        if (m.get('_id') === _state.focus.get('key')) {
-          // Todo: Make sure we're not introducing some nested mutable
-          //   data here.
-          return m.merge(data);
-        } else {
-          return m;
-        }
-      });
-    });
-
-    _updateState('update member with id ' + _state.focus.get('key'), {
-      'pedigree': pedigree
-    });
+  if (_state.focus.level === PedigreeConstants.FocusLevel.Member) {
+    pedigree = pedigree.mergeIn(['members', _state.focus.key], data);
+    _updateState('update member with id ' + _state.focus.key, {pedigree});
   }
-
-  // simulating immutable data here to trigger re-layout.
-  // TODO: do it with real immutable data.
-  // _pedigree = _.clone(_pedigree);
 };
 
 
@@ -276,7 +218,7 @@ AppDispatcher.register(function(payload) {
       _loadPedigree(action.pedigree);
       break;
     case AppConstants.CHANGE_FOCUS:
-      _changeFocus(action.focus);
+      _changeFocus(action.level, action.key);
       break;
     case AppConstants.ADD_SPOUSE:
       _addSpouse();

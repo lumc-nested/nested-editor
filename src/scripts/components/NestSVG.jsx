@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var Immutable = require('immutable');
 var _ = require('lodash');
 var AppActions = require('../actions/AppActions.js');
 var PC = require('../constants/PedigreeConstants.js');
@@ -41,13 +42,10 @@ var NestSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    AppActions.changeFocus({
-      'level': PC.FocusLevel.Nest,
-      'key': {
-        father: this.props.data.father._id,
-        mother: this.props.data.mother._id
-      }
-    });
+    AppActions.changeFocus(
+      PC.FocusLevel.Nest,
+      Immutable.Set([this.props.data.father._id, this.props.data.mother._id])
+    );
   }
 });
 

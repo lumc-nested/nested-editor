@@ -1,64 +1,50 @@
 {
   "id": 1,
 
-  "members": [
-    {
-      "_id": 1,
+  "members": {
+    "1": {
       "gender": 2,
       "deceased": true
     },
-    {
-      "_id": 2,
+    "2": {
       "gender": 1
     },
-    {
-      "_id": 3,
+    "3": {
       "gender": 1,
       "proband": true
     },
-    {
-      "_id": 4
+    "4": {
     },
-    {
-      "_id": 5,
+    "5": {
       "gender": 1
     },
-    {
-      "_id": 6,
+    "6": {
       "gender": 2
     },
-    {
-      "_id": 7,
+    "7": {
       "gender": 1
     },
-    {
-      "_id": 8,
+    "8": {
       "gender": 2
     }
-  ],
+  },
 
-  "nests": [
-    {
-      "father": 2,
-      "mother": 1,
+  "nests": {
+    "2,1": {
       "pregnancies": [
-        { "zygotes": [3] },
-        { "zygotes": [4] }
+        { "zygotes": ["3"] },
+        { "zygotes": ["4"] }
       ]
     },
-    {
-      "father": 5,
-      "mother": 6,
+    "5,6": {
       "pregnancies": [
-        { "zygotes": [1] }
+        { "zygotes": ["1"] }
       ]
     },
-    {
-      "father": 7,
-      "mother": 8,
+    "7,8": {
       "pregnancies": [
-        { "zygotes": [2] }
+        { "zygotes": ["2"] }
       ]
     }
-  ]
+  }
 }
