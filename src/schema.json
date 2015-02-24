@@ -1,84 +1,49 @@
 {
-  "title": "Pedigree",
-  "id": "https://pedigree.lumc.nl/schema#",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Schema for Pedigree",
-  "type": "object",
-  "required": ["id", "members", "nests"],
-
-  "properties": {
-    "id": {
-      "title": "ID",
-      "type": "string"
-    },
-    "description": {
-      "title": "Description",
-      "type": "string"
-    },
-    "members" : {
-      "title": "Members",
-      "description": "Members in a pedigree.",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "An individual or a group.",
-        "oneOf": [
-          { "$ref": "#/definitions/individual" },
-          { "$ref": "#/definitions/group" }
-        ]
+  "$ref": "#/definitions/pedigree",
+  "definitions": {
+    "pedigree": {
+      "title": "Pedigree",
+      "description": "Schema for Pedigree",
+      "type": "object",
+      "required": ["title", "members", "nests"],
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "members" : {
+          "title": "Members",
+          "description": "Members in a pedigree.",
+          "type": "object",
+          "patternProperties": {
+            "^[^,]+$": { "$ref": "#/definitions/member" }
+          },
+          "additionalProperties": false
+        },
+        "nests": {
+          "title": "Nests",
+          "description": "Relationship units in a pedigree.",
+          "type": "object",
+          "patternProperties": {
+            "^[^,]+(,[^,]+)*$": { "$ref": "#/definitions/nest" }
+          },
+          "additionalProperties": false
+        },
+        "schemaExtension": {
+          "$ref": "http://json-schema.org/draft-04/schema#"
+        }
       }
     },
-    "nests": {
-      "title": "Nests",
-      "type": "array",
-      "description": "A relationship unit.",
-      "items": { "$ref": "#/definitions/nest" }
-    }
-  },
-
-  "definitions": {
-    "individual": {
-      "title": "Individual",
+    "member": {
+      "title": "Member",
       "type": "object",
       "properties": {
-        "_id": {
-          "title": "Internal ID",
-          "type": "integer",
-          "description": "Internal id used by the softward. Do not edit it unless you know what you are doing."
-        },
-        "externalID" : {
-          "title": "External ID",
-          "type": "string",
-          "description": "User defined identifier that may be linked to external data source."
-        },
         "gender": {
           "title": "Gender",
           "type": "integer",
           "enum": [0, 1, 2],
           "enumNames": ["Unknown or ambiguous", "Male", "Female"]
-        },
-        "name": {
-          "title": "Name",
-          "type": "string"
-        },
-        "dateOfBirth": {
-          "title": "Date of birth",
-          "type": "string",
-          "format": "date"
-        },
-        "dateOfDeath": {
-          "title": "Date of death",
-          "type": "string",
-          "format": "date",
-          "description": "If given, 'deceased' property is ignored."
-        },
-        "deceased": {
-          "title": "Deceased",
-          "type": "boolean"
-        },
-        "born": {
-          "title": "Born",
-          "type": "boolean"
         },
         "proband": {
           "title": "Proband",
@@ -87,71 +52,46 @@
         "consultand": {
           "title": "Consultand",
           "type": "boolean"
-        },
-        "affected": {
-          "title": "Affected",
-          "type": "boolean"
         }
-      },
-      "required": ["_id"]
+      }
     },
-
-    "group": {
-      "title": "Group",
-      "type": "object",
-      "properties": {
-        "_id": {
-          "title": "Internal ID",
-          "type": "integer"
-        },
-        "gender": {
-          "title": "Gender",
-          "enum": [0, 1, 2],
-          "enumNames": ["Unknown or ambiguous", "Male", "Female"]
-        },
-        "numberOfIndividuals" : {
-          "title": "Count",
-          "type": "integer",
-          "description": "Number of individuals represented by this group. If undefined, 'n' is used."
-        }
-      },
-      "required": ["_id"]
-    },
-
     "nest": {
+      "title": "Nest",
       "type": "object",
+      "required": ["pregnancies"],
       "properties": {
-        "father": {
-          "title": "Father",
-          "type": "string",
-          "description": "Member ID of the father."
-        },
-        "mother": {
-          "title": "Mother",
-          "type": "string",
-          "description": "Member ID of the mother."
-        },
         "pregnancies": {
           "title": "Pregnancies",
           "type": "array",
-          "description": "Pregnancies occured based on the father and mother",
-          "items": {
-            "title": "Pregnancy",
-            "type": "object",
-            "description": "A pregnancy.",
-            "properties": {
-              "zygotes": {
-                "title": "Zygotes",
-                "type": "array"
-              }
-            }
-          }
+          "items": { "$ref": "#/definitions/pregnancy" },
+          "additionalItems": false
         },
         "consanguineous": {
           "title": "Consanguineous",
-          "type": "boolean" }
-      },
-      "required": ["father", "mother"]
+          "type": "boolean"
+        }
+      }
+    },
+    "pregnancy": {
+      "title": "Pregnancy",
+      "type": "object",
+      "required": ["zygotes"],
+      "properties": {
+        "zygotes": {
+          "title": "Zygotes",
+          "type": "array",
+          "items": {
+            "title": "Zygote",
+            "type": "string",
+            "pattern": "^[^,]+$"
+          },
+          "additionalItems": false
+        },
+        "monozygotic": {
+          "title": "Monozygotic",
+          "type": "boolean"
+        }
+      }
     }
   }
 }

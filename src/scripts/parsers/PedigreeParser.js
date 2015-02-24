@@ -12,14 +12,21 @@ var Pedigree = Structures.Pedigree;
 
 
 var parse = function(text) {
+  var props;
   var members;
   var nests;
   var parsedJson;
-  var pregnancies;
+
+  // TODO: Validate using JSON Schema.
 
   parsedJson = JSON.parse(text);
+
   members = Immutable.fromJS(parsedJson.members);
+
   nests = Immutable.Map(parsedJson.nests).mapEntries(([nestKey, nest]) => {
+    var props;
+    var pregnancies;
+
     // In JSON, the nest keys are the parent keys joined by comma's. For now
     // we only support two parents.
     nestKey = Immutable.Set(nestKey.split(','));
@@ -28,14 +35,18 @@ var parse = function(text) {
 
     pregnancies = Immutable.List(nest.pregnancies).map(
       pregnancy => new Pregnancy({
-        zygotes: Immutable.List(pregnancy.zygotes)
+        zygotes: Immutable.List(pregnancy.zygotes),
+        props: Immutable.Map(pregnancy).delete('zygotes')
       })
     );
+    props = Immutable.Map(nest).delete('pregnancies');
 
-    return [nestKey, new Nest({pregnancies})];
+    return [nestKey, new Nest({pregnancies, props})];
   });
 
-  return new Pedigree({members, nests});
+  props = Immutable.Map(parsedJson).delete('members').delete('nests');
+
+  return new Pedigree({members, nests, props});
 };
 
 

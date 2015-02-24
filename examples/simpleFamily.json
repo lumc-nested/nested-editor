@@ -1,5 +1,5 @@
 {
-  "id": 1,
+  "title": "Simple Family",
 
   "members": {
     "1": {
@@ -23,6 +23,20 @@
         { "zygotes": ["3"] },
         { "zygotes": ["4"] }
       ]
+    }
+  },
+
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "member": {
+        "properties": {
+          "deceased": {
+            "title": "Deceased",
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

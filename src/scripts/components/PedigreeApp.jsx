@@ -1,6 +1,7 @@
 'use strict';
 
 
+var _ = require('lodash');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
@@ -26,8 +27,21 @@ var TabbedArea = ReactBootstrap.TabbedArea;
 var TabPane = ReactBootstrap.TabPane;
 
 
+var schema = require('../../schema.json');
+
+
 var getAppState = function() {
-  return AppStore.getData();
+  var state = AppStore.getData();
+
+  // TODO: This is a temporary solution to show predefined and custom columns.
+  //   Merging with _.merge might not be the best solution and schema merging
+  //   is done again on each app state change.
+  state.schema = _.cloneDeep(schema);
+  if (state.pedigree.props.has('schemaExtension')) {
+    state.schema = _.merge(state.schema, state.pedigree.props.get('schemaExtension'));
+  }
+
+  return state;
 };
 
 
@@ -101,7 +115,7 @@ var PedigreeApp = React.createClass({
         <Grid fluid>
           <Row>
             <Col id="sidebar" sm={3} md={2}>
-              <MemberDetails member={selectedMember} />
+              <MemberDetails member={selectedMember} schema={this.state.schema.definitions.member} />
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
               <PedigreeControls focus={focus} undoAction={undoAction} redoAction={redoAction} />
