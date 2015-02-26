@@ -63,10 +63,7 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    AppActions.changeFocus({
-      'level': PC.FocusLevel.Member,
-      'key': this.props.data._id
-    });
+    AppActions.changeFocus(PC.FocusLevel.Member, this.props.data._id);
   }
 });
 

@@ -15,7 +15,8 @@ module.exports = Object.freeze({
   'ThemeColor': 'indigo',
 
   'FocusLevel': {
-    'Member': 0,
-    'Nest': 1
+    'Pedigree': 0,
+    'Member': 1,
+    'Nest': 2
   }
 });

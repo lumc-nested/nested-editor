@@ -1,17 +1,17 @@
 'use strict';
 
-var React = require('react');
-var AppActions = require('../actions/AppActions.js');
-var validate = require('plexus-validate');
-var Form = require('plexus-form');
+
 var _ = require('lodash');
+var React = require('react');
+var Form = require('plexus-form');
+var validate = require('plexus-validate');
+
+var AppActions = require('../actions/AppActions.js');
 
 var schema = require('../../schema.json');
 
-var _detailsID = 'member-details';
 
 var MemberDetails = React.createClass({
-
   getInitialState: function() {
     var individualSchema = schema.definitions.individual;
 
@@ -29,24 +29,25 @@ var MemberDetails = React.createClass({
   },
 
   render: function() {
-    var selected = this.props.selected;
+    var member = this.props.member;
 
-    if (typeof selected === 'undefined') {
-      return <div id={_detailsID}><p>No member selected</p></div>;
+    if (member === undefined) {
+      return <div id="member-details"><p>No member selected</p></div>;
     }
 
     return (
-      <div id={_detailsID}>
+      <div id="member-details">
         <Form
           buttons={['Save']}
           schema={this.state.schema}
           validate={validate}
-          values={selected.toJS()}
+          values={member.toJS()}
           onSubmit={this.onFormSubmit}
         />
       </div>
     );
   }
 });
+
 
 module.exports = MemberDetails;

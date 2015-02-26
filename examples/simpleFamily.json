@@ -1,34 +1,28 @@
 {
   "id": 1,
 
-  "members": [
-    {
-      "_id": 1,
+  "members": {
+    "1": {
       "gender": 2,
       "deceased": true
     },
-    {
-      "_id": 2,
+    "2": {
       "gender": 1
     },
-    {
-      "_id": 3,
+    "3": {
       "gender": 1,
       "proband": true
     },
-    {
-      "_id": 4
+    "4": {
     }
-  ],
+  },
 
-  "nests": [
-    {
-      "father": 2,
-      "mother": 1,
+  "nests": {
+    "2,1": {
       "pregnancies": [
-        { "zygotes": [3] },
-        { "zygotes": [4] }
+        { "zygotes": ["3"] },
+        { "zygotes": ["4"] }
       ]
     }
-  ]
+  }
 }

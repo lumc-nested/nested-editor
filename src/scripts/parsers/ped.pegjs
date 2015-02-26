@@ -18,8 +18,8 @@ comment =
 member =
   family:name spacing
   member:name spacing
-  father:name spacing
-  mother:name spacing
+  father:(name / missing) spacing
+  mother:(name / missing) spacing
   gender:gender spacing
   phenotype:phenotype
   genotypes:(genotype / missinggenotype)*
@@ -37,20 +37,20 @@ gender = "1" { return 1 }
        / nonwhitespace { return 0 }
 
 genotype =
-  spacing !missingallele a:nonwhitespace spacing !missingallele b:nonwhitespace
+  spacing !missing a:nonwhitespace spacing !missing b:nonwhitespace
   { return [a, b] }
 
 missinggenotype =
-  spacing missingallele whitespace missingallele
+  spacing missing whitespace missing
   { return undefined }
 
 phenotype = chars:nonwhitespace+ { return chars.join("") }
-name = chars:namechar+ { return chars.join("") }
+name = !missing chars:namechar+ { return chars.join("") }
+missing = [0.] { return undefined }
 
 nonwhitespace = !whitespace char:. { return char }
 nonnewline = !newline char:. { return char }
 
-missingallele = [0.]
 namechar = [a-zA-Z0-9_-]
 whitespace = (spacing / newline)+
 spacing = [ \t]+
