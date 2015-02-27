@@ -1,5 +1,5 @@
 {
-  "id": 1,
+  "title": "Two Roots",
 
   "members": {
     "1": {
@@ -45,6 +45,20 @@
       "pregnancies": [
         { "zygotes": ["2"] }
       ]
+    }
+  },
+
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "member": {
+        "properties": {
+          "deceased": {
+            "title": "Deceased",
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

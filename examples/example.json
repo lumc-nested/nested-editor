@@ -1,7 +1,6 @@
 {
-  "id": 1,
-  "name": "some description",
-  "clinicianId": 1,
+  "title": "Example Pedigree",
+  "author": "Jon Snow",
 
   "members": {
     "1": {
@@ -69,11 +68,43 @@
     }
   },
 
-  "schema": {
-    "name": { "type": "string" },
-    "dateOfBirth": { "type": "string", "pattern": "date" }
-  },
-
-  "settings": {
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "pedigree": {
+        "properties": {
+          "author": {
+            "title": "Author",
+            "type": "string"
+          }
+        }
+      },
+      "member": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "title": "Date of birth",
+            "type": "string",
+            "format": "date"
+          },
+          "dateOfDeath": {
+            "title": "Date of death",
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "nest": {
+        "properties": {
+        }
+      },
+      "pregnancy": {
+        "properties": {
+        }
+      }
+    }
   }
 }

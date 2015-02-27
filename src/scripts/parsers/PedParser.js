@@ -51,8 +51,9 @@ var parse = function(text) {
     .mapEntries(([_, member]) => {
       return [member.get('member'),
               Immutable.Map({
-                family: member.get('family'),
-                gender: member.get('gender')
+                gender: member.get('gender'),
+                // TODO: Schema definition for family.
+                family: member.get('family')
               })];
     });
 

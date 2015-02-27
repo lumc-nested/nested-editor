@@ -11,7 +11,7 @@ var Pregnancy = Immutable.Record({
   zygotes: Immutable.List(),
 
   // Map of strings (field keys) to scalars (field values).
-  data: Immutable.Map()
+  props: Immutable.Map()
 });
 
 
@@ -20,7 +20,7 @@ var Nest = Immutable.Record({
   pregnancies: Immutable.List(),
 
   // Map of strings (field keys) to scalars (field values).
-  data: Immutable.Map()
+  props: Immutable.Map()
 });
 
 
@@ -33,7 +33,7 @@ var Pedigree = Immutable.Record({
   nests: Immutable.Map(),
 
   // Map of strings (field keys) to scalars (field values).
-  data: Immutable.Map()
+  props: Immutable.Map()
 });
 
 
