@@ -24,6 +24,11 @@ var Focus = Immutable.Record({
 });
 
 
+// TODO: Focus shouldn't be in the undo/redo stack. I guess we should have
+//   a separate Document structure containing pedigree and schema (everything
+//   that is in the file basically) and only manage that with undo/redo.
+//   Or separate ApplicationState and DocumentState, perhaps also in separate
+//   stores.
 var State = Immutable.Record({
   pedigree: new Pedigree({
     members: Immutable.Map({
@@ -35,6 +40,12 @@ var State = Immutable.Record({
        new Nest()]
     ])
   }),
+  // TODO: Perhaps it is better to just have the separate pedigree/nest/member
+  //   schema definitions here? Downside is that we break potential cross-refs
+  //   but I guess we cannot handle them anyway. Let's first test if we can
+  //   give plexus-form a complete schema as context (with definitions) and
+  //   use these definitions from the specific schema.
+  schemaExtension: Immutable.Map(),
   focus: new Focus()
 });
 
@@ -65,8 +76,8 @@ var newMemberKey = function() {
 };
 
 
-var _loadPedigree = function(pedigree) {
-  _state = new State({pedigree});
+var _loadPedigree = function(pedigree, schemaExtension) {
+  _state = new State({pedigree, schemaExtension});
   _undoStack = _undoStack.clear();
   _redoStack = _undoStack.clear();
 };
@@ -210,6 +221,7 @@ var AppStore = _.extend(EventEmitter.prototype, {
     }
     return {
       'pedigree': _state.pedigree,
+      'schemaExtension': _state.schemaExtension,
       'focus': _state.focus,
       'undoAction': undoAction,
       'redoAction': redoAction
@@ -235,7 +247,8 @@ AppDispatcher.register(function(payload) {
 
   switch (action.actionType) {
     case AppConstants.LOAD_PEDIGREE:
-      _loadPedigree(action.pedigree);
+      // TODO: Rename to loadDocument.
+      _loadPedigree(action.pedigree, action.schemaExtension);
       break;
     case AppConstants.CHANGE_FOCUS:
       _changeFocus(action.level, action.key);
