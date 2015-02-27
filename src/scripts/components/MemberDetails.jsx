@@ -9,28 +9,20 @@ var AppActions = require('../actions/AppActions.js');
 
 
 var MemberDetails = React.createClass({
-  onFormSubmit: function(data) {
-    // Todo: Empty form fields are not in data and hence are not removed or
-    //   deleted from the selected member.
-    AppActions.updateMember(data);
+  onFormSubmit: function(memberProps) {
+    // Todo: Empty form fields are not in memberProps and hence are not
+    //   removed or deleted from the selected member.
+    AppActions.updateMember(memberProps);
   },
 
   render: function() {
-    if (this.props.member === undefined) {
-      return <div id="member-details"><p>No member selected</p></div>;
-    }
-
-    return (
-      <div id="member-details">
-        <Form
-          buttons={['Save']}
-          schema={this.props.schema}
-          validate={validate}
-          values={this.props.member.toJS()}
-          onSubmit={this.onFormSubmit}
-        />
-      </div>
-    );
+    return <Form
+             buttons={['Save']}
+             schema={this.props.memberSchema}
+             validate={validate}
+             values={this.props.memberProps.toJS()}
+             onSubmit={this.onFormSubmit}
+           />;
   }
 });
 

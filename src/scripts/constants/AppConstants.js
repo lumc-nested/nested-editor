@@ -8,6 +8,8 @@ module.exports = keyMirror({
   ADD_SPOUSE: null,
   ADD_CHILD: null,
   UPDATE_MEMBER: null,
+  UPDATE_NEST: null,
+  UPDATE_PEDIGREE: null,
   UNDO: null,
   REDO: null
 });

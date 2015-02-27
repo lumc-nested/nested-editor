@@ -13,6 +13,8 @@ var PedigreeParser = require('../parsers/PedigreeParser');
 
 var LayoutView = require('./LayoutView');
 var MemberDetails = require('./MemberDetails');
+var NestDetails = require('./NestDetails');
+var PedigreeDetails = require('./PedigreeDetails');
 var PedigreeControls = require('./PedigreeControls');
 var TableView = require('./TableView');
 
@@ -91,10 +93,27 @@ var PedigreeApp = React.createClass({
     var pedigree = this.state.pedigree;
     var redoAction = this.state.redoAction;
     var undoAction = this.state.undoAction;
-    var selectedMember;
+    var sidebar;
 
-    if (focus.level === PedigreeConstants.FocusLevel.Member) {
-      selectedMember = pedigree.members.get(focus.key);
+    switch (focus.level) {
+      case PedigreeConstants.FocusLevel.Member:
+        sidebar = <MemberDetails
+                    memberProps={pedigree.members.get(focus.key)}
+                    memberSchema={this.state.schema.definitions.member}
+                  />;
+        break;
+      case PedigreeConstants.FocusLevel.Nest:
+        sidebar = <NestDetails
+                    nestProps={pedigree.nests.get(focus.key).props}
+                    nestSchema={this.state.schema.definitions.nest}
+                  />;
+        break;
+      case PedigreeConstants.FocusLevel.Pedigree:
+      default:
+        sidebar = <PedigreeDetails
+                    pedigreeProps={pedigree.props}
+                    pedigreeSchema={this.state.schema.definitions.pedigree}
+                  />;
     }
 
     return (
@@ -115,7 +134,7 @@ var PedigreeApp = React.createClass({
         <Grid fluid>
           <Row>
             <Col id="sidebar" sm={3} md={2}>
-              <MemberDetails member={selectedMember} schema={this.state.schema.definitions.member} />
+              {sidebar}
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
               <PedigreeControls focus={focus} undoAction={undoAction} redoAction={redoAction} />

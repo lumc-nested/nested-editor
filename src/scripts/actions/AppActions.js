@@ -39,6 +39,20 @@ var AppActions = {
     });
   },
 
+  updateNest: function(data) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_NEST,
+      data: data
+    });
+  },
+
+  updatePedigree: function(data) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_PEDIGREE,
+      data: data
+    });
+  },
+
   undo: function() {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.UNDO

@@ -179,6 +179,26 @@ var _updateMember = function(data) {
 };
 
 
+var _updateNest = function(data) {
+  var pedigree = _state.pedigree;
+
+  if (_state.focus.level === PedigreeConstants.FocusLevel.Nest) {
+    pedigree = pedigree.mergeIn(['nests', _state.focus.key, 'props'], data);
+    _updateState('update nest with parent ids ' + _state.focus.key.toString(), {pedigree});
+  }
+};
+
+
+var _updatePedigree = function(data) {
+  var pedigree = _state.pedigree;
+
+  if (_state.focus.level === PedigreeConstants.FocusLevel.Pedigree) {
+    pedigree = pedigree.update('props', props => props.merge(data));
+    _updateState('update pedigree', {pedigree});
+  }
+};
+
+
 var AppStore = _.extend(EventEmitter.prototype, {
   getData: function() {
     var undoAction, redoAction;
@@ -225,6 +245,12 @@ AppDispatcher.register(function(payload) {
       break;
     case AppConstants.UPDATE_MEMBER:
       _updateMember(action.data);
+      break;
+    case AppConstants.UPDATE_NEST:
+      _updateNest(action.data);
+      break;
+    case AppConstants.UPDATE_PEDIGREE:
+      _updatePedigree(action.data);
       break;
     case AppConstants.ADD_CHILD:
       _addChild(action.gender);
