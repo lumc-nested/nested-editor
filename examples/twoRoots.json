@@ -1,53 +1,52 @@
 {
-  "title": "Two Roots",
-
-  "members": {
-    "1": {
-      "gender": 2,
-      "deceased": true
+  "pedigree": {
+    "title": "Two Roots",
+    "members": {
+      "1": {
+        "gender": 2,
+        "deceased": true
+      },
+      "2": {
+        "gender": 1
+      },
+      "3": {
+        "gender": 1,
+        "proband": true
+      },
+      "4": {
+      },
+      "5": {
+        "gender": 1
+      },
+      "6": {
+        "gender": 2
+      },
+      "7": {
+        "gender": 1
+      },
+      "8": {
+        "gender": 2
+      }
     },
-    "2": {
-      "gender": 1
-    },
-    "3": {
-      "gender": 1,
-      "proband": true
-    },
-    "4": {
-    },
-    "5": {
-      "gender": 1
-    },
-    "6": {
-      "gender": 2
-    },
-    "7": {
-      "gender": 1
-    },
-    "8": {
-      "gender": 2
+    "nests": {
+      "2,1": {
+        "pregnancies": [
+          { "zygotes": ["3"] },
+          { "zygotes": ["4"] }
+        ]
+      },
+      "5,6": {
+        "pregnancies": [
+          { "zygotes": ["1"] }
+        ]
+      },
+      "7,8": {
+        "pregnancies": [
+          { "zygotes": ["2"] }
+        ]
+      }
     }
   },
-
-  "nests": {
-    "2,1": {
-      "pregnancies": [
-        { "zygotes": ["3"] },
-        { "zygotes": ["4"] }
-      ]
-    },
-    "5,6": {
-      "pregnancies": [
-        { "zygotes": ["1"] }
-      ]
-    },
-    "7,8": {
-      "pregnancies": [
-        { "zygotes": ["2"] }
-      ]
-    }
-  },
-
   "schemaExtension": {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {

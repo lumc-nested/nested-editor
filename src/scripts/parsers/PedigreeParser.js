@@ -21,9 +21,9 @@ var parse = function(text) {
 
   parsedJson = JSON.parse(text);
 
-  members = Immutable.fromJS(parsedJson.members);
+  members = Immutable.fromJS(parsedJson.pedigree.members);
 
-  nests = Immutable.Map(parsedJson.nests).mapEntries(([nestKey, nest]) => {
+  nests = Immutable.Map(parsedJson.pedigree.nests).mapEntries(([nestKey, nest]) => {
     var props;
     var pregnancies;
 
@@ -44,7 +44,10 @@ var parse = function(text) {
     return [nestKey, new Nest({pregnancies, props})];
   });
 
-  props = Immutable.Map(parsedJson).delete('members').delete('nests');
+  props = Immutable.Map(parsedJson.pedigree)
+    .delete('members')
+    .delete('nests')
+    .set('schemaExtension', parsedJson.schemaExtension);
 
   return new Pedigree({members, nests, props});
 };

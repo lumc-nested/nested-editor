@@ -1,73 +1,72 @@
 {
-  "title": "Example Pedigree",
-  "author": "Jon Snow",
-
-  "members": {
-    "1": {
-      "gender": 2,
-      "name": "Jane Doe"
+  "pedigree": {
+    "title": "Example Pedigree",
+    "author": "Jon Snow",
+    "members": {
+      "1": {
+        "gender": 2,
+        "name": "Jane Doe"
+      },
+      "2": {
+        "gender": 1,
+        "name": "John Smith",
+        "dateOfDeath": "2012-05-07"
+      },
+      "3": {
+        "gender": 1,
+        "dateOfBirth": "1977-04-27",
+        "consultand": true
+      },
+      "4": {
+        "gender": 2
+      },
+      "5": {
+        "gender": 2
+      },
+      "6": {
+        "gender": 2,
+        "proband": true
+      },
+      "7": {
+        "gender": 2
+      },
+      "8": {
+        "gender": 0,
+        "consultand": true
+      },
+      "9": {
+        "gender": 1
+      },
+      "10": {
+        "gender": 2
+      },
+      "11": {
+        "gender": 1
+      },
+      "12": {
+        "gender": 1
+      }
     },
-    "2": {
-      "gender": 1,
-      "name": "John Smith",
-      "dateOfDeath": "2012-05-07"
-    },
-    "3": {
-      "gender": 1,
-      "dateOfBirth": "1977-04-27",
-      "consultand": true
-    },
-    "4": {
-      "gender": 2
-    },
-    "5": {
-      "gender": 2
-    },
-    "6": {
-      "gender": 2,
-      "proband": true
-    },
-    "7": {
-      "gender": 2
-    },
-    "8": {
-      "gender": 0,
-      "consultand": true
-    },
-    "9": {
-      "gender": 1
-    },
-    "10": {
-      "gender": 2
-    },
-    "11": {
-      "gender": 1
-    },
-    "12": {
-      "gender": 1
+    "nests": {
+      "2,1": {
+        "pregnancies": [
+          { "zygotes": ["3"] },
+          { "zygotes": ["4"] },
+          {
+            "zygotes": ["5", "6"],
+            "monozygotic": true
+          }
+        ]
+      },
+      "3,7": {
+        "pregnancies": [{ "zygotes" : ["8"] }],
+        "consanguineous": true
+      },
+      "9,6": {
+        "pregnancies": [{"zygotes": ["10", "11", "12"]}]
+      }
     }
   },
-
-  "nests": {
-    "2,1": {
-      "pregnancies": [
-        { "zygotes": ["3"] },
-        { "zygotes": ["4"] },
-        {
-          "zygotes": ["5", "6"],
-          "monozygotic": true
-        }
-      ]
-    },
-    "3,7": {
-      "pregnancies": [{ "zygotes" : ["8"] }],
-      "consanguineous": true
-    },
-    "9,6": {
-      "pregnancies": [{"zygotes": ["10", "11", "12"]}]
-    }
-  },
-
   "schemaExtension": {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
