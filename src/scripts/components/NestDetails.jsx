@@ -1,29 +1,29 @@
 'use strict';
 
 
+var _ = require('lodash');
 var React = require('react');
 var Form = require('plexus-form');
 var validate = require('plexus-validate');
 
-var AppActions = require('../actions/AppActions.js');
+var DocumentActions = require('../actions/DocumentActions');
 
 
 var NestDetails = React.createClass({
-  onFormSubmit: function(nestProps) {
-    // Todo: Empty form fields are not in nestProps and hence are not
-    //   removed or deleted from the selected nest.
-    AppActions.updateNest(nestProps);
+  onFormSubmit: function(fields) {
+    // Todo: Empty form fields are omited.
+    DocumentActions.updateNest(this.props.nestKey, fields);
   },
 
   render: function() {
-    var schema = this.props.nestSchema;
+    var schema = this.props.schema;
     schema.properties = _.omit(schema.properties, ['pregnancies']);
 
     return <Form
              buttons={['Save']}
              schema={schema}
              validate={validate}
-             values={this.props.nestProps.toJS()}
+             values={this.props.fields.toJS()}
              onSubmit={this.onFormSubmit}
            />;
   }

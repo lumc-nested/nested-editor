@@ -2,9 +2,9 @@
 
 var _ = require('lodash');
 var Immutable = require('immutable');
-var Member = require('./Member.js');
-var Nest = require('./Nest.js');
-var Pregnancy = require('./Pregnancy.js');
+var Member = require('./Member');
+var Nest = require('./Nest');
+var Pregnancy = require('./Pregnancy');
 
 var Individual = Member.Individual;
 var Group = Member.Group;

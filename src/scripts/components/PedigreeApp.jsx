@@ -1,22 +1,24 @@
 'use strict';
 
 
-var _ = require('lodash');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
-var AppActions = require('../actions/AppActions');
-var AppStore = require('../stores/AppStore');
-var PedParser = require('../parsers/PedParser');
-var PedigreeConstants = require('../constants/PedigreeConstants');
-var PedigreeParser = require('../parsers/PedigreeParser');
+var JsonReader = require('../readers/JsonReader');
+var PedReader = require('../readers/PedReader');
 
+var DocumentActions = require('../actions/DocumentActions');
+var AppConstants = require('../constants/AppConstants');
+var DocumentStore = require('../stores/DocumentStore');
+
+var DocumentControls = require('./DocumentControls');
 var LayoutView = require('./LayoutView');
 var MemberDetails = require('./MemberDetails');
 var NestDetails = require('./NestDetails');
 var PedigreeDetails = require('./PedigreeDetails');
-var PedigreeControls = require('./PedigreeControls');
 var TableView = require('./TableView');
+
+var schema = require('../../schemas/schema.json');
 
 
 var Col = ReactBootstrap.Col;
@@ -29,17 +31,20 @@ var TabbedArea = ReactBootstrap.TabbedArea;
 var TabPane = ReactBootstrap.TabPane;
 
 
-var schema = require('../../schema.json');
-
-
-var getAppState = function() {
-  var state = AppStore.getData();
+var getState = function() {
+  var state = {
+    focus: DocumentStore.getFocus(),
+    undo: DocumentStore.getUndo(),
+    redo: DocumentStore.getRedo(),
+    document: DocumentStore.getDocument()
+  };
 
   // TODO: This is a temporary solution to show predefined and custom columns.
   //   Merging with _.merge might not be the best solution and schema merging
   //   is done again on each app state change.
-  //   Perhaps merging should already be done in the store?
-  state.schema = state.schemaExtension.mergeDeep(schema)
+  //   Perhaps merging should already be done in the store? Should the merge
+  //   schema be part of the document?
+  state.documentSchema = state.document.schemaExtension.mergeDeep(schema);
 
   return state;
 };
@@ -47,38 +52,41 @@ var getAppState = function() {
 
 var PedigreeApp = React.createClass({
   getInitialState: function() {
-    return getAppState();
+    return getState();
   },
 
   _onChange: function() {
-    this.setState(getAppState());
+    this.setState(getState());
   },
 
   componentDidMount: function() {
-    AppStore.addChangeListener(this._onChange);
+    DocumentStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    AppStore.removeChangeListener(this._onChange);
+    DocumentStore.removeChangeListener(this._onChange);
   },
 
-  loadPedigree: function(event) {
-    var reader = new FileReader();
+  openDocument: function(event) {
     var file = event.target.files[0];
+    var reader = new FileReader();
 
     // Clear input element so we are called again even when re-opening the
     // same file.
     event.target.value = null;
 
     reader.onload = function(e) {
-      var parser, document;
+      var Reader;
+      var document;
+
       if (file.name.split('.').pop() === 'ped') {
-        parser = PedParser;
+        Reader = PedReader;
       } else {
-        parser = PedigreeParser;
+        Reader = JsonReader;
       }
-      document = parser.parse(e.target.result);
-      AppActions.loadPedigree(document.pedigree, document.schemaExtension);
+
+      document = Reader.readString(e.target.result);
+      DocumentActions.openDocument(document);
     };
 
     if (file) {
@@ -88,31 +96,37 @@ var PedigreeApp = React.createClass({
 
   render: function() {
     var focus = this.state.focus;
-    var pedigree = this.state.pedigree;
-    var redoAction = this.state.redoAction;
-    var undoAction = this.state.undoAction;
+    var redo = this.state.redo;
+    var undo = this.state.undo;
+    var pedigree = this.state.document.pedigree;
+    var documentSchema = this.state.documentSchema;
     var sidebar;
 
     switch (focus.level) {
-      case PedigreeConstants.FocusLevel.Member:
+      case AppConstants.FocusLevel.Member:
         sidebar = <MemberDetails
-                    memberProps={pedigree.members.get(focus.key)}
-                    memberSchema={this.state.schema.toJS().definitions.member}
+                    memberKey={focus.key}
+                    fields={pedigree.members.get(focus.key)}
+                    schema={documentSchema.toJS().definitions.member}
                   />;
         break;
-      case PedigreeConstants.FocusLevel.Nest:
+      case AppConstants.FocusLevel.Nest:
         sidebar = <NestDetails
-                    nestProps={pedigree.nests.get(focus.key).props}
-                    nestSchema={this.state.schema.toJS().definitions.nest}
+                    nestKey={focus.key}
+                    fields={pedigree.nests.get(focus.key).fields}
+                    schema={documentSchema.toJS().definitions.nest}
                   />;
         break;
-      case PedigreeConstants.FocusLevel.Pedigree:
+      case AppConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
-                    pedigreeProps={pedigree.props}
-                    pedigreeSchema={this.state.schema.toJS().definitions.pedigree}
+                    fields={pedigree.fields}
+                    schema={documentSchema.toJS().definitions.pedigree}
                   />;
     }
+
+    // Note: The `accept` attribute with file extensions only works in Google
+    //   Chrome and Internet Explorer 10+.
 
     return (
       <div>
@@ -120,8 +134,8 @@ var PedigreeApp = React.createClass({
           <Nav right>
             <NavItem>
               <span className="file-input">
-                Load pedigree
-                <input type="file" accept=".json,.ped" onChange={this.loadPedigree} />
+                Open pedigree
+                <input type="file" accept=".json,.ped" onChange={this.openDocument} />
               </span>
             </NavItem>
             <NavItem eventKey="sourceLink" href="https://git.lumc.nl/pedigree/webapp">
@@ -135,7 +149,7 @@ var PedigreeApp = React.createClass({
               {sidebar}
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
-              <PedigreeControls focus={focus} undoAction={undoAction} redoAction={redoAction} />
+              <DocumentControls focus={focus} undo={undo} redo={redo} />
               <TabbedArea className="main-area" defaultActiveKey="layoutView" animation={false}>
                 <TabPane eventKey="layoutView" tab="Layout">
                   <LayoutView pedigree={pedigree} focus={focus} />

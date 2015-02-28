@@ -8,12 +8,13 @@ var Structures = require('../common/Structures');
 var parser = require('./ped.pegjs');
 
 
-var Pregnancy = Structures.Pregnancy;
+var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
+var Pregnancy = Structures.Pregnancy;
 
 
-var parse = function(text) {
+var readParseTree = function(parseTree) {
   var members;
   var mergeNests;
   var nests;
@@ -25,7 +26,7 @@ var parse = function(text) {
   var uniqueKeys;
 
   // List of member Maps with the fields we got from the PEG.js parser.
-  originalMembers = Immutable.fromJS(parser.parse(text))
+  originalMembers = Immutable.fromJS(parseTree)
     .filter(([type, _]) => type === 'member')
     .map(([_, member]) => member);
 
@@ -98,8 +99,13 @@ var parse = function(text) {
     }
   });
 
-  return {pedigree, schemaExtension};
+  return new Document({pedigree, schemaExtension});
 };
 
 
-module.exports = {parse};
+var readString = function(string) {
+  return readParseTree(parser.parse(string));
+};
+
+
+module.exports = {readParseTree, readString};

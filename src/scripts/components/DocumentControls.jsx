@@ -1,54 +1,57 @@
 'use strict';
 
+
+var Icon = require('react-fa');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var AppActions = require('../actions/AppActions');
-var PC = require('../constants/PedigreeConstants');
 
-var DropdownButton = ReactBootstrap.DropdownButton;
-var MenuItem = ReactBootstrap.MenuItem;
+var DocumentActions = require('../actions/DocumentActions');
+var AppConstants = require('../constants/AppConstants');
+
+
 var Button = ReactBootstrap.Button;
 var ButtonGroup = ReactBootstrap.ButtonGroup;
 var ButtonToolbar = ReactBootstrap.ButtonToolbar;
-var Tooltip = ReactBootstrap.Tooltip;
+var DropdownButton = ReactBootstrap.DropdownButton;
+var MenuItem = ReactBootstrap.MenuItem;
 var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+var Tooltip = ReactBootstrap.Tooltip;
 
-var Icon = require('react-fa');
 
-
-var PedigreeControls = React.createClass({
+var DocumentControls = React.createClass({
   addSpouse: function() {
-    AppActions.addSpouse();
+    DocumentActions.addSpouse(this.props.focus.get('key'));
   },
 
   addChild: function() {
-    AppActions.addChild(PC.Gender.Unknown);
+    DocumentActions.addChild(this.props.focus.get('key'),
+                             AppConstants.Gender.Unknown);
   },
 
   addSon: function() {
-    AppActions.addChild(PC.Gender.Male);
+    DocumentActions.addChild(this.props.focus.get('key'),
+                             AppConstants.Gender.Male);
   },
 
   addDaughter: function() {
-    AppActions.addChild(PC.Gender.Female);
+    DocumentActions.addChild(this.props.focus.get('key'),
+                             AppConstants.Gender.Female);
   },
 
   undo: function() {
-    AppActions.undo();
+    DocumentActions.undo();
   },
 
   redo: function() {
-    AppActions.redo();
+    DocumentActions.redo();
   },
 
   render: function() {
-    // Note: The `accept` attribute with file extensions only works in
-    //   Google Chrome and Internet Explorer 10+.
-    var tooltip;
     var buttons = {};
+    var tooltip;
 
-    if (this.props.undoAction !== undefined) {
-      tooltip = <Tooltip>Undo <strong>{this.props.undoAction}</strong></Tooltip>;
+    if (this.props.undo !== undefined) {
+      tooltip = <Tooltip>Undo: <strong>{this.props.undo}</strong></Tooltip>;
       buttons.undo = <OverlayTrigger placement="bottom" overlay={tooltip}>
                        <Button key="undo" onClick={this.undo}><Icon name="undo" /></Button>
                      </OverlayTrigger>;
@@ -56,8 +59,8 @@ var PedigreeControls = React.createClass({
       buttons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
     }
 
-    if (this.props.redoAction !== undefined) {
-      tooltip = <Tooltip>Redo <strong>{this.props.redoAction}</strong></Tooltip>;
+    if (this.props.redo !== undefined) {
+      tooltip = <Tooltip>Redo: <strong>{this.props.redo}</strong></Tooltip>;
       buttons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
                        <Button key="redo" onClick={this.redo}><Icon name="repeat" /></Button>
                      </OverlayTrigger>;
@@ -67,16 +70,16 @@ var PedigreeControls = React.createClass({
 
     if (this.props.focus !== undefined) {
       switch (this.props.focus.get('level')) {
-        case PC.FocusLevel.Member:
+        case AppConstants.FocusLevel.Member:
           buttons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
           break;
 
-        case PC.FocusLevel.Nest:
+        case AppConstants.FocusLevel.Nest:
           buttons.addChild = <DropdownButton title="Add child">
-                              <MenuItem eventKey="1" onClick={this.addSon}>Male</MenuItem>
-                              <MenuItem eventKey="2" onClick={this.addDaughter}>Female</MenuItem>
-                              <MenuItem eventKey="3" onClick={this.addChild}>Unknown</MenuItem>
-                            </DropdownButton>;
+                               <MenuItem eventKey="1" onClick={this.addSon}>Male</MenuItem>
+                               <MenuItem eventKey="2" onClick={this.addDaughter}>Female</MenuItem>
+                               <MenuItem eventKey="3" onClick={this.addChild}>Unknown</MenuItem>
+                             </DropdownButton>;
           break;
       }
     }
@@ -97,4 +100,4 @@ var PedigreeControls = React.createClass({
 });
 
 
-module.exports = PedigreeControls;
+module.exports = DocumentControls;
