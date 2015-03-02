@@ -16,6 +16,9 @@ var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 
 
+var accept = ['json'];
+
+
 var readJson = function(json) {
   var members;
   var nests;
@@ -76,4 +79,4 @@ var readString = function(string) {
 tv4.addSchema('http://json-schema.org/draft-04/schema#', metaSchema);
 
 
-module.exports = {readJson, readString};
+module.exports = {accept, readJson, readString};

@@ -37,6 +37,8 @@ module.exports = {
   },
 
   module: {
+    noParse: [/\/jszip\.js$/],
+
     preLoaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,

@@ -31,6 +31,8 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
+    noParse: [/\/jszip\.js$/],
+
     preLoaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
