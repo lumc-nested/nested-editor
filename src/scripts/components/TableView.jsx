@@ -5,32 +5,32 @@ var Immutable = require('immutable');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
-var PedigreeConstants = require('../constants/PedigreeConstants');
-var AppActions = require('../actions/AppActions');
+var AppConstants = require('../constants/AppConstants');
+var DocumentActions = require('../actions/DocumentActions');
 
 
 var Table = ReactBootstrap.Table;
 
 
-var genderTable = Immutable.fromJS(PedigreeConstants.Gender).flip();
+var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
 
 
 var MemberRow = React.createClass({
   handleClick: function() {
-    AppActions.changeFocus(
-      PedigreeConstants.FocusLevel.Member,
+    DocumentActions.setFocus(
+      AppConstants.FocusLevel.Member,
       this.props.memberKey
     );
   },
 
   render: function() {
-    var gender = genderTable.get(this.props.member.get('gender'),
-                                 PedigreeConstants.Gender.Unknown);
+    var gender = genderTable.get(this.props.fields.get('gender'),
+                                 AppConstants.Gender.Unknown);
 
     return (
       <tr className={(this.props.isSelected) ? 'info' : ''} onClick={this.handleClick}>
         <td>{this.props.memberKey}</td>
-        <td>{this.props.member.get('name')}</td>
+        <td>{this.props.fields.get('name')}</td>
         <td>{gender}</td>
       </tr>);
   }
@@ -44,11 +44,11 @@ var TableView = React.createClass({
     var rows;
 
     rows = pedigree.members
-      .map((member, memberKey) => {
-        var isSelected = focus.level === PedigreeConstants.FocusLevel.Member &&
+      .map((fields, memberKey) => {
+        var isSelected = focus.level === AppConstants.FocusLevel.Member &&
                          focus.key === memberKey;
         return <MemberRow key={'member-' + memberKey}
-                          member={member}
+                          fields={fields}
                           memberKey={memberKey}
                           isSelected={isSelected} />;
       })

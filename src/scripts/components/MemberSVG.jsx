@@ -1,13 +1,14 @@
 'use strict';
 
 var React = require('react');
-var AppActions = require('../actions/AppActions.js');
-var PC = require('../constants/PedigreeConstants.js');
+var DocumentActions = require('../actions/DocumentActions');
+var AppConfig = require('../constants/AppConfig');
+var AppConstants = require('../constants/AppConstants');
 
-var arrowPath = 'M' + (-PC.MemberSize / 2 - 10) + ',' + (PC.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
-var size = PC.MemberSize;
-var radius = PC.MemberSize / 2;
-var paddedRadius = radius + PC.MemberPadding;
+var arrowPath = 'M' + (-AppConfig.MemberSize / 2 - 10) + ',' + (AppConfig.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
+var size = AppConfig.MemberSize;
+var radius = AppConfig.MemberSize / 2;
+var paddedRadius = radius + AppConfig.MemberPadding;
 var diamondPoints = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(',');
 
 
@@ -63,7 +64,7 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    AppActions.changeFocus(PC.FocusLevel.Member, this.props.data._id);
+    DocumentActions.setFocus(AppConstants.FocusLevel.Member, this.props.data._id);
   }
 });
 

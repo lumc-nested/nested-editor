@@ -6,41 +6,39 @@ var tv4 = require('tv4');
 
 var Structures = require('../common/Structures');
 
-var metaSchema = require('../../json-schema-draft04.json');
-var schema = require('../../schema.json');
+var metaSchema = require('../../schemas/json-schema-draft04.json');
+var schema = require('../../schemas/schema.json');
 
 
-var Pregnancy = Structures.Pregnancy;
+var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
+var Pregnancy = Structures.Pregnancy;
 
 
-var parse = function(text) {
+var readJson = function(json) {
   var members;
   var nests;
-  var parsedJson;
   var pedigree;
-  var props;
+  var fields;
   var schemaExtension;
 
-  parsedJson = JSON.parse(text);
-
-  if (!tv4.validate(parsedJson, schema)) {
+  if (!tv4.validate(json, schema)) {
     throw new Error('base schema validation failed');
     console.log(tv4.error);
   }
 
-  schemaExtension = Immutable.fromJS(parsedJson.schemaExtension || {});
+  schemaExtension = Immutable.fromJS(json.schemaExtension || {});
 
-  if (!tv4.validate(parsedJson, schemaExtension.mergeDeep(schema).toJS())) {
+  if (!tv4.validate(json, schemaExtension.mergeDeep(schema).toJS())) {
     throw new Error('merged schema validation failed');
     console.log(tv4.error);
   }
 
-  members = Immutable.fromJS(parsedJson.pedigree.members);
+  members = Immutable.fromJS(json.pedigree.members);
 
-  nests = Immutable.Map(parsedJson.pedigree.nests).mapEntries(([nestKey, nest]) => {
-    var props;
+  nests = Immutable.Map(json.pedigree.nests).mapEntries(([nestKey, nest]) => {
+    var fields;
     var pregnancies;
 
     // In JSON, the nest keys are the parent keys joined by comma's. For now
@@ -52,27 +50,30 @@ var parse = function(text) {
     pregnancies = Immutable.List(nest.pregnancies).map(
       pregnancy => new Pregnancy({
         zygotes: Immutable.List(pregnancy.zygotes),
-        props: Immutable.Map(pregnancy).delete('zygotes')
+        fields: Immutable.Map(pregnancy).delete('zygotes')
       })
     );
-    props = Immutable.Map(nest).delete('pregnancies');
+    fields = Immutable.Map(nest).delete('pregnancies');
 
-    return [nestKey, new Nest({pregnancies, props})];
+    return [nestKey, new Nest({pregnancies, fields})];
   });
 
-  props = Immutable.Map(parsedJson.pedigree)
+  fields = Immutable.Map(json.pedigree)
     .delete('members')
     .delete('nests');
 
-  pedigree = new Pedigree({members, nests, props});
+  pedigree = new Pedigree({members, nests, fields});
 
-  console.log('schema extension', schemaExtension.toString());
+  return new Document({pedigree, schemaExtension});
+};
 
-  return {pedigree, schemaExtension};
+
+var readString = function(string) {
+  return readJson(JSON.parse(string));
 };
 
 
 tv4.addSchema('http://json-schema.org/draft-04/schema#', metaSchema);
 
 
-module.exports = {parse};
+module.exports = {readJson, readString};

@@ -3,8 +3,8 @@
 var React = require('react');
 var Immutable = require('immutable');
 var _ = require('lodash');
-var AppActions = require('../actions/AppActions.js');
-var PC = require('../constants/PedigreeConstants.js');
+var DocumentActions = require('../actions/DocumentActions');
+var AppConstants = require('../constants/AppConstants');
 
 var NestSVG = React.createClass({
   render: function() {
@@ -42,8 +42,8 @@ var NestSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    AppActions.changeFocus(
-      PC.FocusLevel.Nest,
+    DocumentActions.setFocus(
+      AppConstants.FocusLevel.Nest,
       Immutable.Set([this.props.data.father._id, this.props.data.mother._id])
     );
   }

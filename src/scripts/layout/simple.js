@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var PC = require('../constants/PedigreeConstants.js');
+var AppConfig = require('../constants/AppConfig');
 
 function doLayout(family) {
 
@@ -55,8 +55,8 @@ function doLayout(family) {
       // TODO: Current approach is too naive.
       locations.push({
         _id: p._id,
-        x: 100 + j * PC.MemberDistance,
-        y: 100 + i * PC.GenerationDistance
+        x: 100 + j * AppConfig.MemberDistance,
+        y: 100 + i * AppConfig.GenerationDistance
       });
     });
   });

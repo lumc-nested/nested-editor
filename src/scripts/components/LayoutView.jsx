@@ -5,9 +5,9 @@ var _ = require('lodash');
 var Immutable = require('immutable');
 var React = require('react');
 
-var AppActions = require('../actions/AppActions');
+var DocumentActions = require('../actions/DocumentActions');
 var LayoutEngine = require('../layout/Engine');
-var PedigreeConstants = require('../constants/PedigreeConstants');
+var AppConstants = require('../constants/AppConstants');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
 
@@ -55,7 +55,7 @@ var LayoutView = React.createClass({
     var translate;
 
     members = _.map(this.state.layout.members, function(member) {
-      var isSelected = focus.level === PedigreeConstants.FocusLevel.Member &&
+      var isSelected = focus.level === AppConstants.FocusLevel.Member &&
                        focus.key === member._id;
       return <MemberSVG data={member}
                         focused={isSelected}
@@ -63,7 +63,7 @@ var LayoutView = React.createClass({
     });
 
     nests = _.map(this.state.layout.nests, function(nest, index) {
-      var isSelected = focus.level === PedigreeConstants.FocusLevel.Nest &&
+      var isSelected = focus.level === AppConstants.FocusLevel.Nest &&
                        focus.key.equals(Immutable.Set.of(nest.father._id, nest.mother._id));
       return <NestSVG data={nest}
                       focused={isSelected}
@@ -89,7 +89,7 @@ var LayoutView = React.createClass({
   },
 
   handleClick: function() {
-    AppActions.changeFocus(PedigreeConstants.FocusLevel.Pedigree);
+    DocumentActions.setFocus(AppConstants.FocusLevel.Pedigree);
   }
 });
 

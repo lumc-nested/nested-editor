@@ -5,22 +5,21 @@ var React = require('react');
 var Form = require('plexus-form');
 var validate = require('plexus-validate');
 
-var AppActions = require('../actions/AppActions.js');
+var DocumentActions = require('../actions/DocumentActions');
 
 
 var MemberDetails = React.createClass({
-  onFormSubmit: function(memberProps) {
-    // Todo: Empty form fields are not in memberProps and hence are not
-    //   removed or deleted from the selected member.
-    AppActions.updateMember(memberProps);
+  onFormSubmit: function(fields) {
+    // Todo: Empty form fields are omited.
+    DocumentActions.updateMember(this.props.memberKey, fields);
   },
 
   render: function() {
     return <Form
              buttons={['Save']}
-             schema={this.props.memberSchema}
+             schema={this.props.schema}
              validate={validate}
-             values={this.props.memberProps.toJS()}
+             values={this.props.fields.toJS()}
              onSubmit={this.onFormSubmit}
            />;
   }

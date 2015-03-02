@@ -1,9 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
-var PC = require('../constants/PedigreeConstants.js');
-var Pedigree = require('./Pedigree.js');
-var GenerationEngine = require('./GenerationEngine.js');
+var AppConfig = require('../constants/AppConfig');
+var Pedigree = require('./Pedigree');
+var GenerationEngine = require('./GenerationEngine');
 
 
 var Engine = function(data) {
@@ -18,12 +18,12 @@ Engine.prototype = {
     var left = 0;
     _.each(generations[0], function(rootMember) {
       if (rootMember.left !== undefined && rootMember.left.location.x >= left) {
-        left = rootMember.left.location.x + PC.MemberDistance;
+        left = rootMember.left.location.x + AppConfig.MemberDistance;
       }
 
       _.each(rootMember.matingNests, function(nest) {
         if (nest.location === undefined) {
-          left += this.arrangeNest(nest, 0, left) + PC.MemberDistance;
+          left += this.arrangeNest(nest, 0, left) + AppConfig.MemberDistance;
         }
       }, this);
     }, this);
@@ -43,14 +43,14 @@ Engine.prototype = {
 
     nest.location = {
       x: center,
-      y: generationIndex * PC.GenerationDistance
+      y: generationIndex * AppConfig.GenerationDistance
     };
 
     if (numberOfSiblings > 0) {
       // first order the children along with their nests.
       orderedChildrenWithMates = this.getChildrenWithNests(nest);
 
-      nestWidth = (this.getNestWidth(nest) - 1) * PC.MemberDistance;
+      nestWidth = (this.getNestWidth(nest) - 1) * AppConfig.MemberDistance;
 
       left = nest.location.x - nestWidth / 2;
       _.each(orderedChildrenWithMates, function(member) {
@@ -60,7 +60,7 @@ Engine.prototype = {
         } else {
           left = member.location.x;
         }
-        left += PC.MemberDistance;
+        left += AppConfig.MemberDistance;
       }, this);
 
       // recenter parents based on children's width
@@ -74,14 +74,14 @@ Engine.prototype = {
 
     if (nest.father.location === undefined) {
       nest.father.location = {
-        x: flip ? nest.location.x + PC.MemberDistance / 2 : nest.location.x - PC.MemberDistance / 2,
+        x: flip ? nest.location.x + AppConfig.MemberDistance / 2 : nest.location.x - AppConfig.MemberDistance / 2,
         y: nest.location.y
       };
     }
 
     if (nest.mother.location === undefined) {
       nest.mother.location = {
-        x: flip ? nest.location.x - PC.MemberDistance / 2 : nest.location.x + PC.MemberDistance / 2,
+        x: flip ? nest.location.x - AppConfig.MemberDistance / 2 : nest.location.x + AppConfig.MemberDistance / 2,
         y: nest.location.y
       };
     }
@@ -96,21 +96,21 @@ Engine.prototype = {
     // TODO: this assumes that the order defined by GenerationEngine is correct.
     if (member.left !== undefined &&
         member.left.location !== undefined &&
-        member.left.location.x > leftEdge - PC.MemberDistance) {
-      leftEdge = member.left.location.x + PC.MemberDistance;
+        member.left.location.x > leftEdge - AppConfig.MemberDistance) {
+      leftEdge = member.left.location.x + AppConfig.MemberDistance;
     }
 
     if (member.hasMates()) {
       currentLeft = leftEdge;
       _.each(member.matingNests, function(nest) {
-        currentLeft = this.arrangeNest(nest, generationIndex, currentLeft + PC.MemberDistance / 2);
+        currentLeft = this.arrangeNest(nest, generationIndex, currentLeft + AppConfig.MemberDistance / 2);
       }, this);
 
       return currentLeft;
     } else {
       member.location = {
         x: leftEdge,
-        y: generationIndex * PC.GenerationDistance
+        y: generationIndex * AppConfig.GenerationDistance
       };
 
       console.log(member.location);
