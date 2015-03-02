@@ -1,6 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$ref": "#/definitions/pedigree",
+  "type": "object",
+  "required": ["pedigree"],
+  "properties": {
+    "pedigree": { "$ref": "#/definitions/pedigree" },
+    "schemaExtension": { "$ref": "http://json-schema.org/draft-04/schema#" }
+  },
   "definitions": {
     "pedigree": {
       "title": "Pedigree",
@@ -29,9 +34,6 @@
             "^[^,]+(,[^,]+)*$": { "$ref": "#/definitions/nest" }
           },
           "additionalProperties": false
-        },
-        "schemaExtension": {
-          "$ref": "http://json-schema.org/draft-04/schema#"
         }
       }
     },

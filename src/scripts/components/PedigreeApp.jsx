@@ -38,10 +38,8 @@ var getAppState = function() {
   // TODO: This is a temporary solution to show predefined and custom columns.
   //   Merging with _.merge might not be the best solution and schema merging
   //   is done again on each app state change.
-  state.schema = _.cloneDeep(schema);
-  if (state.pedigree.props.has('schemaExtension')) {
-    state.schema = _.merge(state.schema, state.pedigree.props.get('schemaExtension'));
-  }
+  //   Perhaps merging should already be done in the store?
+  state.schema = state.schemaExtension.mergeDeep(schema)
 
   return state;
 };
@@ -73,14 +71,14 @@ var PedigreeApp = React.createClass({
     event.target.value = null;
 
     reader.onload = function(e) {
-      var parser, pedigree;
+      var parser, document;
       if (file.name.split('.').pop() === 'ped') {
         parser = PedParser;
       } else {
         parser = PedigreeParser;
       }
-      pedigree = parser.parse(e.target.result);
-      AppActions.loadPedigree(pedigree);
+      document = parser.parse(e.target.result);
+      AppActions.loadPedigree(document.pedigree, document.schemaExtension);
     };
 
     if (file) {
@@ -99,20 +97,20 @@ var PedigreeApp = React.createClass({
       case PedigreeConstants.FocusLevel.Member:
         sidebar = <MemberDetails
                     memberProps={pedigree.members.get(focus.key)}
-                    memberSchema={this.state.schema.definitions.member}
+                    memberSchema={this.state.schema.toJS().definitions.member}
                   />;
         break;
       case PedigreeConstants.FocusLevel.Nest:
         sidebar = <NestDetails
                     nestProps={pedigree.nests.get(focus.key).props}
-                    nestSchema={this.state.schema.definitions.nest}
+                    nestSchema={this.state.schema.toJS().definitions.nest}
                   />;
         break;
       case PedigreeConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
                     pedigreeProps={pedigree.props}
-                    pedigreeSchema={this.state.schema.definitions.pedigree}
+                    pedigreeSchema={this.state.schema.toJS().definitions.pedigree}
                   />;
     }
 

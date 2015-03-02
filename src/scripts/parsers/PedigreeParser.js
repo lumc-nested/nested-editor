@@ -2,8 +2,12 @@
 
 
 var Immutable = require('immutable');
+var tv4 = require('tv4');
 
 var Structures = require('../common/Structures');
+
+var metaSchema = require('../../json-schema-draft04.json');
+var schema = require('../../schema.json');
 
 
 var Pregnancy = Structures.Pregnancy;
@@ -12,18 +16,30 @@ var Pedigree = Structures.Pedigree;
 
 
 var parse = function(text) {
-  var props;
   var members;
   var nests;
   var parsedJson;
-
-  // TODO: Validate using JSON Schema.
+  var pedigree;
+  var props;
+  var schemaExtension;
 
   parsedJson = JSON.parse(text);
 
-  members = Immutable.fromJS(parsedJson.members);
+  if (!tv4.validate(parsedJson, schema)) {
+    throw new Error('base schema validation failed');
+    console.log(tv4.error);
+  }
 
-  nests = Immutable.Map(parsedJson.nests).mapEntries(([nestKey, nest]) => {
+  schemaExtension = Immutable.fromJS(parsedJson.schemaExtension || {});
+
+  if (!tv4.validate(parsedJson, schemaExtension.mergeDeep(schema).toJS())) {
+    throw new Error('merged schema validation failed');
+    console.log(tv4.error);
+  }
+
+  members = Immutable.fromJS(parsedJson.pedigree.members);
+
+  nests = Immutable.Map(parsedJson.pedigree.nests).mapEntries(([nestKey, nest]) => {
     var props;
     var pregnancies;
 
@@ -44,10 +60,19 @@ var parse = function(text) {
     return [nestKey, new Nest({pregnancies, props})];
   });
 
-  props = Immutable.Map(parsedJson).delete('members').delete('nests');
+  props = Immutable.Map(parsedJson.pedigree)
+    .delete('members')
+    .delete('nests');
 
-  return new Pedigree({members, nests, props});
+  pedigree = new Pedigree({members, nests, props});
+
+  console.log('schema extension', schemaExtension.toString());
+
+  return {pedigree, schemaExtension};
 };
+
+
+tv4.addSchema('http://json-schema.org/draft-04/schema#', metaSchema);
 
 
 module.exports = {parse};

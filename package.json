@@ -20,7 +20,8 @@
     "plexus-validate": "0.0.4",
     "react": "~0.12.2",
     "react-bootstrap": "^0.15.1",
-    "react-fa": "^3.0.0"
+    "react-fa": "^3.0.0",
+    "tv4": "^1.1.9"
   },
   "devDependencies": {
     "babel-loader": "~4.0.0",

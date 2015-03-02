@@ -18,6 +18,8 @@ var parse = function(text) {
   var mergeNests;
   var nests;
   var originalMembers;
+  var pedigree;
+  var schemaExtension;
   var singletonNest;
   var singletonNestMap;
   var uniqueKeys;
@@ -52,7 +54,6 @@ var parse = function(text) {
       return [member.get('member'),
               Immutable.Map({
                 gender: member.get('gender'),
-                // TODO: Schema definition for family.
                 family: member.get('family')
               })];
     });
@@ -82,7 +83,22 @@ var parse = function(text) {
     .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
 
-  return new Pedigree({members, nests});
+  pedigree = new Pedigree({members, nests});
+
+  schemaExtension = Immutable.fromJS({
+    definitions: {
+      member: {
+        properties: {
+          family: {
+            title: "Family",
+            type: "string"
+          }
+        }
+      }
+    }
+  });
+
+  return {pedigree, schemaExtension};
 };
 
 
