@@ -14,9 +14,9 @@ var DocumentActions = {
     });
   },
 
-  loadDocument: function(document) {
+  openDocument: function(document) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.LOAD_DOCUMENT,
+      actionType: ActionTypes.OPEN_DOCUMENT,
       document
     });
   },
