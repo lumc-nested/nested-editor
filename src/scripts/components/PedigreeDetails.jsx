@@ -16,9 +16,11 @@ var PedigreeDetails = React.createClass({
   },
 
   render: function() {
-    var schema = this.props.schema;
-    schema.properties = _.omit(schema.properties, ['members', 'nests', 'schemaExtension']);
-
+    var schema = {
+      title: 'Pedigree',
+      type: 'object',
+      properties: this.props.schemas.toJS()
+    };
     return <Form
              buttons={['Save']}
              schema={schema}

@@ -8,8 +8,9 @@ var ExcelReader = require('../readers/ExcelReader');
 var JsonReader = require('../readers/JsonReader');
 var PedReader = require('../readers/PedReader');
 
-var DocumentActions = require('../actions/DocumentActions');
+var AppStore = require('../stores/AppStore');
 var AppConstants = require('../constants/AppConstants');
+var DocumentActions = require('../actions/DocumentActions');
 var DocumentStore = require('../stores/DocumentStore');
 
 var DocumentControls = require('./DocumentControls');
@@ -64,12 +65,9 @@ var getState = function() {
     document: DocumentStore.getDocument()
   };
 
-  // TODO: This is a temporary solution to show predefined and custom columns.
-  //   Merging with _.merge might not be the best solution and schema merging
-  //   is done again on each app state change.
-  //   Perhaps merging should already be done in the store? Should the merge
-  //   schema be part of the document?
-  state.documentSchema = state.document.schemaExtension.mergeDeep(schema);
+  // TODO: Schema merging is done again on each app state change. We should
+  //   only do it when it any of the custom schemas actually changed.
+  state.schemas = state.document.schemas.mergeDeep(AppStore.getSchemas());
 
   return state;
 };
@@ -122,7 +120,6 @@ var PedigreeApp = React.createClass({
     var redo = this.state.redo;
     var undo = this.state.undo;
     var pedigree = this.state.document.pedigree;
-    var documentSchema = this.state.documentSchema;
     var accept;
     var sidebar;
 
@@ -131,21 +128,21 @@ var PedigreeApp = React.createClass({
         sidebar = <MemberDetails
                     memberKey={focus.key}
                     fields={pedigree.members.get(focus.key)}
-                    schema={documentSchema.toJS().definitions.member}
+                    schemas={this.state.schemas.member}
                   />;
         break;
       case AppConstants.FocusLevel.Nest:
         sidebar = <NestDetails
                     nestKey={focus.key}
                     fields={pedigree.nests.get(focus.key).fields}
-                    schema={documentSchema.toJS().definitions.nest}
+                    schemas={this.state.schemas.nest}
                   />;
         break;
       case AppConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
                     fields={pedigree.fields}
-                    schema={documentSchema.toJS().definitions.pedigree}
+                    schemas={this.state.schemas.pedigree}
                   />;
     }
 

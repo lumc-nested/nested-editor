@@ -12,6 +12,7 @@ var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
+var Schemas = Structures.Schemas;
 
 
 var accept = ['ped'];
@@ -23,7 +24,7 @@ var readParseTree = function(parseTree) {
   var nests;
   var originalMembers;
   var pedigree;
-  var schemaExtension;
+  var schemas;
   var singletonNest;
   var singletonNestMap;
   var uniqueKeys;
@@ -89,20 +90,16 @@ var readParseTree = function(parseTree) {
 
   pedigree = new Pedigree({members, nests});
 
-  schemaExtension = Immutable.fromJS({
-    definitions: {
-      member: {
-        properties: {
-          family: {
-            title: 'Family',
-            type: 'string'
-          }
-        }
+  schemas = new Schemas({
+    member: Immutable.Map({
+      family: {
+        title: 'Family',
+        type: 'string'
       }
-    }
+    })
   });
 
-  return new Document({pedigree, schemaExtension});
+  return new Document({pedigree, schemas});
 };
 
 

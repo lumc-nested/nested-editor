@@ -11,6 +11,7 @@ var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
+var Schemas = Structures.Schemas;
 
 
 var accept = ['xlsx', 'ods'];
@@ -23,7 +24,7 @@ var readWorkbook = function(workbook) {
   var nests;
   var originalMembers;
   var pedigree;
-  var schemaExtension;
+  var schemas;
   var sheet;
   var singletonNest;
   var singletonNestMap;
@@ -77,28 +78,22 @@ var readWorkbook = function(workbook) {
     fields: Immutable.Map({note: 'Imported from Excel'})
   });
 
-  schemaExtension = Immutable.fromJS({
-    definitions: {
-      member: {
-        properties: {
-          name: {
-            title: 'Name',
-            type: 'string'
-          }
-        }
-      },
-      pedigree: {
-        properties: {
-          note: {
-            title: 'Note',
-            type: 'string'
-          }
-        }
+  schemas = new Schemas({
+    pedigree: Immutable.fromJS({
+      note: {
+        title: 'Note',
+        type: 'string'
       }
-    }
+    }),
+    member: Immutable.fromJS({
+      name: {
+        title: 'Name',
+        type: 'string'
+      }
+    })
   });
 
-  return new Document({pedigree, schemaExtension});
+  return new Document({pedigree, schemas});
 };
 
 

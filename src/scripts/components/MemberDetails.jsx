@@ -15,9 +15,14 @@ var MemberDetails = React.createClass({
   },
 
   render: function() {
+    var schema = {
+      title: 'Member',
+      type: 'object',
+      properties: this.props.schemas.toJS()
+    };
     return <Form
              buttons={['Save']}
-             schema={this.props.schema}
+             schema={schema}
              validate={validate}
              values={this.props.fields.toJS()}
              onSubmit={this.onFormSubmit}

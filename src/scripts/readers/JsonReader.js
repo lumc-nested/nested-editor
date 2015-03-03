@@ -14,6 +14,7 @@ var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
+var Schemas = Structures.Schemas;
 
 
 var accept = ['json'];
@@ -24,6 +25,7 @@ var readJson = function(json) {
   var nests;
   var pedigree;
   var fields;
+  var schemas;
   var schemaExtension;
 
   if (!tv4.validate(json, schema)) {
@@ -67,7 +69,14 @@ var readJson = function(json) {
 
   pedigree = new Pedigree({members, nests, fields});
 
-  return new Document({pedigree, schemaExtension});
+  schemas = new Schemas({
+    pedigree: schemaExtension.getIn(['definitions', 'pedigree', 'properties']) || Immutable.Map(),
+    member: schemaExtension.getIn(['definitions', 'member', 'properties']) || Immutable.Map(),
+    nest: schemaExtension.getIn(['definitions', 'nest', 'properties']) || Immutable.Map(),
+    pregnancy: schemaExtension.getIn(['definitions', 'pregnancy', 'properties']) || Immutable.Map()
+  });
+
+  return new Document({pedigree, schemas});
 };
 
 
