@@ -91,8 +91,8 @@ var readParseTree = function(parseTree) {
       member: {
         properties: {
           family: {
-            title: "Family",
-            type: "string"
+            title: 'Family',
+            type: 'string'
           }
         }
       }
