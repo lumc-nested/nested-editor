@@ -50,7 +50,7 @@ var indexByArray = function(objects, property) {
   }
 
   return byArray;
-}
+};
 
 
 var readers = indexByArray([ExcelReader, JsonReader, PedReader], 'accept');

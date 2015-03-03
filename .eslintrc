@@ -44,4 +44,7 @@ rules:
   max-params: [1, 4]
 ecmaFeatures:
   arrowFunctions: true
+  destructuring: true
+  objectLiteralShorthandProperties: true
+  templateStrings: true
   jsx: true
