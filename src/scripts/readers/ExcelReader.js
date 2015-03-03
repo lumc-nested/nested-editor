@@ -13,7 +13,7 @@ var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 
 
-var accept = ['xlsx'];
+var accept = ['xlsx', 'ods'];
 var binary = true;
 
 
@@ -38,6 +38,7 @@ var readWorkbook = function(workbook) {
   members = originalMembers
     .toMap()
     .mapEntries(([_, member]) => {
+      console.log('name', typeof member.get('Gender'), member.get('Name'));
       return [member.get('ID'),
               Immutable.Map({
                 gender: parseInt(member.get('Gender'), 10),
