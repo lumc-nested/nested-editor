@@ -22,7 +22,8 @@
     "react": "~0.12.2",
     "react-bootstrap": "^0.15.1",
     "react-fa": "^3.0.0",
-    "tv4": "^1.1.9"
+    "tv4": "^1.1.9",
+    "xlsx": "git+https://github.com/gurdasnijor/js-xlsx.git#d8c23dee049d39d84f4eabecff43c64a186292b4"
   },
   "devDependencies": {
     "babel-loader": "~4.0.0",

@@ -2,10 +2,9 @@
 
 
 var Immutable = require('immutable');
+var XLSX = require('xlsx');
 
 var Structures = require('../common/Structures');
-
-var parser = require('./ped.pegjs');
 
 
 var Document = Structures.Document;
@@ -14,51 +13,36 @@ var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 
 
-var accept = ['ped'];
+var accept = ['xlsx', 'ods'];
+var binary = true;
 
 
-var readParseTree = function(parseTree) {
+var readWorkbook = function(workbook) {
   var members;
   var mergeNests;
   var nests;
   var originalMembers;
   var pedigree;
   var schemaExtension;
+  var sheet;
   var singletonNest;
   var singletonNestMap;
-  var uniqueKeys;
 
-  // List of member Maps with the fields we got from the PEG.js parser.
-  originalMembers = Immutable.fromJS(parseTree)
-    .filter(([type, _]) => type === 'member')
-    .map(([_, member]) => member);
+  sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-  // Are the member keys unique?
-  uniqueKeys = originalMembers.map(m => m.get('member')).toSet().size === originalMembers.size;
-
-  if (!uniqueKeys) {
-    // Add the family key to the member key to make them unique.
-    originalMembers = originalMembers.map(member => {
-      var withFamily = field => {
-        var value = member.get(field);
-        return (value === undefined) ? undefined : (member.get('family') + '.' + value);
-      };
-      return member.merge({
-        member: withFamily('member'),
-        father: withFamily('father'),
-        mother: withFamily('mother')
-      });
-    });
-  }
+  // For now, we expect a sheet in exactly the format (including column
+  // headers) as in the examples/example.xlsx file.
+  originalMembers = Immutable.fromJS(XLSX.utils.sheet_to_json(sheet));
 
   // Map of strings (member keys) to Maps (member fields).
   members = originalMembers
     .toMap()
     .mapEntries(([_, member]) => {
-      return [member.get('member'),
+      console.log('name', typeof member.get('Gender'), member.get('Name'));
+      return [member.get('ID'),
               Immutable.Map({
-                gender: member.get('gender'),
-                family: member.get('family')
+                gender: parseInt(member.get('Gender'), 10),
+                name: member.get('Name')
               })];
     });
 
@@ -70,8 +54,8 @@ var readParseTree = function(parseTree) {
 
   // Map of one singleton nest for the given member, indexed by the parent keys.
   singletonNestMap = member => Immutable.Map([
-    [Immutable.Set.of(member.get('father'), member.get('mother')),
-     singletonNest(member.get('member'))]
+    [Immutable.Set.of(member.get('FatherID'), member.get('MotherID')),
+     singletonNest(member.get('ID'))]
   ]);
 
   // Combine pregnancies from two nests.
@@ -82,19 +66,31 @@ var readParseTree = function(parseTree) {
   // Create a singleton nest for each member that we know both parents of,
   // index these nests by their parents and merge any duplicates.
   nests = originalMembers
-    .filter(member => members.has(member.get('father')) && members.has(member.get('mother')))
+    .filter(member => members.has(member.get('FatherID')) && members.has(member.get('MotherID')))
     .toMap()
     .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
 
-  pedigree = new Pedigree({members, nests});
+  pedigree = new Pedigree({
+    members,
+    nests,
+    fields: Immutable.Map({note: 'Imported from Excel'})
+  });
 
   schemaExtension = Immutable.fromJS({
     definitions: {
       member: {
         properties: {
-          family: {
-            title: 'Family',
+          name: {
+            title: 'Name',
+            type: 'string'
+          }
+        }
+      },
+      pedigree: {
+        properties: {
+          note: {
+            title: 'Note',
             type: 'string'
           }
         }
@@ -107,8 +103,8 @@ var readParseTree = function(parseTree) {
 
 
 var readString = function(string) {
-  return readParseTree(parser.parse(string));
+  return readWorkbook(XLSX.read(string, {type: 'binary'}));
 };
 
 
-module.exports = {accept, readParseTree, readString};
+module.exports = {accept, binary, readWorkbook, readString};
