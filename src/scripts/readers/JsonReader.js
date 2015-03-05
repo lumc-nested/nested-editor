@@ -27,15 +27,15 @@ var readJson = function(json) {
   var schemaExtension;
 
   if (!tv4.validate(json, schema)) {
-    throw new Error('base schema validation failed');
     console.log(tv4.error);
+    throw new Error('base schema validation failed');
   }
 
   schemaExtension = Immutable.fromJS(json.schemaExtension || {});
 
   if (!tv4.validate(json, schemaExtension.mergeDeep(schema).toJS())) {
-    throw new Error('merged schema validation failed');
     console.log(tv4.error);
+    throw new Error('merged schema validation failed');
   }
 
   members = Immutable.fromJS(json.pedigree.members);

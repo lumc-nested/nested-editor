@@ -15,7 +15,7 @@ var convertImmutablePedigreeToOldJS = function(pedigree) {
   var nests;
 
   members = pedigree.members
-    .map((member, memberKey) =>  member.set('_id', memberKey))
+    .map((member, memberKey) => member.set('_id', memberKey))
     .toList()
     .toJS();
 

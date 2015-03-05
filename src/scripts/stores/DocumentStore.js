@@ -17,6 +17,23 @@ var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 
 
+var CHANGE_EVENT = 'change';
+
+
+var DEFAULT_DOCUMENT = new Document({
+  pedigree: new Pedigree({
+    members: Immutable.Map({
+      'id_1': Immutable.Map({gender: AppConstants.Gender.Male}),
+      'id_2': Immutable.Map({gender: AppConstants.Gender.Female})
+    }),
+    nests: Immutable.Map([
+      [Immutable.Set.of('id_1', 'id_2'),
+       new Nest()]
+    ])
+  })
+});
+
+
 var Focus = Immutable.Record({
   level: AppConstants.FocusLevel.Pedigree,
   key: undefined
@@ -27,23 +44,6 @@ var Snapshot = Immutable.Record({
   label: 'Unknown change',
   document: new Document(),
   focus: new Focus()
-});
-
-
-var CHANGE_EVENT = 'change';
-
-
-var DEFAULT_DOCUMENT = new Document({
-  pedigree: new Pedigree({
-    members: Immutable.Map({
-      id_1: Immutable.Map({gender: AppConstants.Gender.Male}),
-      id_2: Immutable.Map({gender: AppConstants.Gender.Female})
-    }),
-    nests: Immutable.Map([
-      [Immutable.Set.of('id_1', 'id_2'),
-       new Nest()]
-    ])
-  })
 });
 
 

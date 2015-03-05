@@ -37,7 +37,7 @@ var readWorkbook = function(workbook) {
   // Map of strings (member keys) to Maps (member fields).
   members = originalMembers
     .toMap()
-    .mapEntries(([_, member]) => {
+    .mapEntries(([, member]) => {
       console.log('name', typeof member.get('Gender'), member.get('Name'));
       return [member.get('ID'),
               Immutable.Map({

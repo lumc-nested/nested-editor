@@ -30,8 +30,8 @@ var readParseTree = function(parseTree) {
 
   // List of member Maps with the fields we got from the PEG.js parser.
   originalMembers = Immutable.fromJS(parseTree)
-    .filter(([type, _]) => type === 'member')
-    .map(([_, member]) => member);
+    .filter(([type, ]) => type === 'member')
+    .map(([, member]) => member);
 
   // Are the member keys unique?
   uniqueKeys = originalMembers.map(m => m.get('member')).toSet().size === originalMembers.size;
@@ -54,7 +54,7 @@ var readParseTree = function(parseTree) {
   // Map of strings (member keys) to Maps (member fields).
   members = originalMembers
     .toMap()
-    .mapEntries(([_, member]) => {
+    .mapEntries(([, member]) => {
       return [member.get('member'),
               Immutable.Map({
                 gender: member.get('gender'),

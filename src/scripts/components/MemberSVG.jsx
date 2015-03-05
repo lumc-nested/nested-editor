@@ -5,7 +5,8 @@ var DocumentActions = require('../actions/DocumentActions');
 var AppConfig = require('../constants/AppConfig');
 var AppConstants = require('../constants/AppConstants');
 
-var arrowPath = 'M' + (-AppConfig.MemberSize / 2 - 10) + ',' + (AppConfig.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
+var arrowPath = 'M' + (-AppConfig.MemberSize / 2 - 10) + ',' +
+                (AppConfig.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
 var size = AppConfig.MemberSize;
 var radius = AppConfig.MemberSize / 2;
 var paddedRadius = radius + AppConfig.MemberPadding;
