@@ -14,11 +14,22 @@ var MemberDetails = React.createClass({
     DocumentActions.updateMember(this.props.memberKey, fields);
   },
 
+  getInitialState: function() {
+    return {schemasJS: this.props.schemas.toJS()};
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.schemas.equals(nextProps.schemas)) {
+      console.log('********** serializing schemas');
+      this.setState({schemasJS: nextProps.schemas.toJS()});
+    }
+  },
+
   render: function() {
     var schema = {
       title: 'Member',
       type: 'object',
-      properties: this.props.schemas.toJS()
+      properties: this.state.schemasJS
     };
     return <Form
              buttons={['Save']}

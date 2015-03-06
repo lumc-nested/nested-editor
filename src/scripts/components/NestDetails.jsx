@@ -1,7 +1,6 @@
 'use strict';
 
 
-var _ = require('lodash');
 var React = require('react');
 var Form = require('plexus-form');
 var validate = require('plexus-validate');
@@ -15,11 +14,22 @@ var NestDetails = React.createClass({
     DocumentActions.updateNest(this.props.nestKey, fields);
   },
 
+  getInitialState: function() {
+    return {schemasJS: this.props.schemas.toJS()};
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.schemas.equals(nextProps.schemas)) {
+      console.log('********** serializing schemas');
+      this.setState({schemasJS: nextProps.schemas.toJS()});
+    }
+  },
+
   render: function() {
     var schema = {
       title: 'Nest',
       type: 'object',
-      properties: this.props.schemas.toJS()
+      properties: this.state.schemas
     };
     return <Form
              buttons={['Save']}

@@ -20,8 +20,6 @@ var NestDetails = require('./NestDetails');
 var PedigreeDetails = require('./PedigreeDetails');
 var TableView = require('./TableView');
 
-var schema = require('../../schemas/schema.json');
-
 
 var Col = ReactBootstrap.Col;
 var Grid = ReactBootstrap.Grid;
@@ -57,29 +55,44 @@ var indexByArray = function(objects, property) {
 var readers = indexByArray([ExcelReader, JsonReader, PedReader], 'accept');
 
 
-var getState = function() {
-  var state = {
+var getAppState = function() {
+  return {
+    schemas: AppStore.getSchemas()
+  };
+};
+
+
+var getDocumentState = function() {
+  return {
     focus: DocumentStore.getFocus(),
     undo: DocumentStore.getUndo(),
     redo: DocumentStore.getRedo(),
     document: DocumentStore.getDocument()
   };
-
-  // TODO: Schema merging is done again on each app state change. We should
-  //   only do it when it any of the custom schemas actually changed.
-  state.schemas = state.document.schemas.mergeDeep(AppStore.getSchemas());
-
-  return state;
 };
 
 
 var PedigreeApp = React.createClass({
   getInitialState: function() {
-    return getState();
+    var state = {
+      app: getAppState(),
+      document: getDocumentState()
+    };
+    state.schemas = state.document.document.schemas.mergeDeep(state.app.schemas);
+    return state;
   },
 
   _onChange: function() {
-    this.setState(getState());
+    var state = {
+      app: getAppState(),
+      document: getDocumentState()
+    };
+    if (!state.app.schemas.equals(this.state.app.schemas) ||
+        !state.document.document.schemas.equals(this.state.document.document.schemas)) {
+      console.log('********** merging schemas');
+      state.schemas = state.document.document.schemas.mergeDeep(state.app.schemas);
+    }
+    this.setState(state);
   },
 
   componentDidMount: function() {
@@ -116,10 +129,10 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
-    var focus = this.state.focus;
-    var redo = this.state.redo;
-    var undo = this.state.undo;
-    var pedigree = this.state.document.pedigree;
+    var focus = this.state.document.focus;
+    var redo = this.state.document.redo;
+    var undo = this.state.document.undo;
+    var pedigree = this.state.document.document.pedigree;
     var accept;
     var sidebar;
 
