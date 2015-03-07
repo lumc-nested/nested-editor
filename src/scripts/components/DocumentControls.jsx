@@ -5,6 +5,8 @@ var Icon = require('react-fa');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
+var JsonWriter = require('../writers/JsonWriter');
+
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
 
@@ -35,6 +37,11 @@ var DocumentControls = React.createClass({
     DocumentActions.redo();
   },
 
+  download: function() {
+    console.log('************ Writing json');
+    console.log(JsonWriter.writeString(this.props.document));
+  },
+
   render: function() {
     var buttons = {};
     var tooltip;
@@ -47,6 +54,10 @@ var DocumentControls = React.createClass({
     } else {
       buttons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
     }
+
+    buttons.download = <Button key="download" onClick={this.download}>
+                         <Icon name="download" />
+                       </Button>;
 
     if (this.props.redo !== undefined) {
       tooltip = <Tooltip>Redo: <strong>{this.props.redo}</strong></Tooltip>;
@@ -78,6 +89,7 @@ var DocumentControls = React.createClass({
         <ButtonGroup>
           {buttons.undo}
           {buttons.redo}
+          {buttons.download}
         </ButtonGroup>
         <ButtonGroup>
           {buttons.addSpouse}

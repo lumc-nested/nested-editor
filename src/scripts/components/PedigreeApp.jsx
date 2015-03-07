@@ -128,10 +128,10 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
+    var document = this.state.document.document;
     var focus = this.state.document.focus;
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
-    var pedigree = this.state.document.document.pedigree;
     var accept;
     var sidebar;
 
@@ -139,21 +139,21 @@ var PedigreeApp = React.createClass({
       case AppConstants.FocusLevel.Member:
         sidebar = <MemberDetails
                     memberKey={focus.key}
-                    fields={pedigree.members.get(focus.key)}
+                    fields={document.pedigree.members.get(focus.key)}
                     fieldDefinitions={this.state.schema.member}
                   />;
         break;
       case AppConstants.FocusLevel.Nest:
         sidebar = <NestDetails
                     nestKey={focus.key}
-                    fields={pedigree.nests.get(focus.key).fields}
+                    fields={document.pedigree.nests.get(focus.key).fields}
                     fieldDefinitions={this.state.schema.nest}
                   />;
         break;
       case AppConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
-                    fields={pedigree.fields}
+                    fields={document.pedigree.fields}
                     fieldDefinitions={this.state.schema.pedigree}
                   />;
     }
@@ -184,13 +184,13 @@ var PedigreeApp = React.createClass({
               {sidebar}
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
-              <DocumentControls focus={focus} undo={undo} redo={redo} />
+              <DocumentControls document={document} focus={focus} undo={undo} redo={redo} />
               <TabbedArea className="main-area" defaultActiveKey="layoutView" animation={false}>
                 <TabPane eventKey="layoutView" tab="Layout">
-                  <LayoutView pedigree={pedigree} focus={focus} />
+                  <LayoutView pedigree={document.pedigree} focus={focus} />
                 </TabPane>
                 <TabPane eventKey="tableView" tab="Table">
-                  <TableView pedigree={pedigree} focus={focus} />
+                  <TableView pedigree={document.pedigree} focus={focus} />
                 </TabPane>
               </TabbedArea>
             </Col>
