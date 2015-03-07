@@ -23,19 +23,8 @@ var DocumentControls = React.createClass({
     DocumentActions.addSpouse(this.props.focus.get('key'));
   },
 
-  addChild: function() {
-    DocumentActions.addChild(this.props.focus.get('key'),
-                             AppConstants.Gender.Unknown);
-  },
-
-  addSon: function() {
-    DocumentActions.addChild(this.props.focus.get('key'),
-                             AppConstants.Gender.Male);
-  },
-
-  addDaughter: function() {
-    DocumentActions.addChild(this.props.focus.get('key'),
-                             AppConstants.Gender.Female);
+  addChild: function(gender) {
+    DocumentActions.addChild(this.props.focus.get('key'), gender);
   },
 
   undo: function() {
@@ -75,10 +64,10 @@ var DocumentControls = React.createClass({
           break;
 
         case AppConstants.FocusLevel.Nest:
-          buttons.addChild = <DropdownButton title="Add child">
-                               <MenuItem eventKey="1" onClick={this.addSon}>Male</MenuItem>
-                               <MenuItem eventKey="2" onClick={this.addDaughter}>Female</MenuItem>
-                               <MenuItem eventKey="3" onClick={this.addChild}>Unknown</MenuItem>
+          buttons.addChild = <DropdownButton onSelect={this.addChild} title="Add child">
+                               <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
+                               <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
+                               <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
                              </DropdownButton>;
           break;
       }
