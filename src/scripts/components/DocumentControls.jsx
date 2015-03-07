@@ -6,6 +6,7 @@ var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
 var JsonWriter = require('../writers/JsonWriter');
+var PedWriter = require('../writers/PedWriter');
 
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
@@ -37,9 +38,10 @@ var DocumentControls = React.createClass({
     DocumentActions.redo();
   },
 
-  download: function() {
-    console.log('************ Writing json');
-    console.log(JsonWriter.writeString(this.props.document));
+  download: function(eventKey) {
+    var Writer = eventKey === 'ped' ? PedWriter : JsonWriter;
+    console.log('************ Writing document');
+    console.log(Writer.writeString(this.props.document));
   },
 
   render: function() {
@@ -55,10 +57,6 @@ var DocumentControls = React.createClass({
       buttons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
     }
 
-    buttons.download = <Button key="download" onClick={this.download}>
-                         <Icon name="download" />
-                       </Button>;
-
     if (this.props.redo !== undefined) {
       tooltip = <Tooltip>Redo: <strong>{this.props.redo}</strong></Tooltip>;
       buttons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
@@ -67,6 +65,11 @@ var DocumentControls = React.createClass({
     } else {
       buttons.redo = <Button key="redo" disabled><Icon name="repeat" /></Button>;
     }
+
+    buttons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
+                         <MenuItem eventKey="json">Save as JSON</MenuItem>
+                         <MenuItem eventKey="ped">Save as PED</MenuItem>
+                       </DropdownButton>;
 
     if (this.props.focus !== undefined) {
       switch (this.props.focus.get('level')) {
