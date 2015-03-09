@@ -29,7 +29,7 @@ var NestDetails = React.createClass({
     var schema = {
       title: 'Nest',
       type: 'object',
-      properties: this.state.schemas
+      properties: this.state.schemasJS
     };
     return <Form
              buttons={['Save']}
