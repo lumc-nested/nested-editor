@@ -15,10 +15,8 @@ var DocumentActions = require('../actions/DocumentActions');
 var DocumentStore = require('../stores/DocumentStore');
 
 var DocumentControls = require('./DocumentControls');
+var FieldsView = require('./FieldsView');
 var LayoutView = require('./LayoutView');
-var MemberDetails = require('./MemberDetails');
-var NestDetails = require('./NestDetails');
-var PedigreeDetails = require('./PedigreeDetails');
 var TableView = require('./TableView');
 
 
@@ -134,30 +132,37 @@ var PedigreeApp = React.createClass({
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
     var accept;
-    var sidebar;
+    var fieldsView;
+    var fieldsViewProps;
 
     switch (focus.level) {
       case AppConstants.FocusLevel.Member:
-        sidebar = <MemberDetails
-                    memberKey={focus.key}
-                    fields={document.pedigree.members.get(focus.key)}
-                    fieldDefinitions={this.state.schema.member}
-                  />;
+        fieldsViewProps = {
+          title: 'Member',
+          fields: document.pedigree.members.get(focus.key),
+          fieldDefinitions: this.state.schema.member,
+          onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
+        };
         break;
       case AppConstants.FocusLevel.Nest:
-        sidebar = <NestDetails
-                    nestKey={focus.key}
-                    fields={document.pedigree.nests.get(focus.key).fields}
-                    fieldDefinitions={this.state.schema.nest}
-                  />;
+        fieldsViewProps = {
+          title: 'Nest',
+          fields: document.pedigree.nests.get(focus.key).fields,
+          fieldDefinitions: this.state.schema.nest,
+          onSubmit: fields => DocumentActions.updateNest(focus.key, fields)
+        };
         break;
       case AppConstants.FocusLevel.Pedigree:
       default:
-        sidebar = <PedigreeDetails
-                    fields={document.pedigree.fields}
-                    fieldDefinitions={this.state.schema.pedigree}
-                  />;
+        fieldsViewProps = {
+          title: 'Pedigree',
+          fields: document.pedigree.fields,
+          fieldDefinitions: this.state.schema.pedigree,
+          onSubmit: fields => DocumentActions.updatePedigree(fields)
+        };
     }
+
+    fieldsView = <FieldsView {...fieldsViewProps} />;
 
     // Note: The `accept` attribute with file extensions only works in Google
     //   Chrome and Internet Explorer 10+.
@@ -182,7 +187,7 @@ var PedigreeApp = React.createClass({
         <Grid fluid>
           <Row>
             <Col id="sidebar" sm={3} md={2}>
-              {sidebar}
+              {fieldsView}
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
               <DocumentControls document={document} focus={focus} undo={undo} redo={redo} />
