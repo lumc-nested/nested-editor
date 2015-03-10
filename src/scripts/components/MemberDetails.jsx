@@ -8,6 +8,15 @@ var validate = require('plexus-validate');
 var DocumentActions = require('../actions/DocumentActions');
 
 
+var createJsonSchema = function(fieldDefinitions) {
+  return {
+    title: 'Member',
+    type: 'object',
+    properties: fieldDefinitions.toJS()
+  };
+};
+
+
 var MemberDetails = React.createClass({
   onFormSubmit: function(fields) {
     // Todo: Empty form fields are omited.
@@ -15,25 +24,23 @@ var MemberDetails = React.createClass({
   },
 
   getInitialState: function() {
-    return {schemasJS: this.props.schemas.toJS()};
+    var jsonSchema = createJsonSchema(this.props.fieldDefinitions);
+    return {jsonSchema};
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.schemas.equals(nextProps.schemas)) {
-      console.log('********** serializing schemas');
-      this.setState({schemasJS: nextProps.schemas.toJS()});
+    var jsonSchema;
+    if (!this.props.fieldDefinitions.equals(nextProps.fieldDefinitions)) {
+      console.log('********** serializing schema');
+      jsonSchema = createJsonSchema(nextProps.fieldDefinitions);
+      this.setState({jsonSchema});
     }
   },
 
   render: function() {
-    var schema = {
-      title: 'Member',
-      type: 'object',
-      properties: this.state.schemasJS
-    };
     return <Form
              buttons={['Save']}
-             schema={schema}
+             schema={this.state.jsonSchema}
              validate={validate}
              values={this.props.fields.toJS()}
              onSubmit={this.onFormSubmit}

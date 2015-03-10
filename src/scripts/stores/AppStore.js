@@ -7,37 +7,37 @@ var Immutable = require('immutable');
 
 var Structures = require('../common/Structures');
 
-var schema = require('../../schemas/schema.json');
+var jsonSchema = require('../../schemas/schema.json');
 
 
-var Schemas = Structures.Schemas;
+var Schema = Structures.Schema;
 
 
 var CHANGE_EVENT = 'change';
 
 
-var SCHEMAS = new Schemas({
+var SCHEMA = new Schema({
   pedigree: Immutable.fromJS(
-    schema.definitions.pedigree.properties
+    jsonSchema.definitions.pedigree.properties
   ).delete('members').delete('nests').delete('schemaExtension'),
 
   member: Immutable.fromJS(
-    schema.definitions.member.properties
+    jsonSchema.definitions.member.properties
   ),
 
   nest: Immutable.fromJS(
-    schema.definitions.nest.properties
+    jsonSchema.definitions.nest.properties
   ).delete('pregnancies'),
 
   pregnancy: Immutable.fromJS(
-    schema.definitions.pregnancy.properties
+    jsonSchema.definitions.pregnancy.properties
   ).delete('zygotes')
 });
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
-  getSchemas: function() {
-    return SCHEMAS;
+  getSchema: function() {
+    return SCHEMA;
   },
 
   emitChange: function() {

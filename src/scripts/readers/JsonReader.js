@@ -6,15 +6,15 @@ var tv4 = require('tv4');
 
 var Structures = require('../common/Structures');
 
-var metaSchema = require('../../schemas/json-schema-draft04.json');
-var schema = require('../../schemas/schema.json');
+var jsonMetaSchema = require('../../schemas/json-schema-draft04.json');
+var jsonSchema = require('../../schemas/schema.json');
 
 
 var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
-var Schemas = Structures.Schemas;
+var Schema = Structures.Schema;
 
 
 var accept = ['json'];
@@ -25,17 +25,17 @@ var readJson = function(json) {
   var nests;
   var pedigree;
   var fields;
-  var schemas;
+  var schema;
   var schemaExtension;
 
-  if (!tv4.validate(json, schema)) {
+  if (!tv4.validate(json, jsonSchema)) {
     console.log(tv4.error);
     throw new Error('base schema validation failed');
   }
 
   schemaExtension = Immutable.fromJS(json.schemaExtension || {});
 
-  if (!tv4.validate(json, schemaExtension.mergeDeep(schema).toJS())) {
+  if (!tv4.validate(json, schemaExtension.mergeDeep(jsonSchema).toJS())) {
     console.log(tv4.error);
     throw new Error('merged schema validation failed');
   }
@@ -69,14 +69,14 @@ var readJson = function(json) {
 
   pedigree = new Pedigree({members, nests, fields});
 
-  schemas = new Schemas({
+  schema = new Schema({
     pedigree: schemaExtension.getIn(['definitions', 'pedigree', 'properties']) || Immutable.Map(),
     member: schemaExtension.getIn(['definitions', 'member', 'properties']) || Immutable.Map(),
     nest: schemaExtension.getIn(['definitions', 'nest', 'properties']) || Immutable.Map(),
     pregnancy: schemaExtension.getIn(['definitions', 'pregnancy', 'properties']) || Immutable.Map()
   });
 
-  return new Document({pedigree, schemas});
+  return new Document({pedigree, schema});
 };
 
 
@@ -85,7 +85,7 @@ var readString = function(string) {
 };
 
 
-tv4.addSchema('http://json-schema.org/draft-04/schema#', metaSchema);
+tv4.addSchema('http://json-schema.org/draft-04/schema#', jsonMetaSchema);
 
 
 module.exports = {accept, readJson, readString};

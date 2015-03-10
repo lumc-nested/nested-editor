@@ -57,7 +57,7 @@ var readers = indexByArray([ExcelReader, JsonReader, PedReader], 'accept');
 
 var getAppState = function() {
   return {
-    schemas: AppStore.getSchemas()
+    schema: AppStore.getSchema()
   };
 };
 
@@ -78,7 +78,7 @@ var PedigreeApp = React.createClass({
       app: getAppState(),
       document: getDocumentState()
     };
-    state.schemas = state.document.document.schemas.mergeDeep(state.app.schemas);
+    state.schema = state.document.document.schema.mergeDeep(state.app.schema);
     return state;
   },
 
@@ -87,10 +87,9 @@ var PedigreeApp = React.createClass({
       app: getAppState(),
       document: getDocumentState()
     };
-    if (!state.app.schemas.equals(this.state.app.schemas) ||
-        !state.document.document.schemas.equals(this.state.document.document.schemas)) {
-      console.log('********** merging schemas');
-      state.schemas = state.document.document.schemas.mergeDeep(state.app.schemas);
+    if (!state.document.document.schema.equals(this.state.document.document.schema)) {
+      console.log('********** merging schema');
+      state.schema = state.document.document.schema.mergeDeep(state.app.schema);
     }
     this.setState(state);
   },
@@ -141,21 +140,21 @@ var PedigreeApp = React.createClass({
         sidebar = <MemberDetails
                     memberKey={focus.key}
                     fields={pedigree.members.get(focus.key)}
-                    schemas={this.state.schemas.member}
+                    fieldDefinitions={this.state.schema.member}
                   />;
         break;
       case AppConstants.FocusLevel.Nest:
         sidebar = <NestDetails
                     nestKey={focus.key}
                     fields={pedigree.nests.get(focus.key).fields}
-                    schemas={this.state.schemas.nest}
+                    fieldDefinitions={this.state.schema.nest}
                   />;
         break;
       case AppConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
                     fields={pedigree.fields}
-                    schemas={this.state.schemas.pedigree}
+                    fieldDefinitions={this.state.schema.pedigree}
                   />;
     }
 

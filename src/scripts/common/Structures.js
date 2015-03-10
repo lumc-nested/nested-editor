@@ -35,9 +35,9 @@ var Pedigree = Immutable.Record({
 });
 
 
-var Schemas = Immutable.Record({
-  // Schemas for fields. For now just a map of strings (field keys) to
-  // Immutable representations of JSON Schemas.
+var Schema = Immutable.Record({
+  // Field definitions are maps of strings (field keys) to Immutable
+  // representations of JSON Schemas.
   pedigree: Immutable.Map(),
   member: Immutable.Map(),
   nest: Immutable.Map(),
@@ -49,9 +49,9 @@ var Document = Immutable.Record({
   // Pedigree instance.
   pedigree: new Pedigree(),
 
-  // Schemas for custom fields.
-  schemas: new Schemas()
+  // Custom field definitions.
+  schema: new Schema()
 });
 
 
-module.exports = {Pregnancy, Nest, Pedigree, Document, Schemas};
+module.exports = {Pregnancy, Nest, Pedigree, Document, Schema};

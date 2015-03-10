@@ -12,7 +12,7 @@ var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
-var Schemas = Structures.Schemas;
+var Schema = Structures.Schema;
 
 
 var accept = ['ped'];
@@ -24,7 +24,7 @@ var readParseTree = function(parseTree) {
   var nests;
   var originalMembers;
   var pedigree;
-  var schemas;
+  var schema;
   var singletonNest;
   var singletonNestMap;
   var uniqueKeys;
@@ -90,7 +90,7 @@ var readParseTree = function(parseTree) {
 
   pedigree = new Pedigree({members, nests});
 
-  schemas = new Schemas({
+  schema = new Schema({
     member: Immutable.Map({
       family: {
         title: 'Family',
@@ -99,7 +99,7 @@ var readParseTree = function(parseTree) {
     })
   });
 
-  return new Document({pedigree, schemas});
+  return new Document({pedigree, schema});
 };
 
 
