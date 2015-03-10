@@ -8,8 +8,9 @@ var ExcelReader = require('../readers/ExcelReader');
 var JsonReader = require('../readers/JsonReader');
 var PedReader = require('../readers/PedReader');
 
-var DocumentActions = require('../actions/DocumentActions');
+var AppStore = require('../stores/AppStore');
 var AppConstants = require('../constants/AppConstants');
+var DocumentActions = require('../actions/DocumentActions');
 var DocumentStore = require('../stores/DocumentStore');
 
 var DocumentControls = require('./DocumentControls');
@@ -18,8 +19,6 @@ var MemberDetails = require('./MemberDetails');
 var NestDetails = require('./NestDetails');
 var PedigreeDetails = require('./PedigreeDetails');
 var TableView = require('./TableView');
-
-var schema = require('../../schemas/schema.json');
 
 
 var Col = ReactBootstrap.Col;
@@ -56,32 +55,43 @@ var indexByArray = function(objects, property) {
 var readers = indexByArray([ExcelReader, JsonReader, PedReader], 'accept');
 
 
-var getState = function() {
-  var state = {
+var getAppState = function() {
+  return {
+    schema: AppStore.getSchema()
+  };
+};
+
+
+var getDocumentState = function() {
+  return {
     focus: DocumentStore.getFocus(),
     undo: DocumentStore.getUndo(),
     redo: DocumentStore.getRedo(),
     document: DocumentStore.getDocument()
   };
-
-  // TODO: This is a temporary solution to show predefined and custom columns.
-  //   Merging with _.merge might not be the best solution and schema merging
-  //   is done again on each app state change.
-  //   Perhaps merging should already be done in the store? Should the merge
-  //   schema be part of the document?
-  state.documentSchema = state.document.schemaExtension.mergeDeep(schema);
-
-  return state;
 };
 
 
 var PedigreeApp = React.createClass({
   getInitialState: function() {
-    return getState();
+    var state = {
+      app: getAppState(),
+      document: getDocumentState()
+    };
+    state.schema = state.document.document.schema.mergeDeep(state.app.schema);
+    return state;
   },
 
   _onChange: function() {
-    this.setState(getState());
+    var state = {
+      app: getAppState(),
+      document: getDocumentState()
+    };
+    if (!state.document.document.schema.equals(this.state.document.document.schema)) {
+      console.log('********** merging schema');
+      state.schema = state.document.document.schema.mergeDeep(state.app.schema);
+    }
+    this.setState(state);
   },
 
   componentDidMount: function() {
@@ -118,11 +128,10 @@ var PedigreeApp = React.createClass({
   },
 
   render: function() {
-    var focus = this.state.focus;
-    var redo = this.state.redo;
-    var undo = this.state.undo;
-    var pedigree = this.state.document.pedigree;
-    var documentSchema = this.state.documentSchema;
+    var focus = this.state.document.focus;
+    var redo = this.state.document.redo;
+    var undo = this.state.document.undo;
+    var pedigree = this.state.document.document.pedigree;
     var accept;
     var sidebar;
 
@@ -131,21 +140,21 @@ var PedigreeApp = React.createClass({
         sidebar = <MemberDetails
                     memberKey={focus.key}
                     fields={pedigree.members.get(focus.key)}
-                    schema={documentSchema.toJS().definitions.member}
+                    fieldDefinitions={this.state.schema.member}
                   />;
         break;
       case AppConstants.FocusLevel.Nest:
         sidebar = <NestDetails
                     nestKey={focus.key}
                     fields={pedigree.nests.get(focus.key).fields}
-                    schema={documentSchema.toJS().definitions.nest}
+                    fieldDefinitions={this.state.schema.nest}
                   />;
         break;
       case AppConstants.FocusLevel.Pedigree:
       default:
         sidebar = <PedigreeDetails
                     fields={pedigree.fields}
-                    schema={documentSchema.toJS().definitions.pedigree}
+                    fieldDefinitions={this.state.schema.pedigree}
                   />;
     }
 
