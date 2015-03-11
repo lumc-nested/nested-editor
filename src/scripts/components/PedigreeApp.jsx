@@ -5,6 +5,7 @@ var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
 var ExcelReader = require('../readers/ExcelReader');
+var FamReader = require('../readers/FamReader');
 var JsonReader = require('../readers/JsonReader');
 var PedReader = require('../readers/PedReader');
 
@@ -52,7 +53,7 @@ var indexByArray = function(objects, property) {
 };
 
 
-var readers = indexByArray([ExcelReader, JsonReader, PedReader], 'accept');
+var readers = indexByArray([ExcelReader, FamReader, JsonReader, PedReader], 'accept');
 
 
 var getAppState = function() {

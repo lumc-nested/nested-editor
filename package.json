@@ -12,6 +12,7 @@
   "dependencies": {
     "babel-runtime": "^4.2.0",
     "bootstrap": "^3.3.1",
+    "fam-parser": "git+https://git.lumc.nl/pedigree/fam-parser.git#v0.0.1",
     "flux": "^2.0.1",
     "immutable": "~3.6.2",
     "lodash": "^2.4.1",
