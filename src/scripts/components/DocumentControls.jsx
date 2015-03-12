@@ -1,10 +1,12 @@
 'use strict';
 
 
+var FileSaver = require('FileSaver');
 var Icon = require('react-fa');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
+var ExcelWriter = require('../writers/ExcelWriter');
 var JsonWriter = require('../writers/JsonWriter');
 var PedWriter = require('../writers/PedWriter');
 
@@ -19,6 +21,30 @@ var DropdownButton = ReactBootstrap.DropdownButton;
 var MenuItem = ReactBootstrap.MenuItem;
 var OverlayTrigger = ReactBootstrap.OverlayTrigger;
 var Tooltip = ReactBootstrap.Tooltip;
+
+
+var stringToArrayBuffer = function(string) {
+  var buffer = new ArrayBuffer(string.length);
+  var view = new Uint8Array(buffer);
+  var i;
+
+  for (i = 0; i !== string.length; ++i) {
+    view[i] = string.charCodeAt(i) & 0xFF;
+  }
+  return buffer;
+};
+
+
+var indexBy = function(objects, property) {
+  var byProperty = {};
+  objects.forEach(object => {
+    byProperty[object[property]] = object;
+  });
+  return byProperty;
+};
+
+
+var writers = indexBy([ExcelWriter, JsonWriter, PedWriter], 'produce');
 
 
 var DocumentControls = React.createClass({
@@ -39,13 +65,24 @@ var DocumentControls = React.createClass({
   },
 
   download: function(eventKey) {
-    var Writer = eventKey === 'ped' ? PedWriter : JsonWriter;
-    console.log('************ Writing document');
-    console.log(Writer.writeString(this.props.document));
+    var Writer = writers[eventKey];
+    var blob;
+    var result;
+
+    result = Writer.writeString(this.props.document);
+
+    if (Writer.binary) {
+      blob = new Blob([stringToArrayBuffer(result)], {type: 'application/octet-stream'});
+    } else {
+      blob = new Blob([result], {type: "text/plain;charset=utf-8"});
+    }
+
+    FileSaver.saveAs(blob, 'pedigree.' + eventKey);
   },
 
   render: function() {
     var buttons = {};
+    var downloadItems;
     var tooltip;
 
     if (this.props.undo !== undefined) {
@@ -66,9 +103,11 @@ var DocumentControls = React.createClass({
       buttons.redo = <Button key="redo" disabled><Icon name="repeat" /></Button>;
     }
 
+    downloadItems = Object.keys(writers).map(
+      produce => <MenuItem key={produce} eventKey={produce}>Save as .{produce}</MenuItem>
+    );
     buttons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
-                         <MenuItem eventKey="json">Save as JSON</MenuItem>
-                         <MenuItem eventKey="ped">Save as PED</MenuItem>
+                         {downloadItems}
                        </DropdownButton>;
 
     if (this.props.focus !== undefined) {
