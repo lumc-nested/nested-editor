@@ -3,3 +3,4 @@ node_modules/
 dist
 /src/scripts/main.js
 bower_components/
+npm-debug.log
