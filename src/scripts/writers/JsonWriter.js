@@ -1,6 +1,9 @@
 'use strict';
 
 
+var produce = 'json';
+
+
 var writeJson = function(document) {
   var members = document.pedigree.members;
   var nests = document.pedigree.nests.mapEntries(
@@ -44,4 +47,4 @@ var writeString = function(document) {
 };
 
 
-module.exports = {writeJson, writeString};
+module.exports = {produce, writeJson, writeString};

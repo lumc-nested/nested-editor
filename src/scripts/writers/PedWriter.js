@@ -4,6 +4,9 @@
 var AppConstants = require('../constants/AppConstants');
 
 
+var produce = 'ped';
+
+
 var flatten = function(document) {
   var fathers = {};
   var mothers = {};
@@ -41,4 +44,4 @@ var writeString = function(document) {
 };
 
 
-module.exports = {writeString};
+module.exports = {produce, writeString};
