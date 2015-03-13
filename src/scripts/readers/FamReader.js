@@ -20,6 +20,16 @@ var accept = ['fam'];
 var binary = true;
 
 
+var mapGender = function(gender) {
+  if (gender === 'MALE') {
+    return AppConstants.Gender.Male;
+  } else if (gender === 'FEMALE') {
+    return AppConstants.Gender.Female;
+  }
+  return AppConstants.Gender.Unknown;
+};
+
+
 var readString = function(string) {
   var members;
   var nests;
@@ -34,7 +44,7 @@ var readString = function(string) {
     Immutable.Map({
       surname: member.SURNAME,
       forenames: member.FORENAMES,
-      gender: AppConstants.Gender[member.SEX]
+      gender: mapGender(member.SEX)
     })
   ]));
 
