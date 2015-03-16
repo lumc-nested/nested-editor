@@ -1,6 +1,8 @@
 'use strict';
 
 var _ = require('lodash');
+var Immutable = require('immutable');
+
 var AppConfig = require('../constants/AppConfig');
 var Pedigree = require('./Pedigree');
 var GenerationEngine = require('./GenerationEngine');
@@ -16,6 +18,8 @@ Engine.prototype = {
     var ge = new GenerationEngine(this.pedigree);
     var generations = ge.determineGenerations();
     var left = 0;
+    var locations;
+
     _.each(generations[0], function(rootMember) {
       if (rootMember.left !== undefined && rootMember.left.location.x >= left) {
         left = rootMember.left.location.x + AppConfig.MemberDistance;
@@ -28,7 +32,21 @@ Engine.prototype = {
       }, this);
     }, this);
 
-    return this.pedigree;
+
+    locations = new Immutable.Map({
+      members: Immutable.fromJS(this.pedigree.members)
+        .map(member => Immutable.Map({
+          x: member.location.x,
+          y: member.location.y,
+          sibIndex: member.sibIndex
+        })),
+      nests: Immutable.Map(this.pedigree.nests.map(nest => [
+          Immutable.Set([nest.father._id, nest.mother._id]),
+          Immutable.fromJS(nest.location)
+        ]))
+    });
+
+    return locations;
   },
 
   arrangeNest: function(nest, generationIndex, center) {

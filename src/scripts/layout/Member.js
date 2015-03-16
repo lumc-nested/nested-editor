@@ -16,21 +16,8 @@ Member = function(data) {
 
 Member.prototype = {
 
-  isDead: function() {
-    return this.data.dateOfDeath !== undefined ||
-           (this.data.deceased !== undefined && this.data.deceased);
-  },
-
   gender: function() {
     return this.data.gender;
-  },
-
-  isProband: function() {
-    return this.data.proband;
-  },
-
-  isConsultand: function() {
-    return this.data.consultand;
   },
 
   hasParents: function() {
@@ -43,8 +30,8 @@ Member.prototype = {
 };
 
 
-Individual = function(data) {
-  Member.call(this, data);
+Individual = function(_id, gender) {
+  Member.call(this, {_id, gender});
   this.children = [];
   this.matingNests = [];
 };
