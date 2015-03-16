@@ -46,18 +46,5 @@
         ]
       }
     }
-  },
-  "schemaExtension": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "definitions": {
-      "member": {
-        "properties": {
-          "deceased": {
-            "title": "Deceased",
-            "type": "boolean"
-          }
-        }
-      }
-    }
   }
 }

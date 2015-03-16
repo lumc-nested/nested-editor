@@ -83,16 +83,6 @@
           "name": {
             "title": "Name",
             "type": "string"
-          },
-          "dateOfBirth": {
-            "title": "Date of birth",
-            "type": "string",
-            "format": "date"
-          },
-          "dateOfDeath": {
-            "title": "Date of death",
-            "type": "string",
-            "format": "date"
           }
         }
       },

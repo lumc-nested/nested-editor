@@ -54,6 +54,20 @@
         "consultand": {
           "title": "Consultand",
           "type": "boolean"
+        },
+        "dateOfBirth": {
+          "title": "Date of birth",
+          "type": "string",
+          "format": "date"
+        },
+        "dateOfDeath": {
+          "title": "Date of death",
+          "type": "string",
+          "format": "date"
+        },
+        "deceased": {
+          "title": "Deceased",
+          "type": "boolean"
         }
       }
     },
