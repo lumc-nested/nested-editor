@@ -74,7 +74,7 @@ var DocumentControls = React.createClass({
     if (Writer.binary) {
       blob = new Blob([stringToArrayBuffer(result)], {type: 'application/octet-stream'});
     } else {
-      blob = new Blob([result], {type: "text/plain;charset=utf-8"});
+      blob = new Blob([result], {type: 'text/plain;charset=utf-8'});
     }
 
     FileSaver.saveAs(blob, 'pedigree.' + eventKey);
