@@ -5,6 +5,10 @@ var React = require('react');
 var PedigreeApp = require('./components/PedigreeApp');
 
 
+// ES6 polyfills
+require('babel-core/polyfill');
+
+
 // CSS
 require('../styles/normalize.css');
 require('../styles/main.less');
