@@ -25,7 +25,7 @@ var FieldsView = React.createClass({
     var jsonSchema;
     if (!this.props.fieldDefinitions.equals(nextProps.fieldDefinitions)) {
       console.log('********** serializing schema');
-      jsonSchema = createJsonSchema(this.props.title, nextProps.fieldDefinitions);
+      jsonSchema = createJsonSchema(nextProps.title, nextProps.fieldDefinitions);
       this.setState({jsonSchema});
     }
   },
