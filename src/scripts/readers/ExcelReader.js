@@ -172,6 +172,13 @@ var readWorkbook = function(workbook) {
   // Per member, a map of strings (column names) to values.
   originalMembers = Immutable.fromJS(XLSX.utils.sheet_to_json(sheet));
 
+  // TODO: Our app currently does not handle unconnected pedigrees well. We
+  //   should at least implement a warning for the user. This would apply to
+  //   all readers, not just ExcelReader.
+  if (!['key', 'father', 'mother'].every(key => getters.hasOwnProperty(key))) {
+    console.log('WARNING: Could not infer relationship definitions from Excel file');
+  }
+
   // We should always have a 'key' getter, so if we couldn't find it we
   // generate keys ourselves.
   if (!getters.hasOwnProperty('key')) {
