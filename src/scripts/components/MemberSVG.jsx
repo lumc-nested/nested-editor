@@ -1,17 +1,21 @@
 'use strict';
 
 var React = require('react');
-var DocumentActions = require('../actions/DocumentActions');
+
+
 var AppConfig = require('../constants/AppConfig');
 var AppConstants = require('../constants/AppConstants');
+var DocumentActions = require('../actions/DocumentActions');
 
-var arrowPath = 'M' + (-AppConfig.MemberSize / 2 - 10) + ',' +
-                (AppConfig.MemberSize / 2 + 10) + 'l9,-9l-3,6l-3,-3l6,-3';
-var size = AppConfig.MemberSize;
-var radius = AppConfig.MemberSize / 2;
-var paddedRadius = radius + AppConfig.MemberPadding;
-var diamondPoints = [-radius, 0, 0, radius, radius, 0, 0, -radius].join(',');
+var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
+var _size = AppConfig.MemberSize;
+var _radius = AppConfig.MemberSize / 2;
+var _paddedRadius = _radius + AppConfig.MemberPadding;
+var _diamondPoints = [-_radius, 0, 0, _radius, _radius, 0, 0, -_radius].join(',');
 
+var _isDead = function(member) {
+  return member.has('dateOfDeath') || member.get('deceased');
+};
 
 var MemberSVG = React.createClass({
 
@@ -23,34 +27,35 @@ var MemberSVG = React.createClass({
     var transform;
 
     var member = this.props.data;
+    var location = this.props.location;
 
-    if (member.isDead()) {
-      death = <line x1={paddedRadius} y1={-paddedRadius} x2={-paddedRadius} y2={paddedRadius} />;
+    if (_isDead(member)) {
+      death = <line x1={_paddedRadius} y1={-_paddedRadius} x2={-_paddedRadius} y2={_paddedRadius} />;
     }
 
-    if (member.isProband()) {
-      arrow = <path className="arrow" d={arrowPath} />;
-      p = <text className="proband" x={-radius - 18} y={radius + 10}>P</text>;
+    if (member.get('proband')) {
+      arrow = <path className="arrow" d={_arrowPath} />;
+      p = <text className="proband" x={-_radius - 18} y={_radius + 10}>P</text>;
     }
 
-    if (member.isConsultand()) {
-      arrow = <path className="arrow" d={arrowPath} />;
+    if (member.get('consultand')) {
+      arrow = <path className="arrow" d={_arrowPath} />;
     }
 
-    transform = 'translate(' + member.location.x + ',' + member.location.y + ')';
+    transform = `translate(${location.get('x')},${location.get('y')})`;
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
-    switch (member.gender()) {
+    switch (member.get('gender')) {
       case 1:
         // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={size - 4} height={size - 4} x={-radius + 2} y={-radius + 2} />;
+        shape = <rect width={_size - 4} height={_size - 4} x={-_radius + 2} y={-_radius + 2} />;
         break;
       case 2:
-        shape = <circle r={radius} />;
+        shape = <circle r={_radius} />;
         break;
       default:
-        shape = <polygon points={diamondPoints} />;
+        shape = <polygon points={_diamondPoints} />;
     }
 
     return (
@@ -65,7 +70,7 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    DocumentActions.setFocus(AppConstants.FocusLevel.Member, this.props.data._id);
+    DocumentActions.setFocus(AppConstants.FocusLevel.Member, this.props.memberKey);
   }
 });
 

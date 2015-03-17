@@ -1,27 +1,19 @@
 'use strict';
 
-
-var _ = require('lodash');
-var Immutable = require('immutable');
 var React = require('react');
 
+var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var LayoutEngine = require('../layout/Engine');
-var AppConstants = require('../constants/AppConstants');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
 
 
 var LayoutView = React.createClass({
   getInitialState: function() {
-    // Todo: Ideally the layout state we get from the LayoutEngine is an
-    // immutable object (or alternatively, we convert it to one). I think it
-    // would be best if our state would only contain layout data, it could
-    // be used for drawing together with the props.pedigree object.
-    var layout = {};
+    var layout;
     var engine;
 
-    // TODO: Layout engine shouldn't choke on empty pedigree.
     if (this.props.pedigree.members.size > 0) {
       engine = new LayoutEngine(this.props.pedigree);
       layout = engine.arrange();
@@ -45,42 +37,53 @@ var LayoutView = React.createClass({
     // TODO: get the dimentions from html
     var windowWidth = 750;
     var focus = this.props.focus;
+    var membersLayout = this.state.layout.get('members');
     var focused;
     var members;
     var nests;
-    var xs;
     var leftmost;
     var rightmost;
     var shift;
     var translate;
 
-    members = _.map(this.state.layout.members, function(member) {
-      var isSelected = focus.level === AppConstants.FocusLevel.Member &&
-                       focus.key === member._id;
-      return <MemberSVG data={member}
+    members = this.props.pedigree.members
+      .map((member, memberKey) => {
+        var isSelected = focus.level === AppConstants.FocusLevel.Member &&
+                         focus.key === memberKey;
+        return <MemberSVG data={member}
+                          memberKey={memberKey}
+                          location={membersLayout.get(memberKey)}
+                          focused={isSelected}
+                          key={'member-' + memberKey}/>;
+      })
+      .toArray();
+
+    nests = this.props.pedigree.nests
+      .map((nest, nestKey) => {
+        var isSelected = focus.level === AppConstants.FocusLevel.Nest &&
+                         focus.key.equals(nestKey);
+        return <NestSVG data={nest}
+                        nestKey={nestKey}
+                        layout={this.state.layout}
                         focused={isSelected}
-                        key={'member-' + member._id}/>;
-    });
+                        key={'nest-' + nestKey.join(',')}/>;
+      })
+      .toArray();
 
-    nests = _.map(this.state.layout.nests, function(nest, index) {
-      var isSelected = focus.level === AppConstants.FocusLevel.Nest &&
-                       focus.key.equals(Immutable.Set.of(nest.father._id, nest.mother._id));
-      return <NestSVG data={nest}
-                      focused={isSelected}
-                      key={'nest-' + index}/>;
-    });
+    leftmost = membersLayout
+      .minBy(member => member.get('x'))
+      .get('x');
 
-    xs = _.pluck(this.state.layout.members, function(m) {
-      return m.location.x;
-    });
-    leftmost = _.min(xs);
-    rightmost = _.max(xs);
+    rightmost = membersLayout
+      .maxBy(member => member.get('x'))
+      .get('x');
+
     shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
     translate = `translate(${shift},50)`;
 
     return (
       <svg id="layout" width="100%" height="100%" onClick={this.handleClick}>
-        <g transform={translate} key={'pedigree-' + this.state.layout.id}>
+        <g transform={translate} key={'pedigree'}>
           {nests}
           {members}
         </g>

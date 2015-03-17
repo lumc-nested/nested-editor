@@ -1,44 +1,16 @@
 'use strict';
 
-var _ = require('lodash');
-var Immutable = require('immutable');
 var Member = require('./Member');
 var Nest = require('./Nest');
 var Pregnancy = require('./Pregnancy');
 
+
 var Individual = Member.Individual;
-var Group = Member.Group;
-
-
-var convertImmutablePedigreeToOldJS = function(pedigree) {
-  var members;
-  var nests;
-
-  members = pedigree.members
-    .map((member, memberKey) => member.set('_id', memberKey))
-    .toList()
-    .toJS();
-
-  nests = pedigree.nests
-    .map((nest, nestKey) => Immutable.Map({
-      father: nestKey.first(),
-      mother: nestKey.last(),
-      pregnancies: nest.pregnancies
-    }))
-    .toList()
-    .toJS();
-
-  return {members, nests};
-};
-
 
 var Pedigree = function(data) {
-  // TODO: We hope the conversion from the immutable pedigree structure to
-  //   the old plain javascript object structure is temporary.
-  this.data = convertImmutablePedigreeToOldJS(data);
+  this.data = data;
   this.members = {};
   this.nests = [];
-  this.id = data.id || 1;
 
   this.init();
 };
@@ -46,42 +18,30 @@ var Pedigree = function(data) {
 Pedigree.prototype = {
 
   init: function() {
-    var nests;
-
-    var data = this.data;
-
-    var members = {};
 
     // Create member objects.
-    _.each(data.members, function(memberProps) {
-      if (_.has(memberProps, 'numberOfIndividuals')) {
-        members[memberProps._id] = new Group(memberProps);
-      } else {
-        members[memberProps._id] = new Individual(memberProps);
-      }
-    });
-
-    this.members = members;
+    this.members = this.data.members
+      .map((member, memberKey) => new Individual(memberKey, member.get('gender')))
+      .toJS();
 
     // Create nest objects.
-    nests = _.map(data.nests, function(nestProps) {
-      var father = members[nestProps.father];
-      var mother = members[nestProps.mother];
+    this.nests = this.data.nests
+      .map((nest, nestKey) => {
+        var [father, mother] = nestKey.toArray();
 
-      var pregnancies = _.map(nestProps.pregnancies, function(pregProps) {
-        var zygotes = _.map(pregProps.zygotes, function(zygote) {
-          var child = members[zygote];
-          return child;
-        });
+        var pregnancies = nest.pregnancies
+          .map(pregnancy => new Pregnancy(
+            pregnancy.zygotes.map(zygote => this.members[zygote]).toJS()))
+          .toJS();
 
-        return new Pregnancy(zygotes);
-      });
-
-      // Create a nest.
-      return new Nest(father, mother, pregnancies, nestProps.consanguenous);
-    });
-
-    this.nests = nests;
+        return new Nest(
+          this.members[father],
+          this.members[mother],
+          pregnancies,
+          nest.get('consanguenous'));
+      })
+      .toList()
+      .toJS();
   }
 };
 
