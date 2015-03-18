@@ -3,14 +3,14 @@
 var React = require('react');
 
 
-var AppConfig = require('../constants/AppConfig');
-var AppConstants = require('../constants/AppConstants');
-var DocumentActions = require('../actions/DocumentActions');
+var AppConfig = require('../../constants/AppConfig');
+var AppConstants = require('../../constants/AppConstants');
+var DocumentActions = require('../../actions/DocumentActions');
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
 var _size = AppConfig.MemberSize;
 var _radius = AppConfig.MemberSize / 2;
-var _paddedRadius = _radius + AppConfig.MemberPadding;
+var _paddedRadius = _radius + AppConfig.MemberPadding / 2;
 var _diamondPoints = [-_radius, 0, 0, _radius, _radius, 0, 0, -_radius].join(',');
 
 var _isDead = function(member) {
@@ -49,7 +49,7 @@ var MemberSVG = React.createClass({
     switch (member.get('gender')) {
       case 1:
         // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={_size - 4} height={_size - 4} x={-_radius + 2} y={-_radius + 2} />;
+        shape = <rect width={_size - 2} height={_size - 2} x={-_radius} y={-_radius} />;
         break;
       case 2:
         shape = <circle r={_radius} />;

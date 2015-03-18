@@ -5,8 +5,8 @@ var React = require('react');
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var LayoutEngine = require('../layout/Engine');
-var MemberSVG = require('./MemberSVG');
-var NestSVG = require('./NestSVG');
+var MemberSVG = require('./SVG/MemberSVG');
+var NestSVG = require('./SVG/NestSVG');
 
 
 var LayoutView = React.createClass({

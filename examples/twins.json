@@ -1,0 +1,113 @@
+{
+  "pedigree": {
+    "title": "Example Pedigree",
+    "members": {
+      "1": {
+        "gender": 2
+      },
+      "2": {
+        "gender": 1
+      },
+      "3": {
+        "gender": 1
+      },
+      "4": {
+        "gender": 2
+      },
+      "5": {
+        "gender": 2
+      },
+      "6": {
+        "gender": 2
+      },
+      "7": {
+        "gender": 2
+      },
+      "8": {
+        "gender": 0
+      },
+      "9": {
+        "gender": 1
+      },
+      "10": {
+        "gender": 1
+      },
+      "11": {
+        "gender": 0
+      },
+      "12": {
+        "gender": 2
+      },
+      "13": {
+        "gender": 2
+      },
+      "14": {
+        "gender": 2
+      },
+      "15": {
+        "gender": 2
+      },
+      "16": {
+        "gender": 1
+      },
+      "17": {
+        "gender": 1
+      },
+      "18": {
+        "gender": 1
+      }
+    },
+    "nests": {
+      "2,1": {
+        "pregnancies": [
+          {
+            "zygotes": ["3", "4"],
+            "monozygotic": false
+          },
+          {
+            "zygotes": ["5", "6"],
+            "monozygotic": true
+          },
+          {
+            "zygotes": ["7", "8"]
+          }
+        ]
+      },
+      "6,9": {
+        "pregnancies": [
+          { "zygotes": ["10", "11", "12"],
+            "monozygotic": false
+          },
+          {
+            "zygotes": ["13", "14", "15"],
+            "monozygotic": true
+          },
+          {
+            "zygotes": ["16", "17", "18"]
+          }
+        ]
+      }
+    }
+  },
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "pedigree": {
+        "properties": {
+        }
+      },
+      "member": {
+        "properties": {
+        }
+      },
+      "nest": {
+        "properties": {
+        }
+      },
+      "pregnancy": {
+        "properties": {
+        }
+      }
+    }
+  }
+}
