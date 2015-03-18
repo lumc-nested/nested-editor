@@ -79,8 +79,7 @@
         "pregnancies": {
           "title": "Pregnancies",
           "type": "array",
-          "items": { "$ref": "#/definitions/pregnancy" },
-          "additionalItems": false
+          "items": { "$ref": "#/definitions/pregnancy" }
         },
         "consanguineous": {
           "title": "Consanguineous",
@@ -91,21 +90,24 @@
     "pregnancy": {
       "title": "Pregnancy",
       "type": "object",
-      "required": ["zygotes"],
+      "required": ["children"],
       "properties": {
+        "children": {
+          "title": "Children",
+          "type": "array",
+          "items": {
+            "title": "Child",
+            "type": "string",
+            "pattern": "^[^,]+$"
+          }
+        },
         "zygotes": {
           "title": "Zygotes",
           "type": "array",
           "items": {
             "title": "Zygote",
-            "type": "string",
-            "pattern": "^[^,]+$"
-          },
-          "additionalItems": false
-        },
-        "monozygotic": {
-          "title": "Monozygotic",
-          "type": "boolean"
+            "type": "integer"
+          }
         }
       }
     }

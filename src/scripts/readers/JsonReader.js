@@ -56,8 +56,9 @@ var readJson = function(json) {
 
     pregnancies = Immutable.List(nest.pregnancies).map(
       pregnancy => new Pregnancy({
-        zygotes: Immutable.List(pregnancy.zygotes),
-        fields: Immutable.Map(pregnancy).delete('zygotes')
+        children: Immutable.List(pregnancy.children),
+        zygotes: pregnancy.zygotes === undefined ? undefined : Immutable.List(pregnancy.zygotes),
+        fields: Immutable.Map(pregnancy).delete('children').delete('zygotes')
       })
     );
     fields = Immutable.Map(nest).delete('pregnancies');

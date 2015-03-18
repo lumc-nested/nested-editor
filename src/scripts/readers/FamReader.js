@@ -62,7 +62,7 @@ var readString = function(string) {
     if (members.has(member.MOTHER_ID) && members.has(member.FATHER_ID)) {
       nestKey = Immutable.Set.of(member.MOTHER_ID, member.FATHER_ID);
       nests = nests.updateIn([nestKey, 'pregnancies'], pregnancies => pregnancies.push(
-        new Pregnancy({zygotes: Immutable.List.of(member.ID)})
+        new Pregnancy({children: Immutable.List.of(member.ID)})
       ));
     }
   });

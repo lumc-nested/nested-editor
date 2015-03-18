@@ -31,18 +31,18 @@
     "nests": {
       "2,1": {
         "pregnancies": [
-          { "zygotes": ["3"] },
-          { "zygotes": ["4"] }
+          { "children": ["3"] },
+          { "children": ["4"] }
         ]
       },
       "5,6": {
         "pregnancies": [
-          { "zygotes": ["1"] }
+          { "children": ["1"] }
         ]
       },
       "7,8": {
         "pregnancies": [
-          { "zygotes": ["2"] }
+          { "children": ["2"] }
         ]
       }
     }

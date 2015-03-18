@@ -67,7 +67,7 @@ var readParseTree = function(parseTree) {
 
   // Nest of one child with given key.
   singletonNest = key => {
-    var pregnancy = new Pregnancy({zygotes: Immutable.List.of(key)});
+    var pregnancy = new Pregnancy({children: Immutable.List.of(key)});
     return new Nest({pregnancies: Immutable.List.of(pregnancy)});
   };
 

@@ -194,7 +194,7 @@ var _addChild = function(nestKey, gender) {
 
   childKey = _newMemberKey();
 
-  pregnancy = new Pregnancy({zygotes: Immutable.List.of(childKey)});
+  pregnancy = new Pregnancy({children: Immutable.List.of(childKey)});
 
   pedigree = pedigree
     .update('members', members => members.set(childKey, child))
@@ -234,7 +234,7 @@ var _addParents = function(memberKey) {
                         .update(memberKey, member => member.set('parents', nestKey)))
     .update('nests',
             nests => nests.set(nestKey, new Nest({
-              'pregnancies': Immutable.List.of(new Pregnancy({'zygotes': Immutable.List.of(memberKey)}))
+              'pregnancies': Immutable.List.of(new Pregnancy({'children': Immutable.List.of(memberKey)}))
             })));
 
   _changeDocument(
@@ -246,6 +246,7 @@ var _addParents = function(memberKey) {
     })
   );
 };
+
 
 var _addTwin = function(memberKey) {
   var pedigree = _document.pedigree;
@@ -265,8 +266,10 @@ var _addTwin = function(memberKey) {
     .update('members', members => members.set(twinKey, twin))
     .updateIn(['nests', member.parents, 'pregnancies'],
       pregnancies => pregnancies.map(pregnancy => {
-        if (pregnancy.zygotes.contains(memberKey)) {
-          return pregnancy.update('zygotes', zygotes => zygotes.push(twinKey));
+        if (pregnancy.children.contains(memberKey)) {
+          return pregnancy
+            .update('children', children => children.push(twinKey))
+            .update('zygotes', zygotes => zygotes === undefined ? zygotes : zygotes.push(zygotes.max() + 1));
         }
 
         return pregnancy;

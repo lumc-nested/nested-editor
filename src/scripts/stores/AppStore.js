@@ -31,7 +31,7 @@ var SCHEMA = new Schema({
 
   pregnancy: Immutable.fromJS(
     jsonSchema.definitions.pregnancy.properties
-  ).delete('zygotes')
+  ).delete('children').delete('zygotes')
 });
 
 

@@ -4,8 +4,8 @@
 var populateParents = function(members, nests) {
   nests.forEach((nest, nestKey) => {
     nest.pregnancies.forEach(pregnancy => {
-      pregnancy.zygotes.forEach(zygote => {
-        members = members.update(zygote,
+      pregnancy.children.forEach(childKey => {
+        members = members.update(childKey,
           member => member.set('parents', nestKey));
       });
     });

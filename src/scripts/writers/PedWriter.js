@@ -8,7 +8,6 @@ var produce = 'ped';
 
 
 var flatten = function(document) {
-
   return document.pedigree.members
     .map((member, memberKey) => {
       var [father, mother] = getFatherAndMother(member.parents, document.pedigree.members);

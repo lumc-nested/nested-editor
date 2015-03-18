@@ -10,7 +10,10 @@ var writeJson = function(document) {
     ([nestKey, nest]) => [
       nestKey.join(','),
       nest.fields.set('pregnancies', nest.pregnancies.map(
-        pregnancy => pregnancy.fields.set('zygotes', pregnancy.zygotes)
+        pregnancy => pregnancy.fields.merge({
+          children: pregnancy.children,
+          zygotes: pregnancy.zygotes
+        })
       ))
     ]
   );
