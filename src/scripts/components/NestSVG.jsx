@@ -1,6 +1,5 @@
 'use strict';
 
-var Immutable = require('immutable');
 var React = require('react');
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
