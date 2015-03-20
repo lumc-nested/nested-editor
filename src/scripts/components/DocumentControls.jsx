@@ -56,6 +56,10 @@ var DocumentControls = React.createClass({
     DocumentActions.addChild(this.props.focus.get('key'), gender);
   },
 
+  addParents: function() {
+    DocumentActions.addParents(this.props.focus.get('key'));
+  },
+
   addTwin: function() {
     DocumentActions.addTwin(this.props.focus.get('key'));
   },
@@ -122,6 +126,8 @@ var DocumentControls = React.createClass({
           if (this.props.pedigree.members.get(this.props.focus.key).parents.size) {
             // TODO: add twin with zygosity information.
             pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
+          } else {
+            pedigreeButtons.addParents = <Button onClick={this.addParents}>Add parents</Button>;
           }
           break;
 
