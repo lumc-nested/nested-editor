@@ -1,39 +1,26 @@
 'use strict';
 
 
-var AppConstants = require('../constants/AppConstants');
+var getFatherAndMother = require('../common/Utils').getFatherAndMother;
 
 
 var produce = 'ped';
 
 
 var flatten = function(document) {
-  var fathers = {};
-  var mothers = {};
-
-  document.pedigree.nests.forEach((nest, nestKey) => {
-    var [father, mother] = nestKey.toArray();
-
-    if (document.pedigree.members.get(father).get('gender') === AppConstants.Gender.Female ||
-        document.pedigree.members.get(mother).get('gender') === AppConstants.Gender.Male) {
-      [father, mother] = [mother, father];
-    }
-
-    nest.pregnancies.flatMap(pregnancy => pregnancy.zygotes).forEach(zygote => {
-      fathers[zygote] = father;
-      mothers[zygote] = mother;
-    });
-  });
 
   return document.pedigree.members
-    .map((member, memberKey) => [
-      member.get('family', 'default'),
-      memberKey,
-      fathers[memberKey] || 0,
-      mothers[memberKey] || 0,
-      member.get('gender'),
-      2
-    ])
+    .map((member, memberKey) => {
+      var [father, mother] = getFatherAndMother(member.parents, document.pedigree.members);
+      return [
+        member.fields.get('family', 'default'),
+        memberKey,
+        father || 0,
+        mother || 0,
+        member.fields.get('gender'),
+        2
+      ];
+    })
     .toArray();
 };
 

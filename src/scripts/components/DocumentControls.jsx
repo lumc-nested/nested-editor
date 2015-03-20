@@ -56,6 +56,10 @@ var DocumentControls = React.createClass({
     DocumentActions.addChild(this.props.focus.get('key'), gender);
   },
 
+  addTwin: function() {
+    DocumentActions.addTwin(this.props.focus.get('key'));
+  },
+
   undo: function() {
     DocumentActions.undo();
   },
@@ -81,47 +85,52 @@ var DocumentControls = React.createClass({
   },
 
   render: function() {
-    var buttons = {};
+    var documentButtons = {};
+    var pedigreeButtons = {};
     var downloadItems;
     var tooltip;
 
     if (this.props.undo !== undefined) {
       tooltip = <Tooltip>Undo: <strong>{this.props.undo}</strong></Tooltip>;
-      buttons.undo = <OverlayTrigger placement="bottom" overlay={tooltip}>
-                       <Button key="undo" onClick={this.undo}><Icon name="undo" /></Button>
-                     </OverlayTrigger>;
+      documentButtons.undo = <OverlayTrigger placement="bottom" overlay={tooltip}>
+                               <Button key="undo" onClick={this.undo}><Icon name="undo" /></Button>
+                             </OverlayTrigger>;
     } else {
-      buttons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
+      documentButtons.undo = <Button key="undo" disabled><Icon name="undo" /></Button>;
     }
 
     if (this.props.redo !== undefined) {
       tooltip = <Tooltip>Redo: <strong>{this.props.redo}</strong></Tooltip>;
-      buttons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
-                       <Button key="redo" onClick={this.redo}><Icon name="repeat" /></Button>
-                     </OverlayTrigger>;
+      documentButtons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
+                               <Button key="redo" onClick={this.redo}><Icon name="repeat" /></Button>
+                             </OverlayTrigger>;
     } else {
-      buttons.redo = <Button key="redo" disabled><Icon name="repeat" /></Button>;
+      documentButtons.redo = <Button key="redo" disabled><Icon name="repeat" /></Button>;
     }
 
     downloadItems = Object.keys(writers).map(
       produce => <MenuItem key={produce} eventKey={produce}>Save as .{produce}</MenuItem>
     );
-    buttons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
-                         {downloadItems}
-                       </DropdownButton>;
+    documentButtons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
+                                 {downloadItems}
+                               </DropdownButton>;
 
     if (this.props.focus !== undefined) {
       switch (this.props.focus.get('level')) {
         case AppConstants.FocusLevel.Member:
-          buttons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
+          pedigreeButtons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
+          if (this.props.pedigree.members.get(this.props.focus.key).parents.size) {
+            // TODO: add twin with zygosity information.
+            pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
+          }
           break;
 
         case AppConstants.FocusLevel.Nest:
-          buttons.addChild = <DropdownButton onSelect={this.addChild} title="Add child">
-                               <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
-                               <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
-                               <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
-                             </DropdownButton>;
+          pedigreeButtons.addChild = <DropdownButton onSelect={this.addChild} title="Add child">
+                                       <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
+                                       <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
+                                       <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
+                                     </DropdownButton>;
           break;
       }
     }
@@ -129,13 +138,10 @@ var DocumentControls = React.createClass({
     return (
       <ButtonToolbar>
         <ButtonGroup>
-          {buttons.undo}
-          {buttons.redo}
-          {buttons.download}
+          {documentButtons}
         </ButtonGroup>
         <ButtonGroup>
-          {buttons.addSpouse}
-          {buttons.addChild}
+          {pedigreeButtons}
         </ButtonGroup>
       </ButtonToolbar>
     );

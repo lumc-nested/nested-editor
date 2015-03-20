@@ -6,9 +6,11 @@ var XLSX = require('xlsx');
 
 var AppConstants = require('../constants/AppConstants');
 var Structures = require('../common/Structures');
+var Utils = require('./Utils');
 
 
 var Document = Structures.Document;
+var Member = Structures.Member;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
@@ -191,7 +193,7 @@ var readWorkbook = function(workbook) {
 
   // Map of strings (member keys) to Maps (member fields).
   // We first get the values for mapped columns using `getters` and then add
-  // the remaining columns as strings.
+  // the remaining columns as strings, and finally wrap it to a Member instance.
   // TODO: Do we want to lowercase the unmapped column keys (and remove
   //   whitespace)? We should probably take the same approach as we will in
   //   the custom field editor (which has not be implemented at this point).
@@ -211,7 +213,8 @@ var readWorkbook = function(workbook) {
             .filter((_, key) => mappedColumns.indexOf(key) === -1)
             .map(value => value === undefined ? value : value.toString())
         )
-    ]);
+    ])
+    .map(fields => new Member({fields}));
 
   // Nest of one child with given key.
   singletonNest = key => {
@@ -237,6 +240,9 @@ var readWorkbook = function(workbook) {
     .toMap()
     .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
+
+  // Add parents key to member instances.
+  members = Utils.populateParents(members, nests);
 
   pedigree = new Pedigree({
     members,

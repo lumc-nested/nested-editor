@@ -3,6 +3,7 @@
 var Member = require('./Member');
 var Nest = require('./Nest');
 var Pregnancy = require('./Pregnancy');
+var Utils = require('../common/Utils');
 
 
 var Individual = Member.Individual;
@@ -21,13 +22,13 @@ Pedigree.prototype = {
 
     // Create member objects.
     this.members = this.data.members
-      .map((member, memberKey) => new Individual(memberKey, member.get('gender')))
+      .map((member, memberKey) => new Individual(memberKey, member.fields.get('gender')))
       .toJS();
 
     // Create nest objects.
     this.nests = this.data.nests
       .map((nest, nestKey) => {
-        var [father, mother] = nestKey.toArray();
+        var [father, mother] = Utils.getFatherAndMother(nestKey, this.data.members);
 
         var pregnancies = nest.pregnancies
           .map(pregnancy => new Pregnancy(

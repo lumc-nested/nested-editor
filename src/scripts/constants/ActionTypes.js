@@ -9,6 +9,7 @@ module.exports = keyMirror({
   SET_FOCUS: null,
   ADD_SPOUSE: null,
   ADD_CHILD: null,
+  ADD_TWIN: null,
   UPDATE_MEMBER: null,
   UPDATE_NEST: null,
   UPDATE_PEDIGREE: null,

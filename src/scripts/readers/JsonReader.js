@@ -5,12 +5,14 @@ var Immutable = require('immutable');
 var tv4 = require('tv4');
 
 var Structures = require('../common/Structures');
+var Utils = require('./Utils');
 
 var jsonMetaSchema = require('../../schemas/json-schema-draft04.json');
 var jsonSchema = require('../../schemas/schema.json');
 
 
 var Document = Structures.Document;
+var Member = Structures.Member;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
@@ -40,7 +42,7 @@ var readJson = function(json) {
     throw new Error('merged schema validation failed');
   }
 
-  members = Immutable.fromJS(json.pedigree.members);
+  members = Immutable.fromJS(json.pedigree.members).map(fields => new Member({fields}));
 
   nests = Immutable.Map(json.pedigree.nests).mapEntries(([nestKey, nest]) => {
     var fields;
@@ -66,6 +68,9 @@ var readJson = function(json) {
   fields = Immutable.Map(json.pedigree)
     .delete('members')
     .delete('nests');
+
+  // Add parents key to member instances.
+  members = Utils.populateParents(members, nests);
 
   pedigree = new Pedigree({members, nests, fields});
 

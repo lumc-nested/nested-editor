@@ -5,7 +5,7 @@ var produce = 'json';
 
 
 var writeJson = function(document) {
-  var members = document.pedigree.members;
+  var members = document.pedigree.members.map(member => member.fields);
   var nests = document.pedigree.nests.mapEntries(
     ([nestKey, nest]) => [
       nestKey.join(','),

@@ -3,8 +3,8 @@
 
 var XLSX = require('xlsx');
 
-var AppConstants = require('../constants/AppConstants');
 var AppStore = require('../stores/AppStore');
+var getFatherAndMother = require('../common/Utils').getFatherAndMother;
 
 
 var produce = 'xlsx';
@@ -80,36 +80,20 @@ var sheetFromArrayOfArrays = function(data) {
 
 
 var flatten = function(document) {
-  var fathers = {};
-  var mothers = {};
   var flattened;
   var schema;
-
-  document.pedigree.nests.forEach((nest, nestKey) => {
-    var [father, mother] = nestKey.toArray();
-
-    if (document.pedigree.members.get(father).get('gender') === AppConstants.Gender.Female ||
-        document.pedigree.members.get(mother).get('gender') === AppConstants.Gender.Male) {
-      [father, mother] = [mother, father];
-    }
-
-    nest.pregnancies.flatMap(pregnancy => pregnancy.zygotes).forEach(zygote => {
-      fathers[zygote] = father;
-      mothers[zygote] = mother;
-    });
-  });
 
   // TODO: Perhaps it's not a good idea to query the AppStore from here.
   schema = document.schema.mergeDeep(AppStore.getSchema());
 
   flattened = document.pedigree.members
-    .map((member, memberKey) => [
-      memberKey,
-      fathers[memberKey] || '0',
-      mothers[memberKey] || '0'
-    ].concat(
-      schema.member.map((_, fieldKey) => member.get(fieldKey)).toArray()
-    ))
+    .map((member, memberKey) => {
+      var [father, mother] = getFatherAndMother(member.parents, document.pedigree.members);
+
+      return [memberKey, father, mother].concat(
+        schema.member.map((_, fieldKey) => member.fields.get(fieldKey)).toArray()
+      );
+    })
     .toArray();
 
   flattened.unshift(['ID', 'Father', 'Mother'].concat(
