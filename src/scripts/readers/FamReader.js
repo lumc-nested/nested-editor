@@ -5,11 +5,13 @@ var Immutable = require('immutable');
 
 var AppConstants = require('../constants/AppConstants');
 var Structures = require('../common/Structures');
+var Utils = require('./Utils');
 
 var FamParser = require('fam-parser');
 
 
 var Document = Structures.Document;
+var Member = Structures.Member;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
@@ -41,11 +43,11 @@ var readString = function(string) {
 
   members = Immutable.Map(parser.getMembers().map(member => [
     member.ID,
-    Immutable.Map({
+    new Member({fields: Immutable.Map({
       surname: member.SURNAME,
       forenames: member.FORENAMES,
       gender: mapGender(member.SEX)
-    })
+    })})
   ]));
 
   nests = Immutable.Map(parser.getRelationships().map(relationship => [
@@ -64,6 +66,9 @@ var readString = function(string) {
       ));
     }
   });
+
+  // Add parents key to member instances.
+  members = Utils.populateParents(members, nests);
 
   pedigree = new Pedigree({
     members,

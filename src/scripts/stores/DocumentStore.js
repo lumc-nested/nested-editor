@@ -15,6 +15,7 @@ var Document = Structures.Document;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
+var Member = Structures.Member;
 
 
 var CHANGE_EVENT = 'change';
@@ -23,8 +24,8 @@ var CHANGE_EVENT = 'change';
 var DEFAULT_DOCUMENT = new Document({
   pedigree: new Pedigree({
     members: Immutable.Map({
-      'id_1': Immutable.Map({gender: AppConstants.Gender.Male}),
-      'id_2': Immutable.Map({gender: AppConstants.Gender.Female})
+      'id_1': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
+      'id_2': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
     }),
     nests: Immutable.Map([
       [Immutable.Set.of('id_1', 'id_2'),
@@ -137,26 +138,26 @@ var _openDocument = function(document) {
 var _addSpouse = function(memberKey) {
   var pedigree = _document.pedigree;
   var member;
-  var spouse;
+  var fields;
   var spouseKey;
 
   member = pedigree.members.get(memberKey);
 
-  switch (member.get('gender')) {
+  switch (member.fields.get('gender')) {
     case AppConstants.Gender.Male:
-      spouse = Immutable.Map({gender: AppConstants.Gender.Female});
+      fields = Immutable.Map({gender: AppConstants.Gender.Female});
       break;
     case AppConstants.Gender.Female:
-      spouse = Immutable.Map({gender: AppConstants.Gender.Male});
+      fields = Immutable.Map({gender: AppConstants.Gender.Male});
       break;
     case AppConstants.Gender.Unknown:
     default:
-      spouse = Immutable.Map({gender: AppConstants.Gender.Unknown});
+      fields = Immutable.Map({gender: AppConstants.Gender.Unknown});
   }
 
   spouseKey = _newMemberKey();
   pedigree = pedigree
-    .update('members', members => members.set(spouseKey, spouse))
+    .update('members', members => members.set(spouseKey, new Member({fields})))
     .update('nests', nests => nests.set(Immutable.Set.of(memberKey, spouseKey),
                                         new Nest()));
 
@@ -177,7 +178,11 @@ var _addChild = function(nestKey, gender) {
   var childKey;
   var pregnancy;
 
-  child = Immutable.Map({gender});
+  child = new Member({
+    parents: nestKey,
+    fields: Immutable.Map({gender})
+  });
+
   childKey = _newMemberKey();
 
   pregnancy = new Pregnancy({zygotes: Immutable.List.of(childKey)});
@@ -198,10 +203,46 @@ var _addChild = function(nestKey, gender) {
 };
 
 
+var _addTwin = function(memberKey) {
+  var pedigree = _document.pedigree;
+  var member;
+  var twin;
+  var twinKey;
+
+  member = pedigree.members.get(memberKey);
+  twin = new Member({
+    parents: member.parents,
+    fields: Immutable.Map({gender: member.fields.get('gender')})
+  });
+
+  twinKey = _newMemberKey();
+
+  pedigree = pedigree
+    .update('members', members => members.set(twinKey, twin))
+    .updateIn(['nests', member.parents, 'pregnancies'],
+      pregnancies => pregnancies.map(pregnancy => {
+        if (pregnancy.zygotes.contains(memberKey)) {
+          return pregnancy.update('zygotes', zygotes => zygotes.push(twinKey));
+        }
+
+        return pregnancy;
+      }));
+
+  _changeDocument(
+    'Add twin',
+    _document.set('pedigree', pedigree),
+    new Focus({
+      level: AppConstants.FocusLevel.Member,
+      key: twinKey
+    })
+  );
+};
+
+
 var _updateMember = function(memberKey, fields) {
   _changeDocument(
     'Update member fields',
-    _document.mergeIn(['pedigree', 'members', memberKey], fields)
+    _document.mergeIn(['pedigree', 'members', memberKey, 'fields'], fields)
   );
 };
 
@@ -272,6 +313,9 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.ADD_CHILD:
       _addChild(action.nestKey, action.gender);
+      break;
+    case ActionTypes.ADD_TWIN:
+      _addTwin(action.memberKey);
       break;
     case ActionTypes.UPDATE_MEMBER:
       _updateMember(action.memberKey, action.fields);

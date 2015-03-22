@@ -139,7 +139,7 @@ var PedigreeApp = React.createClass({
       case AppConstants.FocusLevel.Member:
         fieldsViewProps = {
           title: 'Member',
-          fields: document.pedigree.members.get(focus.key),
+          fields: document.pedigree.members.get(focus.key).fields,
           fieldDefinitions: this.state.schema.member,
           onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
         };
@@ -190,7 +190,7 @@ var PedigreeApp = React.createClass({
               {fieldsView}
             </Col>
             <Col id="main" sm={9} smOffset={3} md={10} mdOffset={2}>
-              <DocumentControls document={document} focus={focus} undo={undo} redo={redo} />
+              <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree}/>
               <TabbedArea className="main-area" defaultActiveKey="layoutView" animation={false}>
                 <TabPane eventKey="layoutView" tab="Layout">
                   <LayoutView pedigree={document.pedigree} focus={focus} />

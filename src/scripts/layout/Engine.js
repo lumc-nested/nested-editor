@@ -16,37 +16,47 @@ Engine.prototype = {
 
   arrange: function() {
     var ge = new GenerationEngine(this.pedigree);
-    var generations = ge.determineGenerations();
     var left = 0;
-    var locations;
+    var generations;
+    var layout;
 
-    _.each(generations[0], function(rootMember) {
+    // determine the y coordinates of members.
+    generations = ge.determineGenerations();
+
+    // determine the x coordinates of members and nests.
+    generations[0].forEach(rootMember => {
       if (rootMember.left !== undefined && rootMember.left.location.x >= left) {
         left = rootMember.left.location.x + AppConfig.MemberDistance;
       }
 
-      _.each(rootMember.matingNests, function(nest) {
+      rootMember.matingNests.forEach(nest => {
         if (nest.location === undefined) {
           left += this.arrangeNest(nest, 0, left) + AppConfig.MemberDistance;
         }
-      }, this);
-    }, this);
+      });
+    });
 
-
-    locations = new Immutable.Map({
+    // wrap the layout into an Immutable Map.
+    layout = new Immutable.Map({
       members: Immutable.fromJS(this.pedigree.members)
         .map(member => Immutable.Map({
           x: member.location.x,
           y: member.location.y,
           sibIndex: member.sibIndex
         })),
+
       nests: Immutable.Map(this.pedigree.nests.map(nest => [
-          Immutable.Set([nest.father._id, nest.mother._id]),
-          Immutable.fromJS(nest.location)
-        ]))
+        Immutable.Set([nest.father._id, nest.mother._id]),
+        Immutable.Map({
+          x: nest.location.x,
+          y: nest.location.y,
+          pregnancies: Immutable.List(nest.pregnancies)
+                        .map(pregnancy => Immutable.Map(pregnancy.layout()))
+        })
+      ]))
     });
 
-    return locations;
+    return layout;
   },
 
   arrangeNest: function(nest, generationIndex, center) {

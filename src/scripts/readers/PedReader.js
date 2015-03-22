@@ -4,11 +4,13 @@
 var Immutable = require('immutable');
 
 var Structures = require('../common/Structures');
+var Utils = require('./Utils');
 
 var parser = require('./ped.pegjs');
 
 
 var Document = Structures.Document;
+var Member = Structures.Member;
 var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
@@ -57,10 +59,10 @@ var readParseTree = function(parseTree) {
     .toMap()
     .mapEntries(([, member]) => {
       return [member.get('member'),
-              Immutable.Map({
+              new Member({fields: Immutable.Map({
                 gender: member.get('gender'),
                 family: member.get('family')
-              })];
+              })})];
     });
 
   // Nest of one child with given key.
@@ -87,6 +89,9 @@ var readParseTree = function(parseTree) {
     .toMap()
     .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
+
+  // Add parents key to member instances.
+  members = Utils.populateParents(members, nests);
 
   pedigree = new Pedigree({members, nests});
 

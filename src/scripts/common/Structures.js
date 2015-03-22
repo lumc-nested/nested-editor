@@ -4,6 +4,15 @@
 var Immutable = require('immutable');
 
 
+var Member = Immutable.Record({
+  // Set of strings (member keys).
+  parents: Immutable.Set(),
+
+  // Map of strings (field keys) to scalars (field values).
+  fields: Immutable.Map()
+});
+
+
 var Pregnancy = Immutable.Record({
   // List of strings (member keys).
   zygotes: Immutable.List(),
@@ -23,7 +32,7 @@ var Nest = Immutable.Record({
 
 
 var Pedigree = Immutable.Record({
-  // Map of strings (member keys) to Maps (member fields).
+  // Map of strings (member keys) to Member instances.
   members: Immutable.Map(),
 
   // Map of Sets to Nest instances where the Sets contain a string (member
@@ -54,4 +63,4 @@ var Document = Immutable.Record({
 });
 
 
-module.exports = {Pregnancy, Nest, Pedigree, Document, Schema};
+module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema};

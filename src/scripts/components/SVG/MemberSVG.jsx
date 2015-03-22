@@ -3,18 +3,18 @@
 var React = require('react');
 
 
-var AppConfig = require('../constants/AppConfig');
-var AppConstants = require('../constants/AppConstants');
-var DocumentActions = require('../actions/DocumentActions');
+var AppConfig = require('../../constants/AppConfig');
+var AppConstants = require('../../constants/AppConstants');
+var DocumentActions = require('../../actions/DocumentActions');
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
 var _size = AppConfig.MemberSize;
 var _radius = AppConfig.MemberSize / 2;
-var _paddedRadius = _radius + AppConfig.MemberPadding;
+var _paddedRadius = _radius + AppConfig.MemberPadding / 2;
 var _diamondPoints = [-_radius, 0, 0, _radius, _radius, 0, 0, -_radius].join(',');
 
-var _isDead = function(member) {
-  return member.has('dateOfDeath') || member.get('deceased');
+var _isDead = function(fields) {
+  return fields.has('dateOfDeath') || fields.get('deceased');
 };
 
 var MemberSVG = React.createClass({
@@ -29,16 +29,16 @@ var MemberSVG = React.createClass({
     var member = this.props.data;
     var location = this.props.location;
 
-    if (_isDead(member)) {
+    if (_isDead(member.fields)) {
       death = <line x1={_paddedRadius} y1={-_paddedRadius} x2={-_paddedRadius} y2={_paddedRadius} />;
     }
 
-    if (member.get('proband')) {
+    if (member.fields.get('proband')) {
       arrow = <path className="arrow" d={_arrowPath} />;
       p = <text className="proband" x={-_radius - 18} y={_radius + 10}>P</text>;
     }
 
-    if (member.get('consultand')) {
+    if (member.fields.get('consultand')) {
       arrow = <path className="arrow" d={_arrowPath} />;
     }
 
@@ -46,10 +46,10 @@ var MemberSVG = React.createClass({
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
-    switch (member.get('gender')) {
+    switch (member.fields.get('gender')) {
       case 1:
         // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={_size - 4} height={_size - 4} x={-_radius + 2} y={-_radius + 2} />;
+        shape = <rect width={_size - 2} height={_size - 2} x={-_radius} y={-_radius} />;
         break;
       case 2:
         shape = <circle r={_radius} />;

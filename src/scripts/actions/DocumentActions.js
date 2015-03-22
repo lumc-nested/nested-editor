@@ -36,6 +36,13 @@ var DocumentActions = {
     });
   },
 
+  addTwin: function(memberKey) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.ADD_TWIN,
+      memberKey
+    });
+  },
+
   updateMember: function(memberKey, fields) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.UPDATE_MEMBER,
