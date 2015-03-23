@@ -57,14 +57,23 @@ var _undoStack = Immutable.Stack();
 var _redoStack = Immutable.Stack();
 
 
-// Generate a new member key.
-var _newMemberKey = function() {
+// Generate new member keys.
+var _newMemberKeys = function(n) {
   var existingKeys = Immutable.Set.fromKeys(_document.pedigree.members);
+
+  // default to 1.
+  n = n !== undefined ? n : 1;
 
   return Immutable.Range(1)
     .map(n => 'id_' + n.toString())
     .filterNot(key => existingKeys.contains(key))
-    .first();
+    .take(n);
+};
+
+
+// Generate a new member key.
+var _newMemberKey = function() {
+  return _newMemberKeys().first();
 };
 
 
@@ -203,6 +212,41 @@ var _addChild = function(nestKey, gender) {
 };
 
 
+var _addParents = function(memberKey) {
+  var pedigree = _document.pedigree;
+  var father;
+  var mother;
+  var fatherKey;
+  var motherKey;
+  var nestKey;
+
+  father = new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})});
+  mother = new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})});
+
+  [fatherKey, motherKey] = _newMemberKeys(2).toArray();
+  nestKey = Immutable.Set.of(fatherKey, motherKey);
+
+  pedigree = pedigree
+    .update('members',
+            members => members
+                        .set(fatherKey, father)
+                        .set(motherKey, mother)
+                        .update(memberKey, member => member.set('parents', nestKey)))
+    .update('nests',
+            nests => nests.set(nestKey, new Nest({
+              'pregnancies': Immutable.List.of(new Pregnancy({'zygotes': Immutable.List.of(memberKey)}))
+            })));
+
+  _changeDocument(
+    'Add parents',
+    _document.set('pedigree', pedigree),
+    new Focus({
+      level: AppConstants.FocusLevel.Nest,
+      key: nestKey
+    })
+  );
+};
+
 var _addTwin = function(memberKey) {
   var pedigree = _document.pedigree;
   var member;
@@ -313,6 +357,9 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.ADD_CHILD:
       _addChild(action.nestKey, action.gender);
+      break;
+    case ActionTypes.ADD_PARENTS:
+      _addParents(action.memberKey);
       break;
     case ActionTypes.ADD_TWIN:
       _addTwin(action.memberKey);

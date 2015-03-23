@@ -36,6 +36,13 @@ var DocumentActions = {
     });
   },
 
+  addParents: function(memberKey) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.ADD_PARENTS,
+      memberKey
+    });
+  },
+
   addTwin: function(memberKey) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.ADD_TWIN,
