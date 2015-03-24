@@ -44,11 +44,11 @@ var TableView = React.createClass({
     var rows;
 
     rows = pedigree.members
-      .map((fields, memberKey) => {
+      .map((member, memberKey) => {
         var isSelected = focus.level === AppConstants.FocusLevel.Member &&
                          focus.key === memberKey;
         return <MemberRow key={'member-' + memberKey}
-                          fields={fields}
+                          fields={member.fields}
                           memberKey={memberKey}
                           isSelected={isSelected} />;
       })
