@@ -96,7 +96,7 @@ var readParseTree = function(parseTree) {
   pedigree = new Pedigree({members, nests});
 
   schema = new Schema({
-    member: Immutable.Map({
+    member: Immutable.fromJS({
       family: {
         title: 'Family',
         type: 'string'
