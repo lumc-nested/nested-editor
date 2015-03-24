@@ -24,6 +24,7 @@ var MemberSVG = React.createClass({
     var death;
     var arrow;
     var p;
+    var annotation;
     var transform;
 
     var member = this.props.data;
@@ -58,12 +59,17 @@ var MemberSVG = React.createClass({
         shape = <polygon points={_diamondPoints} />;
     }
 
+    // TODO: this is for debugging for now.
+    // need to properly handle annotations.
+    annotation = <text x={-5} y={_size}>{this.props.memberKey}</text>;
+
     return (
       <g transform={transform} onClick={this.handleClick} className={this.props.focused ? 'focus' : ''} >
         {shape}
         {death}
         {arrow}
         {p}
+        {annotation}
       </g>
     );
   },

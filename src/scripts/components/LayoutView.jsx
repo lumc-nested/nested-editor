@@ -4,32 +4,20 @@ var React = require('react');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var LayoutEngine = require('../layout/Engine');
+var LayoutUtils = require('../layout/Utils');
 var MemberSVG = require('./SVG/MemberSVG');
 var NestSVG = require('./SVG/NestSVG');
 
 
 var LayoutView = React.createClass({
   getInitialState: function() {
-    var layout;
-    var engine;
-
-    if (this.props.pedigree.members.size > 0) {
-      engine = new LayoutEngine(this.props.pedigree);
-      layout = engine.arrange();
-    }
-
-    return {layout};
+    return {layout: LayoutUtils.getLayout(this.props.pedigree)};
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var engine;
-
     if (!this.props.pedigree.equals(nextProps.pedigree)) {
-      engine = new LayoutEngine(nextProps.pedigree);
       console.log('redo layout');
-
-      this.setState({layout: engine.arrange()});
+      this.setState({layout: LayoutUtils.getLayout(nextProps.pedigree)});
     }
   },
 
@@ -37,7 +25,7 @@ var LayoutView = React.createClass({
     // TODO: get the dimentions from html
     var windowWidth = 750;
     var focus = this.props.focus;
-    var membersLayout = this.state.layout.get('members');
+    var layout = this.state.layout;
     var focused;
     var members;
     var nests;
@@ -52,7 +40,7 @@ var LayoutView = React.createClass({
                          focus.key === memberKey;
         return <MemberSVG data={member}
                           memberKey={memberKey}
-                          location={membersLayout.get(memberKey)}
+                          location={layout.getIn(['members', memberKey])}
                           focused={isSelected}
                           key={'member-' + memberKey}/>;
       })
@@ -64,17 +52,17 @@ var LayoutView = React.createClass({
                          focus.key.equals(nestKey);
         return <NestSVG data={nest}
                         nestKey={nestKey}
-                        layout={this.state.layout}
+                        layout={layout}
                         focused={isSelected}
                         key={'nest-' + nestKey.join(',')}/>;
       })
       .toArray();
 
-    leftmost = membersLayout
+    leftmost = layout.get('members')
       .minBy(member => member.get('x'))
       .get('x');
 
-    rightmost = membersLayout
+    rightmost = layout.get('members')
       .maxBy(member => member.get('x'))
       .get('x');
 

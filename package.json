@@ -16,7 +16,6 @@
     "FileSaver": "git+https://github.com/martijnvermaat/FileSaver.js#npm-package",
     "flux": "^2.0.1",
     "immutable": "~3.6.2",
-    "lodash": "^2.4.1",
     "object-assign": "^2.0.0",
     "plexus-form": "git+https://github.com/martijnvermaat/plexus-form.git#pedigree",
     "plexus-objective": "0.0.1",
