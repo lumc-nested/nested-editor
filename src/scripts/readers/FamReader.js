@@ -42,7 +42,7 @@ var readString = function(string) {
   parser = new FamParser(string);
 
   members = Immutable.Map(parser.getMembers().map(member => [
-    member.ID,
+    member.ID.toString(),
     new Member({fields: Immutable.Map({
       surname: member.SURNAME,
       forenames: member.FORENAMES,
@@ -51,18 +51,23 @@ var readString = function(string) {
   ]));
 
   nests = Immutable.Map(parser.getRelationships().map(relationship => [
-    Immutable.Set.of(relationship.MEMBER_1_ID, relationship.MEMBER_2_ID),
+    Immutable.Set.of(
+      relationship.MEMBER_1_ID.toString(),
+      relationship.MEMBER_2_ID.toString()
+    ),
     new Nest({
       consanguineous: relationship.RELATION_IS_CONSANGUINEOUS
     })
   ]));
 
   parser.getMembers().forEach(member => {
+    var fatherId = member.FATHER_ID.toString();
+    var motherId = member.MOTHER_ID.toString();
     var nestKey;
-    if (members.has(member.MOTHER_ID) && members.has(member.FATHER_ID)) {
-      nestKey = Immutable.Set.of(member.MOTHER_ID, member.FATHER_ID);
+    if (members.has(fatherId) && members.has(fatherId)) {
+      nestKey = Immutable.Set.of(fatherId, motherId);
       nests = nests.updateIn([nestKey, 'pregnancies'], pregnancies => pregnancies.push(
-        new Pregnancy({children: Immutable.List.of(member.ID)})
+        new Pregnancy({children: Immutable.List.of(member.ID.toString())})
       ));
     }
   });
