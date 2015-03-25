@@ -1,0 +1,123 @@
+/* Stiziles */
+
+@import "~bootstrap/less/bootstrap";
+
+/* main */
+
+body {
+  padding-top: 50px;  /* fixed navbar is 50px tall */
+}
+
+/* top navigation */
+
+.navbar-fixed-top {
+  border: 0; /* hide default border to remove 1px line */
+}
+
+/* sidebar */
+
+#sidebar {
+  display: none; /* hide for mobile, show later */
+}
+
+@media (min-width: 768px) {
+  #sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #F5F5F5;
+    border-right: 1px solid #EEE;
+  }
+}
+
+/* main content */
+
+#main {
+  padding: 20px;
+}
+
+/* this is from the bootstrap dashboard example, but i think we need the
+   horizontal space */
+/*
+@media (min-width: 768px) {
+  #main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+*/
+
+/* main area */
+
+nav.main-area {
+  margin-top: -40px;
+  padding-bottom: 20px;
+}
+
+ul.main-area > li {
+  float: right;
+}
+
+/* pedigree area */
+
+#layout {
+  background: #ffffff;
+  color: #fff;
+  height: 650px;
+}
+
+/* file input field */
+
+.file-input {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-input input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+/* transitions */
+
+.fade-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+}
+
+.fade-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+}
+
+/* no round borders */
+
+@border-radius-base:  0;
+@border-radius-large: 0;
+@border-radius-small: 0;

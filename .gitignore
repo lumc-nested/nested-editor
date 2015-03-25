@@ -1,6 +1,4 @@
 node_modules/
+dist/
 .tmp
-dist
-/src/scripts/main.js
-bower_components/
 npm-debug.log
