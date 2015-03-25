@@ -1,18 +1,18 @@
 'use strict';
 
-var Pregnancy = function(zygotes) {
-  this.zygotes = zygotes;
+var Pregnancy = function(children) {
+  this.children = children;
 };
 
 Pregnancy.prototype = {
   size: function() {
-    return this.zygotes.length;
+    return this.children.length;
   },
 
   width: function() {
 
     if (this.size() > 1) {
-      return this.zygotes[this.size() - 1].location.x - this.zygotes[0].location.x;
+      return this.children[this.size() - 1].location.x - this.children[0].location.x;
     }
 
     return 0;
@@ -21,7 +21,7 @@ Pregnancy.prototype = {
   layout: function() {
     var width = this.width();
     return {
-      x: this.zygotes[0].location.x + width / 2,
+      x: this.children[0].location.x + width / 2,
       width: width
     };
   }

@@ -14,8 +14,12 @@ var Member = Immutable.Record({
 
 
 var Pregnancy = Immutable.Record({
-  // List of strings (member keys).
-  zygotes: Immutable.List(),
+  // List of strings (member keys, in chronological order of delivery).
+  children: Immutable.List(),
+
+  // List of integers (per item in `children`, a corresponding zygote number).
+  // The default value of `undefined` represents unknown zygosity.
+  zygotes: undefined,
 
   // Map of strings (field keys) to scalars (field values).
   fields: Immutable.Map()
@@ -23,7 +27,7 @@ var Pregnancy = Immutable.Record({
 
 
 var Nest = Immutable.Record({
-  // List of Pregnancy instances.
+  // List of Pregnancy instances, in chronological order.
   pregnancies: Immutable.List(),
 
   // Map of strings (field keys) to scalars (field values).

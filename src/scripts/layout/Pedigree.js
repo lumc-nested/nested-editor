@@ -32,7 +32,7 @@ Pedigree.prototype = {
 
         var pregnancies = nest.pregnancies
           .map(pregnancy => new Pregnancy(
-            pregnancy.zygotes.map(zygote => this.members[zygote]).toJS()))
+            pregnancy.children.map(child => this.members[child]).toJS()))
           .toJS();
 
         return new Nest(

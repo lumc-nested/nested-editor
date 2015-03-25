@@ -19,8 +19,8 @@
     "nests": {
       "2,1": {
         "pregnancies": [
-          { "zygotes": ["3"] },
-          { "zygotes": ["4"] }
+          { "children": ["3"] },
+          { "children": ["4"] }
         ]
       }
     }

@@ -15,7 +15,7 @@ var Nest = function(father, mother, pregnancies, consanguenous) {
   // function to access the private children property.
   this.children = function() {
     if (children === undefined) {
-      children = _.flatten(_.pluck(this.pregnancies, 'zygotes'));
+      children = _.flatten(_.pluck(this.pregnancies, 'children'));
     }
     return children;
   };

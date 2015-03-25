@@ -61,29 +61,30 @@
       "2,1": {
         "pregnancies": [
           {
-            "zygotes": ["3", "4"],
-            "monozygotic": false
+            "children": ["3", "4"],
+            "zygotes": [0, 1]
           },
           {
-            "zygotes": ["5", "6"],
-            "monozygotic": true
+            "children": ["5", "6"],
+            "zygotes": [0, 0]
           },
           {
-            "zygotes": ["7", "8"]
+            "children": ["7", "8"]
           }
         ]
       },
       "6,9": {
         "pregnancies": [
-          { "zygotes": ["10", "11", "12"],
-            "monozygotic": false
+          {
+            "children": ["10", "11", "12"],
+            "zygotes": [0, 1, 1]
           },
           {
-            "zygotes": ["13", "14", "15"],
-            "monozygotic": true
+            "children": ["13", "14", "15"],
+            "zygotes": [0, 0, 0]
           },
           {
-            "zygotes": ["16", "17", "18"]
+            "children": ["16", "17", "18"]
           }
         ]
       }
