@@ -85,7 +85,4 @@ var LayoutView = React.createClass({
 });
 
 
-require('../../styles/layout.less');
-
-
 module.exports = LayoutView;
