@@ -1,0 +1,208 @@
+{
+  "pedigree": {
+    "members": {
+      "1": {
+        "gender": 1
+      },
+      "2": {
+        "gender": 2
+      },
+      "3": {
+        "gender": 1
+      },
+      "4": {
+        "gender": 2
+      },
+      "5": {
+        "gender": 2
+      },
+      "6": {
+        "gender": 1
+      },
+      "7": {
+        "gender": 1
+      },
+      "8": {
+        "gender": 2
+      },
+      "9": {
+        "gender": 2
+      },
+      "10": {
+        "gender": 2
+      },
+      "11": {
+        "gender": 1
+      },
+      "12": {
+        "gender": 1
+      },
+      "13": {
+        "gender": 1
+      },
+      "14": {
+        "gender": 1
+      },
+      "15": {
+        "gender": 2
+      },
+      "16": {
+        "gender": 1
+      },
+      "17": {
+        "gender": 1
+      },
+      "18": {
+        "gender": 2
+      },
+      "19": {
+        "gender": 2
+      },
+      "20": {
+        "gender": 2
+      },
+      "21": {
+        "gender": 1
+      },
+      "22": {
+        "gender": 1
+      },
+      "23": {
+        "gender": 2
+      },
+      "24": {
+        "gender": 1
+      },
+      "25": {
+        "gender": 2
+      },
+      "26": {
+        "gender": 2
+      },
+      "27": {
+        "gender": 1
+      }
+    },
+    "nests": {
+      "7,8": {
+        "pregnancies": [
+          {
+            "children": [
+              "9",
+              "10"
+            ]
+          }
+        ]
+      },
+      "10,11": {
+        "pregnancies": []
+      },
+      "23,24": {
+        "pregnancies": [
+          {
+            "children": [
+              "25",
+              "26"
+            ]
+          }
+        ]
+      },
+      "14,15": {
+        "pregnancies": [
+          {
+            "children": [
+              "16"
+            ]
+          }
+        ]
+      },
+      "17,18": {
+        "pregnancies": [
+          {
+            "children": [
+              "6"
+            ]
+          },
+          {
+            "children": [
+              "19"
+            ]
+          },
+          {
+            "children": [
+              "20"
+            ]
+          }
+        ]
+      },
+      "20,22": {
+        "pregnancies": [
+          {
+            "children": [
+              "23"
+            ]
+          },
+          {
+            "children": [
+              "27"
+            ]
+          }
+        ]
+      },
+      "9,12": {
+        "pregnancies": []
+      },
+      "1,2": {
+        "pregnancies": [
+          {
+            "children": [
+              "13",
+              "14"
+            ]
+          },
+          {
+            "children": [
+              "21"
+            ]
+          }
+        ]
+      },
+      "3,4": {
+        "pregnancies": [
+          {
+            "children": [
+              "2",
+              "5"
+            ]
+          }
+        ]
+      },
+      "5,6": {
+        "pregnancies": [
+          {
+            "children": [
+              "7"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "pedigree": {
+        "properties": {}
+      },
+      "member": {
+        "properties": {}
+      },
+      "nest": {
+        "properties": {}
+      },
+      "pregnancy": {
+        "properties": {}
+      }
+    }
+  }
+}
