@@ -6,38 +6,35 @@ var Form = require('plexus-form');
 var validate = require('plexus-validate');
 
 
-var createJsonSchema = function(title, fieldDefinitions) {
-  return {
-    title: title,
-    type: 'object',
-    properties: fieldDefinitions.toJS()
-  };
-};
-
-
 var FieldsView = React.createClass({
   getInitialState: function() {
-    var jsonSchema = createJsonSchema(this.props.title, this.props.fieldDefinitions);
-    return {jsonSchema};
+    var properties = this.props.fieldDefinitions.toJS();
+    return {properties};
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var jsonSchema;
+    var properties;
     if (!this.props.fieldDefinitions.equals(nextProps.fieldDefinitions)) {
       console.log('********** serializing schema');
-      jsonSchema = createJsonSchema(nextProps.title, nextProps.fieldDefinitions);
-      this.setState({jsonSchema});
+      properties = nextProps.fieldDefinitions.toJS();
+      this.setState({properties});
     }
   },
 
   render: function() {
+
+    var jsonSchema = {
+      title: this.props.title,
+      type: 'object',
+      properties: this.state.properties
+    };
+
     return <Form
              buttons={['Save']}
-             schema={this.state.jsonSchema}
+             schema={jsonSchema}
              validate={validate}
              values={this.props.fields.toJS()}
-             onSubmit={this.props.onSubmit}
-           />;
+             onSubmit={this.props.onSubmit} />;
   }
 });
 

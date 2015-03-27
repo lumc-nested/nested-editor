@@ -138,7 +138,7 @@ var PedigreeApp = React.createClass({
     switch (focus.level) {
       case AppConstants.FocusLevel.Member:
         fieldsViewProps = {
-          title: 'Member',
+          title: 'Member (' + focus.key + ')',
           fields: document.pedigree.members.get(focus.key).fields,
           fieldDefinitions: this.state.schema.member,
           onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
