@@ -24,11 +24,11 @@ var CHANGE_EVENT = 'change';
 var DEFAULT_DOCUMENT = new Document({
   pedigree: new Pedigree({
     members: Immutable.Map({
-      'id_1': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
-      'id_2': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
+      '1': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
+      '2': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
     }),
     nests: Immutable.Map([
-      [Immutable.Set.of('id_1', 'id_2'),
+      [Immutable.Set.of('1', '2'),
        new Nest()]
     ])
   })
@@ -65,7 +65,7 @@ var _newMemberKeys = function(n) {
   n = n !== undefined ? n : 1;
 
   return Immutable.Range(1)
-    .map(n => 'id_' + n.toString())
+    .map(n => n.toString())
     .filterNot(key => existingKeys.contains(key))
     .take(n);
 };

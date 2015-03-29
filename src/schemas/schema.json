@@ -11,7 +11,7 @@
       "title": "Pedigree",
       "description": "Schema for Pedigree",
       "type": "object",
-      "required": ["title", "members", "nests"],
+      "required": ["members", "nests"],
       "properties": {
         "title": {
           "title": "Title",
