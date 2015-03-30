@@ -58,7 +58,7 @@ var FramedEditor = React.createClass({
     /*eslint-enable */
 
     return (
-      <Frame head={head} initialSrc={initialSrc}>
+      <Frame style={this.props.style} head={head} initialSrc={initialSrc}>
         <Editor />
       </Frame>
     );

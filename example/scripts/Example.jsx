@@ -1,6 +1,7 @@
 'use strict';
 
 
+var EventListener = require('react-bootstrap/src/utils/EventListener');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
@@ -49,7 +50,45 @@ var FileInput = React.createClass({
 });
 
 
+// Component can use `this.state.size`, which is populated by `this.getSize`,
+// which should be implemented by the component.
+var ResizeMixin = {
+  _resized: true,
+
+  getInitialState: function() {
+    return {size: 0};
+  },
+
+  resize: function() {
+    this._resized = true;
+  },
+
+  componentDidMount: function() {
+    this._onWindowResizeListener = EventListener.listen(window, 'resize', this.resize);
+
+    this._resizeInterval = setInterval(() => {
+      if (this._resized) {
+        this._resized = false;
+        this.setState({size: this.getSize()});
+      }
+    }, 250);
+  },
+
+  componentWillUnmount: function() {
+    if (this._onWindowResizeListener) {
+      this._onWindowResizeListener.remove();
+    }
+
+    if (this._resizeInterval) {
+      this._resizeInterval.clearInterval();
+    }
+  }
+};
+
+
 var Example = React.createClass({
+  mixins: [ResizeMixin],
+
   openJson: function(event) {
     this.openFile(event, 'json');
   },
@@ -87,16 +126,35 @@ var Example = React.createClass({
     }
   },
 
+  getSize: function() {
+    return parseInt(
+      document.defaultView.getComputedStyle(this.refs.panel.getDOMNode(), null).height,
+      10
+    );
+  },
+
   render: function() {
+    var editorStyle = {
+      'margin-bottom': -this.state.size,
+      'padding-bottom': this.state.size
+    };
+
     var links = (filetype) => examples[filetype].map(([name, data]) => {
       var onClick = () => this.refs.editor.openDocument(data, filetype);
       return <a onClick={onClick} href="#">{name}</a>;
     });
 
+    var panelProps = {
+      header: <h3>Example pedigrees</h3>,
+      collapsable: true,
+      defaultExpanded: true,
+      onSelect: this.resize
+    };
+
     return (
       <div>
-        <Nested ref="editor" />
-        <Panel header={<h3>Example pedigrees</h3>}>
+        <Nested ref="editor" style={editorStyle} />
+        <Panel ref="panel" bsStyle="primary" {...panelProps}>
           <Grid>
             <Row>
               <Col md={3}>
