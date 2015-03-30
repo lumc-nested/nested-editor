@@ -48,7 +48,10 @@ var FramedEditor = React.createClass({
   },
 
   render: function() {
-    var head = <style type="text/css" dangerouslySetInnerHTML={{__html: style.toString()}} />;
+    var head = [
+      <base key="base" href={document.baseURI} />,
+      <style key="style" type="text/css" dangerouslySetInnerHTML={{__html: style.toString()}} />
+    ];
 
     /*eslint-disable no-script-url */
     var initialSrc = 'javascript:"<!DOCTYPE html><html><body></body></html>"';
