@@ -109,7 +109,16 @@ var readParseTree = function(parseTree) {
 
 
 var readString = function(string) {
-  return readParseTree(parser.parse(string));
+  var parseTree;
+
+  try {
+    parseTree = parser.parse(string);
+  } catch (e) {
+    console.log(`Line ${e.line}, column ${e.column}: ${e.message}`);
+    throw new Error('error parsing ped file');
+  }
+
+  return readParseTree(parseTree);
 };
 
 

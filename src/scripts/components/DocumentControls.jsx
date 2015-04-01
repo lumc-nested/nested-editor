@@ -2,7 +2,9 @@
 
 
 var FileSaver = require('FileSaver');
-var Icon = require('react-fa');
+// Prevent including the FA stylesheet to the document, we include it manually
+// in the iframe.
+var Icon = require('react-fa/dist/Icon');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 

@@ -1,42 +1,30 @@
-/*
- * Webpack distribution configuration
- *
- * This file is set up for serving the distribution version. It will be compiled to dist/ by default
- */
-
 'use strict';
+
 
 var webpack = require('webpack');
 
+
 module.exports = {
-
-  output: {
-    publicPath: '/assets/',
-    path: 'dist/assets/',
-    filename: 'main.js'
-  },
-
-  debug: false,
-  devtool: false,
-  entry: './src/scripts/app.jsx',
-
-  stats: {
-    colors: true,
-    reasons: false
-  },
-
   plugins: [
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({compress: {drop_console: true}}),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin()
   ],
+
+  entry: './src/scripts/index.js',
+
+  output: {
+    filename: 'bundle.min.js',
+    path: 'dist/'
+  },
 
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
 
   module: {
+    // JSZip is bundled with xlsx as a pre-built javascript file.
     noParse: [/\/jszip\.js$/],
 
     preLoaders: [{
@@ -46,18 +34,14 @@ module.exports = {
     }],
 
     loaders: [{
-      test: /\.js$/,
+      test: /\.jsx?$/,
       exclude: /node_modules/,
       loader: 'babel-loader?optional=runtime'
-    }, {
-      test: /\.jsx$/,
-      exclude: /node_modules/,
-      loader: 'jsx-loader?harmony'
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
     }, {
-      test: /\.less/,
+      test: /\.less$/,
       loader: 'style-loader!css-loader!less-loader'
     }, {
       test: /\.(png|jpg)$/,
@@ -78,5 +62,9 @@ module.exports = {
       test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'file-loader'
     }]
-  }
+  },
+
+  cache: false,
+  debug: false,
+  devtool: false
 };
