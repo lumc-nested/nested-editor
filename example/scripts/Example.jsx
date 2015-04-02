@@ -1,7 +1,7 @@
 'use strict';
 
 
-var EventListener = require('react-bootstrap/src/utils/EventListener');
+var EventListener = require('react-bootstrap/lib/utils/EventListener');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
@@ -128,15 +128,15 @@ var Example = React.createClass({
 
   getSize: function() {
     return parseInt(
-      document.defaultView.getComputedStyle(this.refs.panel.getDOMNode(), null).height,
+      document.defaultView.getComputedStyle(React.findDOMNode(this.refs.panel), null).height,
       10
     );
   },
 
   render: function() {
     var editorStyle = {
-      'margin-bottom': -this.state.size,
-      'padding-bottom': this.state.size
+      marginBottom: -this.state.size,
+      paddingBottom: this.state.size
     };
 
     var links = (filetype) => examples[filetype].map(([name, data]) => {
