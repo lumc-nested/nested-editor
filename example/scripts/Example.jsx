@@ -4,6 +4,7 @@
 var EventListener = require('react-bootstrap/lib/utils/EventListener');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
+var TransitionEvents = require('react/lib/ReactTransitionEvents');
 
 var Nested = require('../../src/scripts/index');
 
@@ -133,6 +134,14 @@ var Example = React.createClass({
     );
   },
 
+  componentDidMount: function() {
+    TransitionEvents.addEndEventListener(this.refs.panel.getCollapsableDOMNode(), this.resize);
+  },
+
+  componentWillUnmount: function() {
+    TransitionEvents.removeEndEventListener(this.refs.panel.getCollapsableDOMNode(), this.resize);
+  },
+
   render: function() {
     var editorStyle = {
       marginBottom: -this.state.size,
@@ -147,8 +156,7 @@ var Example = React.createClass({
     var panelProps = {
       header: <h3>Example pedigrees</h3>,
       collapsable: true,
-      defaultExpanded: true,
-      onSelect: this.resize
+      defaultExpanded: true
     };
 
     return (
