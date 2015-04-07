@@ -18,7 +18,6 @@ var AppConstants = require('../constants/AppConstants');
 
 var Button = ReactBootstrap.Button;
 var ButtonGroup = ReactBootstrap.ButtonGroup;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar;
 var DropdownButton = ReactBootstrap.DropdownButton;
 var MenuItem = ReactBootstrap.MenuItem;
 var OverlayTrigger = ReactBootstrap.OverlayTrigger;
@@ -144,14 +143,14 @@ var DocumentControls = React.createClass({
     }
 
     return (
-      <ButtonToolbar>
+      <div>
         <ButtonGroup>
           {documentButtons}
         </ButtonGroup>
         <ButtonGroup>
           {pedigreeButtons}
         </ButtonGroup>
-      </ButtonToolbar>
+      </div>
     );
   }
 });

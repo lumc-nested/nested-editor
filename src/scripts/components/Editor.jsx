@@ -1,6 +1,9 @@
 'use strict';
 
 
+// Prevent including the FA stylesheet to the document, we include it manually
+// in the iframe.
+var Icon = require('react-fa/dist/Icon');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
@@ -12,14 +15,22 @@ var DocumentStore = require('../stores/DocumentStore');
 var DocumentControls = require('./DocumentControls');
 var FieldsView = require('./FieldsView');
 var LayoutView = require('./LayoutView');
+var RelationsView = require('./RelationsView');
 var TableView = require('./TableView');
 
 
+var Button = ReactBootstrap.Button;
+var ButtonGroup = ReactBootstrap.ButtonGroup;
+var ButtonToolbar = ReactBootstrap.ButtonToolbar;
 var Col = ReactBootstrap.Col;
 var Grid = ReactBootstrap.Grid;
 var Row = ReactBootstrap.Row;
-var TabbedArea = ReactBootstrap.TabbedArea;
-var TabPane = ReactBootstrap.TabPane;
+
+
+var VIEWS = {
+  LAYOUT: 0,
+  TABLE: 1
+};
 
 
 var getAppState = function() {
@@ -42,6 +53,7 @@ var getDocumentState = function() {
 var Editor = React.createClass({
   getInitialState: function() {
     var state = {
+      view: VIEWS.LAYOUT,
       app: getAppState(),
       document: getDocumentState()
     };
@@ -69,13 +81,18 @@ var Editor = React.createClass({
     DocumentStore.removeChangeListener(this._onChange);
   },
 
+  changeView: function(view) {
+    this.setState({view});
+  },
+
   render: function() {
     var document = this.state.document.document;
     var focus = this.state.document.focus;
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
-    var fieldsView;
     var fieldsViewProps;
+    var main;
+    var sidebar;
 
     switch (focus.level) {
       case AppConstants.FocusLevel.Member:
@@ -104,27 +121,51 @@ var Editor = React.createClass({
         };
     }
 
-    fieldsView = <FieldsView {...fieldsViewProps} />;
+    switch (this.state.view) {
+      case VIEWS.TABLE:
+        main = <TableView pedigree={document.pedigree} focus={focus} />;
+        sidebar = <RelationsView title="TODO (show member relations)" />;
+        break;
+      case VIEWS.LAYOUT:
+      default:
+        main = <LayoutView pedigree={document.pedigree} focus={focus} />;
+        sidebar = <FieldsView {...fieldsViewProps} />;
+    }
 
     return (
-      <Grid id="editor" fluid>
-        <Row>
-          <Col id="sidebar" sm={3} md={2}>
-            {fieldsView}
-          </Col>
-          <Col id="main" sm={9} md={10}>
-            <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree}/>
-            <TabbedArea className="main-area" defaultActiveKey="layoutView" animation={false}>
-              <TabPane eventKey="layoutView" tab="Layout">
-                <LayoutView pedigree={document.pedigree} focus={focus} />
-              </TabPane>
-              <TabPane eventKey="tableView" tab="Table">
-                <TableView pedigree={document.pedigree} focus={focus} />
-              </TabPane>
-            </TabbedArea>
-          </Col>
-        </Row>
-      </Grid>
+      <div>
+        <ButtonToolbar id="toolbar" className="container-fluid">
+          <div className="pull-left">
+            <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree} />
+          </div>
+          <div className="pull-right">
+            <ButtonGroup>
+              <Button
+                  key="layout"
+                  onClick={this.changeView.bind(this, VIEWS.LAYOUT)}
+                  active={this.state.view === VIEWS.LAYOUT}>
+                <Icon name="sitemap" />
+              </Button>
+              <Button
+                  key="table"
+                  onClick={this.changeView.bind(this, VIEWS.TABLE)}
+                  active={this.state.view === VIEWS.TABLE}>
+                <Icon name="table" />
+              </Button>
+            </ButtonGroup>
+          </div>
+        </ButtonToolbar>
+        <Grid fluid>
+          <Row>
+            <Col id="main" sm={9} md={10}>
+              {main}
+            </Col>
+            <Col id="sidebar" sm={3} smOffset={9} md={2} mdOffset={10}>
+              {sidebar}
+            </Col>
+          </Row>
+        </Grid>
+      </div>
     );
   }
 });

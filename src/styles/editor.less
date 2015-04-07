@@ -1,91 +1,97 @@
-#editor {
-  display: block;
-  height: 500px;
+/* TODO: Define some variables (e.g., toolbar height) */
+
+
+/* Move down content because we have a fixed toolbar that is 50px tall. */
+body {
+  padding-top: 44px;
 }
 
-/* sidebar */
+/* No round borders. */
+@border-radius-base:  0;
+@border-radius-large: 0;
+@border-radius-small: 0;
 
-#sidebar {
-/*  display: none; *//* hide for mobile, show later */
-  height: 100%;
-  background-color: #F5F5F5;
-  border-right: 1px solid #EEE;
-}
 
 /*
+ * Toolbar
+ */
+
+#toolbar {
+  position: relative;
+  top: 0;
+  border: none;
+  position: fixed;
+  right: 0;
+  left: 0;
+  min-height: 44px;
+  z-index: 2000;
+  background-color: #f5f5f5;
+  padding: 0;
+  /* TODO: Something weird is going on here, I cannot just use the margin-left
+     from the toolbar children, it seems like 5px are 'lost' to the left of
+     the toolbar. */
+  padding-left: 5px;
+}
+
+#toolbar {
+  :not(.btn-group) > .btn-group {
+    margin: 5px;
+  }
+
+  .btn:focus, .btn:active:focus, .btn.active:focus,
+  .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: none;
+  }
+}
+
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+#sidebar {
+  display: none;
+}
 @media (min-width: 768px) {
   #sidebar {
     position: fixed;
-    top: 51px;
-    bottom: 0px;
-    left: 0px;
+    top: 44px;
+    bottom: 0;
+    right: 0;
     z-index: 1000;
     display: block;
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: #F5F5F5;
-    border-right: 1px solid #EEE;
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
   }
 }
-*/
-/* main content */
+
+
+/*
+ * Main content
+ */
 
 #main {
+  position: fixed;
+  top: 44px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 10px;
+  overflow-y: auto;
 }
 
-/* this is from the bootstrap dashboard example, but i think we need the
-   horizontal space */
+
 /*
-@media (min-width: 768px) {
-  #main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
-*/
-
-/* main area */
-
-nav.main-area {
-  margin-top: -40px;
-  padding-bottom: 20px;
-}
-
-ul.main-area > li {
-  float: right;
-}
-
-/* pedigree area */
+ * Layout view
+ */
 
 #layout {
   background: #ffffff;
   color: #fff;
-  height: 400px;
+  width: 100%;
+  height: 100%;
 }
-
-/* transitions */
-
-.fade-enter {
-  opacity: 0.01;
-  transition: opacity .5s ease-in;
-}
-
-.fade-enter.fade-enter-active {
-  opacity: 1;
-}
-
-.fade-leave {
-  opacity: 1;
-  transition: opacity .5s ease-in;
-}
-
-.fade-leave.fade-leave-active {
-  opacity: 0.01;
-}
-
-/* no round borders */
-
-@border-radius-base:  0;
-@border-radius-large: 0;
-@border-radius-small: 0;
