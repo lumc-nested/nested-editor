@@ -50,6 +50,13 @@ var DocumentActions = {
     });
   },
 
+  deleteMember: function(memberKey) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.DELETE_MEMBER,
+      memberKey
+    });
+  },
+
   updateMember: function(memberKey, fields) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.UPDATE_MEMBER,

@@ -286,6 +286,50 @@ var _addTwin = function(memberKey) {
 };
 
 
+var _deleteMember = function(memberKey) {
+  var pedigree = _document.pedigree;
+  var member = pedigree.members.get(memberKey);
+  var matingNests = pedigree.nests.filter((n, nk) => nk.has(memberKey));
+
+  // remove member
+  pedigree = pedigree
+    .update('members', members => members.delete(memberKey));
+
+  // remove members nests
+  if (matingNests.size) {
+    pedigree = pedigree
+      .update('nests', nests => nests.filterNot((n, nk) => matingNests.has(nk)));
+  }
+
+  // remove member from his/her parents' nest
+  if (member.parents.size) {
+    pedigree = pedigree
+      .updateIn(['nests', member.parents, 'pregnancies'],
+        pregnancies => pregnancies
+          .map(pregnancy => {
+            var index = pregnancy.children.indexOf(memberKey);
+            if (index >= 0) {
+              return pregnancy
+                .update('children', children => children.delete(index))
+                .update('zygotes', zygotes => zygotes === undefined ? zygotes : zygotes.delete(index));
+            } else {
+              return pregnancy;
+            }
+          })
+          .filter(pregnancy => pregnancy.children.size)
+      );
+  }
+
+  _changeDocument(
+    'Delete member',
+    _document.set('pedigree', pedigree),
+    new Focus({
+      level: AppConstants.FocusLevel.Pedigree
+    })
+  );
+};
+
+
 var _updateMember = function(memberKey, fields) {
   _changeDocument(
     'Update member fields',
@@ -366,6 +410,9 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.ADD_TWIN:
       _addTwin(action.memberKey);
+      break;
+    case ActionTypes.DELETE_MEMBER:
+      _deleteMember(action.memberKey);
       break;
     case ActionTypes.UPDATE_MEMBER:
       _updateMember(action.memberKey, action.fields);
