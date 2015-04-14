@@ -6,6 +6,7 @@ var webpack = require('webpack');
 
 module.exports = {
   plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({compress: {drop_console: true}}),
     new webpack.optimize.OccurenceOrderPlugin(),
