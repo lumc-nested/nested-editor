@@ -70,7 +70,7 @@ var LayoutView = React.createClass({
     translate = `translate(${shift},50)`;
 
     return (
-      <svg id="layout" width="100%" height="100%" onClick={this.handleClick}>
+      <svg id="layout" onClick={this.handleClick}>
         <g transform={translate} key={'pedigree'}>
           {nests}
           {members}
