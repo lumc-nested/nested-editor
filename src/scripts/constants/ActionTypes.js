@@ -11,6 +11,7 @@ module.exports = keyMirror({
   ADD_CHILD: null,
   ADD_PARENTS: null,
   ADD_TWIN: null,
+  DELETE_MEMBER: null,
   UPDATE_MEMBER: null,
   UPDATE_NEST: null,
   UPDATE_PEDIGREE: null,

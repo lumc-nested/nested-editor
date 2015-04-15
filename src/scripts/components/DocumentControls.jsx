@@ -65,6 +65,10 @@ var DocumentControls = React.createClass({
     DocumentActions.addTwin(this.props.focus.get('key'));
   },
 
+  deleteMember: function() {
+    DocumentActions.deleteMember(this.props.focus.get('key'));
+  },
+
   undo: function() {
     DocumentActions.undo();
   },
@@ -94,6 +98,7 @@ var DocumentControls = React.createClass({
     var pedigreeButtons = {};
     var downloadItems;
     var tooltip;
+    var canDelete;
 
     if (this.props.undo !== undefined) {
       tooltip = <Tooltip>Undo: <strong>{this.props.undo}</strong></Tooltip>;
@@ -130,6 +135,40 @@ var DocumentControls = React.createClass({
           } else {
             pedigreeButtons.addParents = <Button onClick={this.addParents}>Add parents</Button>;
           }
+
+          // TODO: should we cache this?
+          // this is recalculated everytime we switch focus between members.
+          // but this property based on the member is key is probably not changed.
+          canDelete = this.props.pedigree.nests.every((nest, nestKey) => {
+            var mateKey;
+            var mate;
+            if (nestKey.has(this.props.focus.key)) {
+              // has spouse
+              if (nest.pregnancies.size) {
+                // has children
+                return false;
+              } else {
+                // no children. Is the mate connected with other members?
+                mateKey = nestKey.delete(this.props.focus.key).first();
+                mate = this.props.pedigree.members.get(mateKey);
+                if (mate.parents.size) {
+                  return true;
+                } else {
+                  // true if mate has other mates.
+                  return this.props.pedigree.nests
+                    .some((n, nk) => n !== nest && nk.has(mateKey));
+                }
+              }
+            } else {
+              // no spouse
+              return true;
+            }
+          });
+
+          if (canDelete) {
+            pedigreeButtons.deleteMember = <Button onClick={this.deleteMember}>Delete member</Button>;
+          }
+
           break;
 
         case AppConstants.FocusLevel.Nest:
