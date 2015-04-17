@@ -133,7 +133,7 @@ var Editor = React.createClass({
     }
 
     return (
-      <div>
+      <div id="nested-editor">
         <ButtonToolbar id="toolbar" className="container-fluid">
           <div className="pull-left">
             <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree} />
