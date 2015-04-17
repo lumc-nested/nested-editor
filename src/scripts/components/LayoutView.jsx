@@ -1,17 +1,27 @@
 'use strict';
 
+var Icon = require('react-fa/dist/Icon');
 var React = require('react');
+var ReactBootstrap = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var LayoutUtils = require('../layout/Utils');
 var MemberSVG = require('./SVG/MemberSVG');
 var NestSVG = require('./SVG/NestSVG');
+var Utils = require('../common/Utils');
+
+
+var Button = ReactBootstrap.Button;
 
 
 var LayoutView = React.createClass({
   getInitialState: function() {
-    return {layout: LayoutUtils.getLayout(this.props.pedigree)};
+    return {
+      layout: LayoutUtils.getLayout(this.props.pedigree),
+      zoomLevel: 0,
+      width: 100
+    };
   },
 
   componentWillReceiveProps: function(nextProps) {
@@ -21,18 +31,36 @@ var LayoutView = React.createClass({
     }
   },
 
+  zoomIn: function() {
+    this.setState({zoomLevel: this.state.zoomLevel + 1});
+  },
+
+  zoomOut: function() {
+    this.setState({zoomLevel: this.state.zoomLevel - 1});
+  },
+
+  componentDidMount: function () {
+    var style = Utils.getComputedStyles(this.refs.layout);
+    this.setState({
+      width: parseInt(style.width, 10),
+      height: parseInt(style.height, 10)
+    });
+  },
+
   render: function() {
-    // TODO: get the dimentions from html
-    var windowWidth = 750;
+
+    // TODO: resize
+    var windowWidth = this.state.width;
     var focus = this.props.focus;
     var layout = this.state.layout;
+    var zoomLevel = this.state.zoomLevel;
     var focused;
     var members;
     var nests;
     var leftmost;
     var rightmost;
     var shift;
-    var translate;
+    var transform;
 
     members = this.props.pedigree.members
       .map((member, memberKey) => {
@@ -67,15 +95,25 @@ var LayoutView = React.createClass({
       .get('x');
 
     shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
-    translate = `translate(${shift},50)`;
+    transform = `translate(${shift},50) scale(${1 + zoomLevel / 5})`;
 
     return (
-      <svg id="layout" onClick={this.handleClick}>
-        <g transform={translate} key={'pedigree'}>
-          {nests}
-          {members}
-        </g>
-      </svg>
+      <div ref="layout" id="layout-view">
+
+        <Button className="zoom-in" onClick={this.zoomIn} disabled={zoomLevel >= 5 ? 'disabled' : ''}>
+          <Icon name="search-plus" />
+        </Button>
+        <Button className="zoom-out" onClick={this.zoomOut} disabled={zoomLevel <= -4 ? 'disabled' : ''}>
+          <Icon name="search-minus" />
+        </Button>
+
+        <svg id="layout" onClick={this.handleClick}>
+          <g transform={transform} key={'pedigree'}>
+            {nests}
+            {members}
+          </g>
+        </svg>
+      </div>
     );
   },
 
