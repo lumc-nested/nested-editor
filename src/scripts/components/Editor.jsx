@@ -157,10 +157,10 @@ var Editor = React.createClass({
         </ButtonToolbar>
         <Grid fluid>
           <Row>
-            <Col id="main" sm={9} md={10}>
+            <Col id="main" sm={8} md={9} lg={10}>
               {main}
             </Col>
-            <Col id="sidebar" sm={3} smOffset={9} md={2} mdOffset={10}>
+            <Col id="sidebar" sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
               {sidebar}
             </Col>
           </Row>
