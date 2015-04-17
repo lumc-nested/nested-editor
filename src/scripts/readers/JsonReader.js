@@ -17,6 +17,7 @@ var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 var Schema = Structures.Schema;
+var Symbol = Structures.Symbol;
 
 
 var accept = ['json'];
@@ -29,6 +30,7 @@ var readJson = function(json) {
   var fields;
   var schema;
   var schemaExtension;
+  var symbol;
 
   if (!tv4.validate(json, jsonSchema)) {
     console.log(tv4.error);
@@ -66,14 +68,17 @@ var readJson = function(json) {
     return [nestKey, new Nest({pregnancies, fields})];
   });
 
+  symbol = new Symbol(json.pedigree.symbol);
+
   fields = Immutable.Map(json.pedigree)
     .delete('members')
-    .delete('nests');
+    .delete('nests')
+    .delete('symbol');
 
   // Add parents key to member instances.
   members = Utils.populateParents(members, nests);
 
-  pedigree = new Pedigree({members, nests, fields});
+  pedigree = new Pedigree({members, nests, symbol, fields});
 
   schema = new Schema({
     pedigree: schemaExtension.getIn(['definitions', 'pedigree', 'properties']) || Immutable.Map(),

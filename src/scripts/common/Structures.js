@@ -35,6 +35,21 @@ var Nest = Immutable.Record({
 });
 
 
+var Symbol = Immutable.Record({
+  // shceme
+  scheme: 0,
+
+  // List of strings representing color
+  color: Immutable.List(),
+
+  // List of strings (field keys)
+  mapping: Immutable.List(),
+
+  // List of strings representing patterns
+  pattern: Immutable.List()
+});
+
+
 var Pedigree = Immutable.Record({
   // Map of strings (member keys) to Member instances.
   members: Immutable.Map(),
@@ -42,6 +57,9 @@ var Pedigree = Immutable.Record({
   // Map of Sets to Nest instances where the Sets contain a string (member
   // key) for each parent.
   nests: Immutable.Map(),
+
+  // symbol instance.
+  symbol: new Symbol(),
 
   // Map of strings (field keys) to scalars (field values).
   fields: Immutable.Map()
@@ -67,4 +85,4 @@ var Document = Immutable.Record({
 });
 
 
-module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema};
+module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema, Symbol};

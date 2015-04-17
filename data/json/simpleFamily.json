@@ -1,6 +1,14 @@
 {
   "pedigree": {
     "title": "Simple Family",
+
+    "symbol": {
+      "scheme": 0,
+      "mapping": ["affected"],
+      "color": ["indigo"],
+      "pattern": ["solid"]
+    },
+
     "members": {
       "1": {
         "gender": 2,
@@ -11,7 +19,8 @@
       },
       "3": {
         "gender": 1,
-        "proband": true
+        "proband": true,
+        "affected": true
       },
       "4": {
       }

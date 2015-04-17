@@ -17,6 +17,41 @@
           "title": "Title",
           "type": "string"
         },
+
+        "symbol": {
+          "title": "symbol",
+          "type": "object",
+          "properties": {
+            "scheme": {
+              "title": "Symbol scheme",
+              "type": "integer"
+            },
+            "color": {
+              "titile": "Symbol color",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "mapping": {
+              "title": "Symbol mapping",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pattern": {
+              "title": "Symbol pattern",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["solid", "dotted"]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+
         "members" : {
           "title": "Members",
           "description": "Members in a pedigree.",
@@ -67,6 +102,10 @@
         },
         "deceased": {
           "title": "Deceased",
+          "type": "boolean"
+        },
+        "affected": {
+          "title": "Affected",
           "type": "boolean"
         }
       }
