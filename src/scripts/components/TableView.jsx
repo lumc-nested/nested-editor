@@ -7,7 +7,7 @@ var ReactBootstrap = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var Pedigree = require('../common/Structures').Pedigree;
+var {Pedigree, Ref} = require('../common/Structures');
 
 
 var Table = ReactBootstrap.Table;
@@ -25,10 +25,10 @@ var MemberRow = React.createClass({
   },
 
   handleClick: function() {
-    DocumentActions.setFocus(
-      AppConstants.FocusLevel.Member,
-      this.props.memberKey
-    );
+    DocumentActions.setFocus(new Ref({
+      type: AppConstants.ObjectType.Member,
+      key: this.props.memberKey
+    }));
   },
 
   render: function() {
@@ -48,7 +48,7 @@ var MemberRow = React.createClass({
 var TableView = React.createClass({
 
   propTypes: {
-    focus: React.PropTypes.object.isRequired,
+    focus: React.PropTypes.instanceOf(Ref).isRequired,
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
   },
 
@@ -59,7 +59,7 @@ var TableView = React.createClass({
 
     rows = pedigree.members
       .map((member, memberKey) => {
-        var isSelected = focus.level === AppConstants.FocusLevel.Member &&
+        var isSelected = focus.type === AppConstants.ObjectType.Member &&
                          focus.key === memberKey;
         return <MemberRow key={'member-' + memberKey}
                           fields={member.fields}

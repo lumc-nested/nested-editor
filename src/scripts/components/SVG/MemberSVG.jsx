@@ -7,7 +7,8 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var Structures = require('../../common/Structures');
+var {Member, Ref} = require('../../common/Structures');
+
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
 var _size = AppConfig.MemberSize;
@@ -22,7 +23,7 @@ var _isDead = function(fields) {
 var MemberSVG = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.instanceOf(Structures.Member).isRequired,
+    data: React.PropTypes.instanceOf(Member).isRequired,
     focused: React.PropTypes.bool.isRequired,
     location: React.PropTypes.object.isRequired,
     symbolDef: React.PropTypes.object.isRequired,
@@ -95,7 +96,10 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    DocumentActions.setFocus(AppConstants.FocusLevel.Member, this.props.memberKey);
+    DocumentActions.setFocus(new Ref({
+      type: AppConstants.ObjectType.Member,
+      key: this.props.memberKey
+    }));
   }
 });
 

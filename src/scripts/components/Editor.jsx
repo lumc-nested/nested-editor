@@ -13,14 +13,13 @@ var JsonReader = require('../readers/JsonReader');
 var PedReader = require('../readers/PedReader');
 
 var AppStore = require('../stores/AppStore');
-var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var DocumentStore = require('../stores/DocumentStore');
 
 var DocumentControls = require('./DocumentControls');
-var FieldsView = require('./FieldsView');
+var LayoutSidebar = require('./LayoutSidebar');
 var LayoutView = require('./LayoutView');
-var RelationsView = require('./RelationsView');
+var TableSidebar = require('./TableSidebar');
 var TableView = require('./TableView');
 
 
@@ -80,31 +79,23 @@ var getDocumentState = function() {
 
 
 var Editor = React.createClass({
-
   propTypes: {
     style: React.PropTypes.object
   },
 
   getInitialState: function() {
-    var state = {
+    return {
       view: VIEWS.LAYOUT,
       app: getAppState(),
       document: getDocumentState()
     };
-    state.schema = state.document.document.schema.mergeDeep(state.app.schema);
-    return state;
   },
 
   _onChange: function() {
-    var state = {
+    this.setState({
       app: getAppState(),
       document: getDocumentState()
-    };
-    if (!state.document.document.schema.equals(this.state.document.document.schema)) {
-      console.log('********** merging schema');
-      state.schema = state.document.document.schema.mergeDeep(state.app.schema);
-    }
-    this.setState(state);
+    });
   },
 
   componentDidMount: function() {
@@ -128,47 +119,18 @@ var Editor = React.createClass({
     var focus = this.state.document.focus;
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
-    var fieldsViewProps;
     var main;
     var sidebar;
 
-    switch (this.state.view) {
-      case VIEWS.TABLE:
-        main = <TableView pedigree={document.pedigree} focus={focus} />;
-        sidebar = <RelationsView pedigree={document.pedigree} focus={focus} />;
-        break;
-
-      case VIEWS.LAYOUT:
-      default:
-        switch (focus.level) {
-          case AppConstants.FocusLevel.Member:
-            fieldsViewProps = {
-              title: 'Member (' + focus.key + ')',
-              fields: document.pedigree.members.get(focus.key).fields,
-              fieldDefinitions: this.state.schema.member,
-              onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
-            };
-            break;
-          case AppConstants.FocusLevel.Nest:
-            fieldsViewProps = {
-              title: 'Nest',
-              fields: document.pedigree.nests.get(focus.key).fields,
-              fieldDefinitions: this.state.schema.nest,
-              onSubmit: fields => DocumentActions.updateNest(focus.key, fields)
-            };
-            break;
-          case AppConstants.FocusLevel.Pedigree:
-          default:
-            fieldsViewProps = {
-              title: 'Pedigree',
-              fields: document.pedigree.fields,
-              fieldDefinitions: this.state.schema.pedigree,
-              onSubmit: fields => DocumentActions.updatePedigree(fields)
-            };
-        }
-
-        main = <LayoutView pedigree={document.pedigree} focus={focus} symbol={document.symbol} />;
-        sidebar = <FieldsView {...fieldsViewProps} />;
+    if (this.state.view === VIEWS.TABLE) {
+      main = <TableView pedigree={document.pedigree} focus={focus} />;
+      sidebar = <TableSidebar pedigree={document.pedigree} focus={focus} />;
+    } else {
+      main = <LayoutView pedigree={document.pedigree} focus={focus} symbol={document.symbol} />;
+      sidebar = <LayoutSidebar pedigree={document.pedigree}
+                               documentSchema={document.schema}
+                               appSchema={this.state.app.schema}
+                               focus={focus} />;
     }
 
     return (

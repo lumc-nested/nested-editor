@@ -3,6 +3,8 @@
 
 var Immutable = require('immutable');
 
+var AppConstants = require('../constants/AppConstants');
+
 
 var Member = Immutable.Record({
   // Set of strings (member keys).
@@ -100,4 +102,13 @@ var Document = Immutable.Record({
 });
 
 
-module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema, Symbol};
+var Ref = Immutable.Record({
+  // Type of the referenced object.
+  type: AppConstants.ObjectType.Pedigree,
+
+  // Key of the referenced object.
+  key: undefined
+});
+
+
+module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema, Symbol, Ref};

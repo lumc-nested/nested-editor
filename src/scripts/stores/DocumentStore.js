@@ -16,6 +16,7 @@ var Nest = Structures.Nest;
 var Pedigree = Structures.Pedigree;
 var Pregnancy = Structures.Pregnancy;
 var Member = Structures.Member;
+var Ref = Structures.Ref;
 
 
 var CHANGE_EVENT = 'change';
@@ -35,21 +36,15 @@ var DEFAULT_DOCUMENT = new Document({
 });
 
 
-var Focus = Immutable.Record({
-  level: AppConstants.FocusLevel.Pedigree,
-  key: undefined
-});
-
-
 var Snapshot = Immutable.Record({
   label: 'Unknown change',
   document: new Document(),
-  focus: new Focus()
+  focus: new Ref()
 });
 
 
 var _document = DEFAULT_DOCUMENT;
-var _focus = new Focus();
+var _focus = new Ref();
 
 
 // Undo/redo stacks contain Snapshot instances.
@@ -77,8 +72,8 @@ var _newMemberKey = function() {
 };
 
 
-var _setFocus = function(level, key) {
-  _focus = new Focus({level, key});
+var _setFocus = function(ref) {
+  _focus = ref;
 };
 
 
@@ -140,7 +135,7 @@ var _openDocument = function(document) {
   _redoStack = _redoStack.clear();
 
   _document = document;
-  _focus = new Focus();
+  _focus = new Ref();
 };
 
 
@@ -173,8 +168,8 @@ var _addSpouse = function(memberKey) {
   _changeDocument(
     'Add spouse',
     _document.set('pedigree', pedigree),
-    new Focus({
-      level: AppConstants.FocusLevel.Member,
+    new Ref({
+      type: AppConstants.ObjectType.Member,
       key: spouseKey
     })
   );
@@ -204,8 +199,8 @@ var _addChild = function(nestKey, gender) {
   _changeDocument(
     'Add child',
     _document.set('pedigree', pedigree),
-    new Focus({
-      level: AppConstants.FocusLevel.Member,
+    new Ref({
+      type: AppConstants.ObjectType.Member,
       key: childKey
     })
   );
@@ -240,8 +235,8 @@ var _addParents = function(memberKey) {
   _changeDocument(
     'Add parents',
     _document.set('pedigree', pedigree),
-    new Focus({
-      level: AppConstants.FocusLevel.Nest,
+    new Ref({
+      type: AppConstants.ObjectType.Nest,
       key: nestKey
     })
   );
@@ -278,8 +273,8 @@ var _addTwin = function(memberKey) {
   _changeDocument(
     'Add twin',
     _document.set('pedigree', pedigree),
-    new Focus({
-      level: AppConstants.FocusLevel.Member,
+    new Ref({
+      type: AppConstants.ObjectType.Member,
       key: twinKey
     })
   );
@@ -323,33 +318,97 @@ var _deleteMember = function(memberKey) {
   _changeDocument(
     'Delete member',
     _document.set('pedigree', pedigree),
-    new Focus({
-      level: AppConstants.FocusLevel.Pedigree
+    new Ref({
+      type: AppConstants.ObjectType.Pedigree
     })
   );
 };
 
 
-var _updateMember = function(memberKey, fields) {
+var _updateFields = function(ref, fields) {
+  var label;
+  var path;
+
+  switch (ref.type) {
+    case AppConstants.ObjectType.Member:
+      label = 'Update member fields';
+      path = ['pedigree', 'members', ref.key, 'fields'];
+      break;
+    case AppConstants.ObjectType.Nest:
+      label = 'Update nest fields';
+      path = ['pedigree', 'nests', ref.key, 'fields'];
+      break;
+    case AppConstants.ObjectType.Pedigree:
+    default:
+      label = 'Update pedigree fields';
+      path = ['pedigree', 'fields'];
+  }
+
+  _changeDocument(label, _document.mergeIn(path, fields));
+};
+
+
+var _addField = function(objectType, field, schema) {
+  var typePaths = {
+    [AppConstants.ObjectType.Member]: 'member',
+    [AppConstants.ObjectType.Nest]: 'nest',
+    [AppConstants.ObjectType.Pedigree]: 'pedigree'
+  };
+
   _changeDocument(
-    'Update member fields',
-    _document.mergeIn(['pedigree', 'members', memberKey, 'fields'], fields)
+    'Add custom field',
+    _document.setIn(['schema', typePaths[objectType], field], Immutable.Map(schema))
   );
 };
 
 
-var _updateNest = function(nestKey, fields) {
-  _changeDocument(
-    'Update nest fields',
-    _document.mergeIn(['pedigree', 'nests', nestKey, 'fields'], fields)
-  );
-};
+var _deleteField = function(objectType, field) {
+  var pedigree = _document.pedigree;
+  var schema = _document.schema;
+  var symbol = _document.symbol;
 
+  switch (objectType) {
+    case AppConstants.ObjectType.Member:
+      schema = schema.deleteIn(['member', field]);
+      pedigree = pedigree.update(
+        'members',
+        members => members.map(
+          member => member.deleteIn(['fields', field])
+        )
+      );
+      symbol = symbol.update(
+        'mapping',
+        mapping => mapping.map(mappedField => {
+          if (mappedField === field) {
+            return undefined;
+          } else {
+            return mappedField;
+          }
+        })
+      );
+      break;
+    case AppConstants.ObjectType.Nest:
+      schema = schema.deleteIn(['nest', field]);
+      pedigree = pedigree.update(
+        'nests',
+        nests => nests.map(
+          nest => nest.deleteIn(['fields', field])
+        )
+      );
+      break;
+    case AppConstants.ObjectType.Pedigree:
+    default:
+      schema = schema.deleteIn(['pedigree', field]);
+      pedigree = pedigree.deleteIn(['fields', field]);
+  }
 
-var _updatePedigree = function(fields) {
   _changeDocument(
-    'Update pedigree fields',
-    _document.mergeIn(['pedigree', 'fields'], fields)
+    'Remove custom field',
+    _document.merge({
+      pedigree: pedigree,
+      schema: schema,
+      symbol: symbol
+    })
   );
 };
 
@@ -388,7 +447,7 @@ var DocumentStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(action) {
   switch (action.actionType) {
     case ActionTypes.SET_FOCUS:
-      _setFocus(action.level, action.key);
+      _setFocus(action.ref);
       break;
     case ActionTypes.UNDO:
       _undo();
@@ -414,14 +473,14 @@ AppDispatcher.register(function(action) {
     case ActionTypes.DELETE_MEMBER:
       _deleteMember(action.memberKey);
       break;
-    case ActionTypes.UPDATE_MEMBER:
-      _updateMember(action.memberKey, action.fields);
+    case ActionTypes.UPDATE_FIELDS:
+      _updateFields(action.ref, action.fields);
       break;
-    case ActionTypes.UPDATE_NEST:
-      _updateNest(action.nestKey, action.fields);
+    case ActionTypes.ADD_FIELD:
+      _addField(action.objectType, action.field, action.schema);
       break;
-    case ActionTypes.UPDATE_PEDIGREE:
-      _updatePedigree(action.fields);
+    case ActionTypes.DELETE_FIELD:
+      _deleteField(action.objectType, action.field);
       break;
     default:
   }

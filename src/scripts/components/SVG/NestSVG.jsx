@@ -6,9 +6,12 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var Nest = require('../../common/Structures').Nest;
+var Structures = require('../../common/Structures');
 var PregnancySVG = require('./PregnancySVG');
 var SVGPathBuilder = require('./SVGPathBuilder');
+
+var Nest = Structures.Nest;
+var Ref = Structures.Ref;
 
 var NestSVG = React.createClass({
 
@@ -78,10 +81,10 @@ var NestSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    DocumentActions.setFocus(
-      AppConstants.FocusLevel.Nest,
-      this.props.nestKey
-    );
+    DocumentActions.setFocus(new Ref({
+      type: AppConstants.ObjectType.Nest,
+      key: this.props.nestKey
+    }));
   }
 });
 
