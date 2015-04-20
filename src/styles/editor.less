@@ -38,6 +38,7 @@ body {
   background-color: #f5f5f5;
   padding: 0 5px;
   margin-left: auto;
+  z-index: 2000
 }
 
 #toolbar, #layout-view {
@@ -46,7 +47,8 @@ body {
   }
 
   .btn:focus, .btn:active:focus, .btn.active:focus,
-  .btn.focus, .btn:active.focus, .btn.active.focus {
+  .btn.focus, .btn:active.focus, .btn.active.focus,
+  input.focus {
     outline: none;
   }
 }
@@ -107,7 +109,46 @@ body {
   }
 
   .zoom-out {
-    top: 43px;
+    top: 142px;
+  }
+
+  /* slider bar style */
+  input[type='range'] {
+    -webkit-appearance: none !important;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 2px;
+    width: 100px;
+    background: #bbbbbb;
+    border: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #777777;
+    margin-top: -7px;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #777777;
+  }
+
+  #slider {
+    transform: rotate(270deg);
+    position: absolute;
+    top: 74px;
+    width: 100px;
+    height: 38px;
+    left: -20px;
   }
 }
 

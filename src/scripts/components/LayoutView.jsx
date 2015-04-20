@@ -14,8 +14,9 @@ var LayoutView = React.createClass({
   getInitialState: function() {
     return {
       layout: LayoutUtils.getLayout(this.props.pedigree),
-      zoomLevel: 0,
-      width: 100
+      zoomLevel: 1,
+      width: 100,
+      height: 100
     };
   },
 
@@ -26,8 +27,12 @@ var LayoutView = React.createClass({
     }
   },
 
-  zoom: function(delta) {
+  zoomStep: function(delta) {
     this.setState({zoomLevel: this.state.zoomLevel + delta});
+  },
+
+  zoomSlide: function(event) {
+    this.setState({zoomLevel: parseFloat(event.target.value, 10)});
   },
 
   componentDidMount: function () {
@@ -86,28 +91,33 @@ var LayoutView = React.createClass({
       .get('x');
 
     shift = windowWidth / 2 - (leftmost + (rightmost - leftmost) / 2);
-    transform = `translate(${shift},50) scale(${1 + zoomLevel / 5})`;
+    transform = `translate(${shift},50) scale(${zoomLevel})`;
 
     controls = React.addons.createFragment({
       zoomIn: Utils.tooltipButton({
-        tooltipText: `Zoom to ${100 + (zoomLevel + 1) * 20}%`,
+        tooltipText: `Zoom to ${Math.round(zoomLevel * 100)}%`,
         tooltipPlacement: 'right',
-        onClickHandle: this.zoom.bind(this, 1),
+        onClickHandle: this.zoomStep.bind(this, 0.2),
         buttonClass: 'zoom-in',
         iconName: 'search-plus'
-      }, zoomLevel >= 5),
+      }, zoomLevel >= 2),
       zoomOut: Utils.tooltipButton({
-        tooltipText: `Zoom to ${100 + (zoomLevel - 1) * 20}%`,
+        tooltipText: `Zoom to ${Math.round(zoomLevel * 100)}%`,
         tooltipPlacement: 'right',
-        onClickHandle: this.zoom.bind(this, -1),
+        onClickHandle: this.zoomStep.bind(this, -0.2),
         buttonClass: 'zoom-out',
         iconName: 'search-minus'
-      }, zoomLevel <= -4)
+      }, zoomLevel <= 0.25) // 0.05 padding to avoid floating number errors.
     });
 
     return (
       <div ref="layout" id="layout-view">
-        {controls}
+        <div id="controls">
+          {controls}
+          <input id="slider" type="range" min="0.2" max="2.0" step="0.2"
+                 value={this.state.zoomLevel}
+                 onChange={this.zoomSlide} />
+        </div>
         <svg id="layout" onClick={this.handleClick}>
           <g transform={transform} key={'pedigree'}>
             {nests}
