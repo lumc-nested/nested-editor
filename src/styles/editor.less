@@ -38,16 +38,10 @@ body {
   background-color: #f5f5f5;
   padding: 0 5px;
   margin-left: auto;
-}
+  z-index: 200;
 
-#toolbar, #layout-view {
   :not(.btn-group) > .btn-group {
     margin: 5px;
-  }
-
-  .btn:focus, .btn:active:focus, .btn.active:focus,
-  .btn.focus, .btn:active.focus, .btn.active.focus {
-    outline: none;
   }
 }
 
@@ -66,7 +60,7 @@ body {
     top: 44px;
     bottom: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 100;
     display: block;
     padding-top: 20px;
     overflow-x: hidden;
@@ -107,9 +101,51 @@ body {
   }
 
   .zoom-out {
-    top: 43px;
+    top: 142px;
+  }
+
+  /* slider bar style */
+  input[type='range'] {
+    -webkit-appearance: none !important;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 2px;
+    width: 100px;
+    background: #bbbbbb;
+    border: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #777777;
+    margin-top: -7px;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #777777;
+  }
+
+  #slider {
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    position: absolute;
+    top: 74px;
+    width: 100px;
+    height: 38px;
+    left: -20px;
   }
 }
+
 
 /*
  * SVG
@@ -120,4 +156,45 @@ body {
   width: 100%;
   height: 100%;
   border: 1px solid #dddddd;
+}
+
+
+/*
+ * Reset some ugly focus styling for our toolbar buttons
+ */
+#toolbar, #layout-view {
+  .btn {
+    &,
+    &:active,
+    &.active {
+      &:focus,
+      &.focus {
+        outline: none;
+      }
+    }
+
+    /* reset darker background on focus */
+    &:focus,
+    &.focus {
+      background-color: @btn-default-bg;
+      border-color: #ccc;
+
+      /* except on hover or active */
+      &:active,
+      &.active,
+      &:hover {
+        background-color: darken(@btn-default-bg, 10%);
+        border-color: darken(@btn-default-border, 12%);
+      }
+    }
+  }
+
+  input:focus, input.focus {
+    outline: none;
+  }
+
+  /* http://stackoverflow.com/a/21568066 */
+  input[type=range]::-moz-focus-outer {
+    border: 0;
+  }
 }
