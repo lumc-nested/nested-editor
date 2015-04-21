@@ -7,6 +7,11 @@ var Icon = require('react-fa/dist/Icon');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 
+var ExcelReader = require('../readers/ExcelReader');
+var FamReader = require('../readers/FamReader');
+var JsonReader = require('../readers/JsonReader');
+var PedReader = require('../readers/PedReader');
+
 var AppStore = require('../stores/AppStore');
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
@@ -31,6 +36,30 @@ var VIEWS = {
   LAYOUT: 0,
   TABLE: 1
 };
+
+
+// [{a: 1, b: [x, y]},
+//  {a: 2, b: [z]}]
+// =>
+// {x: {a: 1, b: [x, y]},
+//  y: {a: 1, b: [x, y]},
+//  z: {a: 2, b: [z]}}
+var indexByArray = function(objects, property) {
+  var byArray = {};
+  var i;
+  var j;
+
+  for (i = 0; i < objects.length; i++) {
+    for (j = 0; j < objects[i][property].length; j++) {
+      byArray[objects[i][property][j]] = objects[i];
+    }
+  }
+
+  return byArray;
+};
+
+
+var readers = indexByArray([ExcelReader, FamReader, JsonReader, PedReader], 'accept');
 
 
 var getAppState = function() {
@@ -79,6 +108,10 @@ var Editor = React.createClass({
 
   componentWillUnmount: function() {
     DocumentStore.removeChangeListener(this._onChange);
+  },
+
+  openDocument: function(document, filetype) {
+    DocumentActions.openDocument(readers[filetype].readString(document));
   },
 
   changeView: function(view) {
@@ -133,7 +166,7 @@ var Editor = React.createClass({
     }
 
     return (
-      <div id="nested-editor">
+      <div style={this.props.style} id="nested-editor">
         <ButtonToolbar id="toolbar" className="container-fluid">
           <div className="pull-left">
             <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree} />

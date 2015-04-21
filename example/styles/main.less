@@ -1,4 +1,5 @@
 @import "~bootstrap/less/bootstrap";
+@import "~react-fa/node_modules/font-awesome/less/font-awesome";
 
 
 /* No round borders. */
@@ -12,12 +13,7 @@ html, body, #content, #content > div {
 }
 
 
-body {
-  padding: 20px;
-}
-
-
-iframe {
+#nested-editor, iframe {
   border: none;
   min-height: 100%;
   height: auto;
@@ -29,33 +25,31 @@ iframe {
 
 .panel {
   margin-bottom: 0;
-}
 
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
 
-ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-
-.file-input {
-  display: block;
-  position: relative;
-  overflow: hidden;
-
-  input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
+  .file-input {
     display: block;
+    position: relative;
+    overflow: hidden;
+
+    input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      background: white;
+      cursor: inherit;
+      display: block;
+    }
   }
 }
