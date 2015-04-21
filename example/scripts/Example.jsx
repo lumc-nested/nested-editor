@@ -6,7 +6,8 @@ var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 var TransitionEvents = require('react/lib/ReactTransitionEvents');
 
-var Nested = require('../../src/scripts/index');
+// Provided by webpack.
+// var Nested = require('../../src/scripts/index');
 
 
 var examples = {

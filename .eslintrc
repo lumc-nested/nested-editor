@@ -3,6 +3,8 @@
 env:
   browser: true
   node: true
+globals:
+  Nested: true
 rules:
   no-reserved-keys: 1   # ok in es5, dangerous in es3
   vars-on-top: 1

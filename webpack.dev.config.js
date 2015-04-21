@@ -4,11 +4,20 @@
 var webpack = require('webpack');
 
 
+var NESTED_IFRAME = JSON.parse(process.env.NESTED_IFRAME || 'false');
+
+
 module.exports = {
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      Nested: NESTED_IFRAME ? '../../src/scripts/components/FramedEditor' : '../../src/scripts/index'
+    }),
+    new webpack.DefinePlugin({
+      __NESTED_IFRAME__: NESTED_IFRAME
+    })
   ],
 
   entry: [

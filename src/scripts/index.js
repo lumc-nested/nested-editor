@@ -4,4 +4,7 @@
 require('babel-core/polyfill');
 
 
-module.exports = require('./components/FramedEditor');
+require('../styles/main.less');
+
+
+module.exports = require('./components/Editor');
