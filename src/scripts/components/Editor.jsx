@@ -166,7 +166,7 @@ var Editor = React.createClass({
     }
 
     return (
-      <div style={this.props.style} id="nested-editor">
+      <div id="nested-editor">
         <ButtonToolbar id="toolbar" className="container-fluid">
           <div className="pull-left">
             <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree} />
@@ -190,10 +190,10 @@ var Editor = React.createClass({
         </ButtonToolbar>
         <Grid fluid>
           <Row>
-            <Col id="main" sm={8} md={9} lg={10}>
+            <Col id="main" style={this.props.style} sm={8} md={9} lg={10}>
               {main}
             </Col>
-            <Col id="sidebar" sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
+            <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
               {sidebar}
             </Col>
           </Row>

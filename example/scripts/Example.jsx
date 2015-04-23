@@ -145,8 +145,7 @@ var Example = React.createClass({
 
   render: function() {
     var editorStyle = {
-      marginBottom: -this.state.size,
-      paddingBottom: this.state.size
+      bottom: this.state.size
     };
 
     var links = (filetype) => examples[filetype].map(([name, data]) => {
