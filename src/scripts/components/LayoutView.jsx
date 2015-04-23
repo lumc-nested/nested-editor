@@ -7,10 +7,17 @@ var DocumentActions = require('../actions/DocumentActions');
 var LayoutUtils = require('../layout/Utils');
 var MemberSVG = require('./SVG/MemberSVG');
 var NestSVG = require('./SVG/NestSVG');
+var Pedigree = require('../common/Structures').Pedigree;
 var Utils = require('./Utils');
 
 
 var LayoutView = React.createClass({
+
+  propTypes: {
+    focus: React.PropTypes.object.isRequired,
+    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
+  },
+
   getInitialState: function() {
     return {
       layout: LayoutUtils.getLayout(this.props.pedigree),

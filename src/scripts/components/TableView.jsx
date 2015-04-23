@@ -7,6 +7,7 @@ var ReactBootstrap = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
+var Pedigree = require('../common/Structures').Pedigree;
 
 
 var Table = ReactBootstrap.Table;
@@ -16,6 +17,13 @@ var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
 
 
 var MemberRow = React.createClass({
+
+  propTypes: {
+    fields: React.PropTypes.object.isRequired,
+    memberKey: React.PropTypes.string.isRequired,
+    isSelcted: React.PropTypes.bool.isRequired
+  },
+
   handleClick: function() {
     DocumentActions.setFocus(
       AppConstants.FocusLevel.Member,
@@ -38,6 +46,12 @@ var MemberRow = React.createClass({
 
 
 var TableView = React.createClass({
+
+  propTypes: {
+    focus: React.PropTypes.object.isRequired,
+    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
+  },
+
   render: function() {
     var focus = this.props.focus;
     var pedigree = this.props.pedigree;

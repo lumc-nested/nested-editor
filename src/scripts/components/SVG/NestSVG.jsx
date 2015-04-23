@@ -5,10 +5,19 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
+var Nest = require('../../common/Structures').Nest;
 var PregnancySVG = require('./PregnancySVG');
 var SVGPathBuilder = require('./SVGPathBuilder');
 
 var NestSVG = React.createClass({
+
+  propTypes: {
+    data: React.PropTypes.instanceOf(Nest).isRequired,
+    focused: React.PropTypes.bool.isRequired,
+    layout: React.PropTypes.object.isRequired,
+    nestKey: React.PropTypes.object.isRequired
+  },
+
   render: function() {
 
     var nest = this.props.data;

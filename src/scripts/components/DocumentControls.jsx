@@ -49,6 +49,14 @@ var writers = indexBy([ExcelWriter, JsonWriter, PedWriter], 'produce');
 
 
 var DocumentControls = React.createClass({
+
+  propTyps: {
+    document: React.PropTypes.object.isRequired,
+    focus: React.PropTypes.object.isRequired,
+    redo: React.PropTypes.string.isRequired,
+    undo: React.PropTypes.string.isRequired
+  },
+
   addSpouse: function() {
     DocumentActions.addSpouse(this.props.focus.get('key'));
   },
@@ -96,6 +104,8 @@ var DocumentControls = React.createClass({
   render: function() {
     var documentButtons = {};
     var pedigreeButtons = {};
+    var focus = this.props.focus;
+    var pedigree = this.props.document.pedigree;
     var downloadItems;
     var tooltip;
     var canDelete;
@@ -125,11 +135,11 @@ var DocumentControls = React.createClass({
                                  {downloadItems}
                                </DropdownButton>;
 
-    if (this.props.focus !== undefined) {
-      switch (this.props.focus.get('level')) {
+    if (focus !== undefined) {
+      switch (focus.get('level')) {
         case AppConstants.FocusLevel.Member:
           pedigreeButtons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
-          if (this.props.pedigree.members.get(this.props.focus.key).parents.size) {
+          if (pedigree.members.get(focus.key).parents.size) {
             // TODO: add twin with zygosity information.
             pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
           } else {
@@ -139,23 +149,23 @@ var DocumentControls = React.createClass({
           // TODO: should we cache this?
           // this is recalculated everytime we switch focus between members.
           // but this property based on the member is key is probably not changed.
-          canDelete = this.props.pedigree.nests.every((nest, nestKey) => {
+          canDelete = pedigree.nests.every((nest, nestKey) => {
             var mateKey;
             var mate;
-            if (nestKey.has(this.props.focus.key)) {
+            if (nestKey.has(focus.key)) {
               // has spouse
               if (nest.pregnancies.size) {
                 // has children
                 return false;
               } else {
                 // no children. Is the mate connected with other members?
-                mateKey = nestKey.delete(this.props.focus.key).first();
-                mate = this.props.pedigree.members.get(mateKey);
+                mateKey = nestKey.delete(focus.key).first();
+                mate = pedigree.members.get(mateKey);
                 if (mate.parents.size) {
                   return true;
                 } else {
                   // true if mate has other mates.
-                  return this.props.pedigree.nests
+                  return pedigree.nests
                     .some((n, nk) => n !== nest && nk.has(mateKey));
                 }
               }
@@ -184,10 +194,10 @@ var DocumentControls = React.createClass({
     return (
       <div>
         <ButtonGroup>
-          {documentButtons}
+          {React.addons.createFragment(documentButtons)}
         </ButtonGroup>
         <ButtonGroup>
-          {pedigreeButtons}
+          {React.addons.createFragment(pedigreeButtons)}
         </ButtonGroup>
       </div>
     );

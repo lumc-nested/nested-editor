@@ -6,6 +6,7 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
+var Member = require('../../common/Structures').Member;
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
 var _size = AppConfig.MemberSize;
@@ -18,6 +19,13 @@ var _isDead = function(fields) {
 };
 
 var MemberSVG = React.createClass({
+
+  propTypes: {
+    data: React.PropTypes.instanceOf(Member).isRequired,
+    focused: React.PropTypes.bool.isRequired,
+    location: React.PropTypes.object.isRequired,
+    memberKey: React.PropTypes.string.isRequired
+  },
 
   render: function() {
     var shape;
