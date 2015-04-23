@@ -4,10 +4,18 @@ var Immutable = require('immutable');
 var React = require('react');
 
 var AppConfig = require('../../constants/AppConfig');
+var Pregnancy = require('../../common/Structures').Pregnancy;
 var SVGPathBuilder = require('./SVGPathBuilder');
 
 
 var PregnancySVG = React.createClass({
+
+  propTypes: {
+    data: React.PropTypes.instanceOf(Pregnancy).isRequired,
+    layout: React.PropTypes.object.isRequired,
+    members: React.PropTypes.object.isRequired
+  },
+
   render: function() {
     var layout = this.props.layout;
     var pregnancy = this.props.data;

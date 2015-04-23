@@ -16,6 +16,11 @@ var style = require('!css-loader!less-loader!../../styles/main-framed.less');
 
 
 var FramedEditor = React.createClass({
+
+  propTypes: {
+    style: React.PropTypes.object
+  },
+
   openDocument: function(document, filetype) {
     this.refs.editor.openDocument(document, filetype);
   },

@@ -7,6 +7,14 @@ var validate = require('plexus-validate');
 
 
 var FieldsView = React.createClass({
+
+  propTypes: {
+    fieldDefinitions: React.PropTypes.object.isRequired,
+    fields: React.PropTypes.object.isRequired,
+    onSubmit: React.PropTypes.func.isRequired,
+    title: React.PropTypes.string.isRequired
+  },
+
   getInitialState: function() {
     var properties = this.props.fieldDefinitions.toJS();
     return {properties};

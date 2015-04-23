@@ -150,7 +150,7 @@ var Example = React.createClass({
 
     var links = (filetype) => examples[filetype].map(([name, data]) => {
       var onClick = () => this.refs.editor.openDocument(data, filetype);
-      return <a onClick={onClick} href="#">{name}</a>;
+      return <li key={name}><a onClick={onClick} href="#">{name}</a></li>;
     });
 
     var panelProps = {
@@ -168,28 +168,28 @@ var Example = React.createClass({
               <Col md={3}>
                 <p>Nested</p>
                 <ul>
-                  {links('json').map(l => <li>{l}</li>)}
+                  {links('json')}
                   <li><FileInput extensions={['json']} onChange={this.openJson} /></li>
                 </ul>
               </Col>
               <Col md={3}>
                 <p>PED format</p>
                 <ul>
-                  {links('ped').map(l => <li>{l}</li>)}
+                  {links('ped')}
                   <li><FileInput extensions={['ped']} onChange={this.openPed} /></li>
                 </ul>
               </Col>
               <Col md={3}>
                 <p>FAM format</p>
                 <ul>
-                  {links('fam').map(l => <li>{l}</li>)}
+                  {links('fam')}
                   <li><FileInput extensions={['fam']} onChange={this.openFam} /></li>
                 </ul>
               </Col>
               <Col md={3}>
                 <p>Spreadsheets</p>
                 <ul>
-                  {links('xlsx').map(l => <li>{l}</li>)}
+                  {links('xlsx')}
                   <li><FileInput extensions={['xlsx', 'ods']} onChange={this.openSpreadsheet} /></li>
                 </ul>
               </Col>

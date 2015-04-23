@@ -80,6 +80,11 @@ var getDocumentState = function() {
 
 
 var Editor = React.createClass({
+
+  propTypes: {
+    style: React.PropTypes.object
+  },
+
   getInitialState: function() {
     var state = {
       view: VIEWS.LAYOUT,
@@ -169,7 +174,7 @@ var Editor = React.createClass({
       <div id="nested-editor">
         <ButtonToolbar id="toolbar" className="container-fluid">
           <div className="pull-left">
-            <DocumentControls document={document} focus={focus} undo={undo} redo={redo} pedigree={document.pedigree} />
+            <DocumentControls document={document} focus={focus} undo={undo} redo={redo} />
           </div>
           <div className="pull-right">
             <ButtonGroup>
