@@ -68,7 +68,7 @@ var readJson = function(json) {
     return [nestKey, new Nest({pregnancies, fields})];
   });
 
-  symbol = new Symbol(json.pedigree.symbol);
+  symbol = new Symbol(Immutable.fromJS(json.pedigree.symbol));
 
   fields = Immutable.Map(json.pedigree)
     .delete('members')

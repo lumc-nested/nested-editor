@@ -17,6 +17,7 @@
   "dependencies": {
     "babel-runtime": "~4.7.12",
     "bootstrap": "~3.3.4",
+    "classnames": "^1.2.1",
     "fam-parser": "git+https://git.lumc.nl/nested/fam-parser.git#v0.0.1",
     "FileSaver": "git+https://github.com/martijnvermaat/FileSaver.js#npm-package",
     "flux": "~2.0.1",

@@ -35,18 +35,19 @@ var Nest = Immutable.Record({
 });
 
 
+// TODO: what is the best way to set the default here?
 var Symbol = Immutable.Record({
   // shceme
   scheme: 0,
 
   // List of strings representing color
-  color: Immutable.List(),
+  color: Immutable.List(['indigo']),
 
   // List of strings (field keys)
-  mapping: Immutable.List(),
+  mapping: Immutable.List(['affected']),
 
   // List of strings representing patterns
-  pattern: Immutable.List()
+  pattern: Immutable.List(['solid'])
 });
 
 

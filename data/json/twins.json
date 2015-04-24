@@ -1,15 +1,28 @@
 {
   "pedigree": {
     "title": "Example Pedigree",
+
+    "symbol": {
+      "scheme": 3,
+      "mapping": ["Test1", "Test2", "Test3"],
+      "color": ["indigo", "gold", "cyan"],
+      "pattern": ["solid", "solid", "solid"]
+    },
+
     "members": {
       "1": {
-        "gender": 2
+        "gender": 2,
+        "Test3": true
       },
       "2": {
-        "gender": 1
+        "gender": 1,
+        "Test1": true,
+        "Test2": true,
+        "Test3": true
       },
       "3": {
-        "gender": 1
+        "gender": 1,
+        "Test1": true
       },
       "4": {
         "gender": 2
@@ -24,7 +37,9 @@
         "gender": 2
       },
       "8": {
-        "gender": 0
+        "gender": 0,
+        "Test1": true,
+        "Test2": true
       },
       "9": {
         "gender": 1
@@ -36,13 +51,15 @@
         "gender": 0
       },
       "12": {
-        "gender": 2
+        "gender": 2,
+        "Test3": true
       },
       "13": {
         "gender": 2
       },
       "14": {
-        "gender": 2
+        "gender": 2,
+        "Test2": true
       },
       "15": {
         "gender": 2
@@ -51,10 +68,14 @@
         "gender": 1
       },
       "17": {
-        "gender": 1
+        "gender": 1,
+        "Test2": true,
+        "Test3": true
       },
       "18": {
-        "gender": 1
+        "gender": 1,
+        "Test1": true,
+        "Test3": true
       }
     },
     "nests": {
@@ -99,6 +120,18 @@
       },
       "member": {
         "properties": {
+          "Test1": {
+            "title": "Test1",
+            "type": "boolean"
+          },
+          "Test2": {
+            "title": "Test2",
+            "type": "boolean"
+          },
+          "Test3": {
+            "title": "Test3",
+            "type": "boolean"
+          }
         }
       },
       "nest": {
