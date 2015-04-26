@@ -2,17 +2,88 @@
 
 
 var React = require('react');
+var ReactBootstrap = require('react-bootstrap');
+
+var AppConstants = require('../constants/AppConstants');
+var DocumentActions = require('../actions/DocumentActions');
+var Pedigree = require('../common/Structures').Pedigree;
+var {getFatherAndMother, getSpouses, memberAsString} = require('../common/Utils');
+
+
+var Button = ReactBootstrap.Button;
 
 
 var RelationsView = React.createClass({
 
   propTypes: {
-    title: React.PropTypes.string
+    focus: React.PropTypes.object.isRequired,
+    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
+  },
+
+  focusMember: function(memberKey) {
+    DocumentActions.setFocus(
+      AppConstants.FocusLevel.Member,
+      memberKey
+    );
   },
 
   render: function() {
-    console.log(this.props);
-    return <p>{this.props.title}</p>;
+    var focus = this.props.focus;
+    var fields = {};
+    var father;
+    var member;
+    var members;
+    var mother;
+
+    if (focus.level !== AppConstants.FocusLevel.Member) {
+      return <p>Click on a member to see relationships.</p>;
+    }
+
+    members = this.props.pedigree.members;
+    member = members.get(focus.key);
+    [father, mother] = getFatherAndMother(member.parents, members);
+
+    if (father) {
+      fields.father = (
+        <div>
+          <label>Father</label>
+          <Button bsStyle="link" onClick={this.focusMember.bind(this, father)}>
+            {memberAsString(father, members)}
+          </Button>
+        </div>
+      );
+    }
+
+    if (mother) {
+      fields.mother = (
+        <div>
+          <label>Mother</label>
+          <Button bsStyle="link" onClick={this.focusMember.bind(this, mother)}>
+            {memberAsString(mother, members)}
+          </Button>
+        </div>
+      );
+    }
+
+    getSpouses(focus.key, this.props.pedigree.nests).forEach(spouseKey => {
+      fields['_spouse-' + spouseKey] = (
+        <div>
+          <label>Spouse</label>
+          <Button bsStyle="link" onClick={this.focusMember.bind(this, spouseKey)}>
+            {memberAsString(spouseKey, members)}
+          </Button>
+        </div>
+      );
+    });
+
+    // TODO: This needs restyling.
+
+    return (
+      <fieldset>
+        <legend>{'Member (' + focus.key + ')'}</legend>
+        {React.addons.createFragment(fields)}
+      </fieldset>
+    );
   }
 });
 

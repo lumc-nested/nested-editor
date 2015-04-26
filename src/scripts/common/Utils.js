@@ -1,6 +1,8 @@
 'use strict';
 
+
 var AppConstants = require('../constants/AppConstants');
+
 
 var getFatherAndMother = function(nestKey, members) {
   var [father, mother] = [undefined, undefined];
@@ -18,4 +20,19 @@ var getFatherAndMother = function(nestKey, members) {
   return [father, mother];
 };
 
-module.exports = {getFatherAndMother};
+
+var getSpouses = function(memberKey, nests) {
+  return nests.keySeq()
+    .filter(nestKey => nestKey.contains(memberKey) && nestKey.size === 2)
+    .map(nestKey => nestKey.delete(memberKey).first())
+    .toArray();
+};
+
+
+var memberAsString = function(memberKey, members) {
+  var member = members.get(memberKey);
+  return member.fields.get('name') || memberKey;
+};
+
+
+module.exports = {getFatherAndMother, getSpouses, memberAsString};

@@ -132,40 +132,41 @@ var Editor = React.createClass({
     var main;
     var sidebar;
 
-    switch (focus.level) {
-      case AppConstants.FocusLevel.Member:
-        fieldsViewProps = {
-          title: 'Member (' + focus.key + ')',
-          fields: document.pedigree.members.get(focus.key).fields,
-          fieldDefinitions: this.state.schema.member,
-          onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
-        };
-        break;
-      case AppConstants.FocusLevel.Nest:
-        fieldsViewProps = {
-          title: 'Nest',
-          fields: document.pedigree.nests.get(focus.key).fields,
-          fieldDefinitions: this.state.schema.nest,
-          onSubmit: fields => DocumentActions.updateNest(focus.key, fields)
-        };
-        break;
-      case AppConstants.FocusLevel.Pedigree:
-      default:
-        fieldsViewProps = {
-          title: 'Pedigree',
-          fields: document.pedigree.fields,
-          fieldDefinitions: this.state.schema.pedigree,
-          onSubmit: fields => DocumentActions.updatePedigree(fields)
-        };
-    }
-
     switch (this.state.view) {
       case VIEWS.TABLE:
         main = <TableView pedigree={document.pedigree} focus={focus} />;
-        sidebar = <RelationsView title="TODO (show member relations)" />;
+        sidebar = <RelationsView pedigree={document.pedigree} focus={focus} />;
         break;
+
       case VIEWS.LAYOUT:
       default:
+        switch (focus.level) {
+          case AppConstants.FocusLevel.Member:
+            fieldsViewProps = {
+              title: 'Member (' + focus.key + ')',
+              fields: document.pedigree.members.get(focus.key).fields,
+              fieldDefinitions: this.state.schema.member,
+              onSubmit: fields => DocumentActions.updateMember(focus.key, fields)
+            };
+            break;
+          case AppConstants.FocusLevel.Nest:
+            fieldsViewProps = {
+              title: 'Nest',
+              fields: document.pedigree.nests.get(focus.key).fields,
+              fieldDefinitions: this.state.schema.nest,
+              onSubmit: fields => DocumentActions.updateNest(focus.key, fields)
+            };
+            break;
+          case AppConstants.FocusLevel.Pedigree:
+          default:
+            fieldsViewProps = {
+              title: 'Pedigree',
+              fields: document.pedigree.fields,
+              fieldDefinitions: this.state.schema.pedigree,
+              onSubmit: fields => DocumentActions.updatePedigree(fields)
+            };
+        }
+
         main = <LayoutView pedigree={document.pedigree} focus={focus} />;
         sidebar = <FieldsView {...fieldsViewProps} />;
     }
