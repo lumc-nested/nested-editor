@@ -6,6 +6,7 @@ env:
 globals:
   Nested: true
 rules:
+  strict: [1, global]
   no-reserved-keys: 1   # ok in es5, dangerous in es3
   vars-on-top: 1
   eqeqeq: 1
