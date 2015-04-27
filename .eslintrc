@@ -51,6 +51,7 @@ rules:
 ecmaFeatures:
   arrowFunctions: true
   destructuring: true
+  objectLiteralComputedProperties: true
   objectLiteralShorthandProperties: true
   templateStrings: true
   jsx: true
