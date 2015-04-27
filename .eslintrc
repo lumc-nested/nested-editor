@@ -19,6 +19,8 @@ rules:
   no-array-constructor: 1
   no-inner-declarations: [1, both]
   no-shadow-restricted-names: 1
+  no-unused-vars: 1
+  no-unreachable: 1
   brace-style: 1
   semi: [1, always]
   camelcase: 2
