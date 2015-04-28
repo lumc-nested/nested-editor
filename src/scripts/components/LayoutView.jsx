@@ -4,9 +4,9 @@ var React = require('react/addons');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var Pedigree = require('../common/Structures').Pedigree;
 var PedigreeDefs = require('./SVG/PedigreeDefs');
 var PedigreeSVG = require('./SVG/PedigreeSVG');
+var Structures = require('../common/Structures');
 var Utils = require('./Utils');
 
 
@@ -14,7 +14,8 @@ var LayoutView = React.createClass({
 
   propTypes: {
     focus: React.PropTypes.object.isRequired,
-    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
+    pedigree: React.PropTypes.instanceOf(Structures.Pedigree).isRequired,
+    symbol: React.PropTypes.instanceOf(Structures.Symbol).isRequired
   },
 
   getInitialState: function() {
@@ -63,8 +64,8 @@ var LayoutView = React.createClass({
       }, zoomLevel <= 0.25) // 0.05 padding to avoid floating number errors.
     });
 
-    if (this.props.pedigree.symbol.scheme !== undefined) {
-      defs = <PedigreeDefs symbol={this.props.pedigree.symbol} />;
+    if (this.props.symbol.scheme !== undefined) {
+      defs = <PedigreeDefs symbol={this.props.symbol} />;
     }
 
     return (
@@ -80,7 +81,8 @@ var LayoutView = React.createClass({
           <PedigreeSVG data={this.props.pedigree}
                        width={this.state.width}
                        focus={this.props.focus}
-                       scale={zoomLevel} />
+                       scale={zoomLevel}
+                       symbol={this.props.symbol} />
         </svg>
       </div>
     );

@@ -3,13 +3,6 @@
     "title": "Example Pedigree",
     "author": "Jon Snow",
 
-    "symbol": {
-      "scheme": 1,
-      "mapping": ["BRCA1", "BRCA2"],
-      "color": ["indigo", "gold"],
-      "pattern": ["solid", "solid"]
-    },
-
     "members": {
       "1": {
         "gender": 2,
@@ -79,6 +72,14 @@
       }
     }
   },
+
+  "symbol": {
+    "scheme": 1,
+    "mapping": ["BRCA1", "BRCA2"],
+    "color": ["indigo", "gold"],
+    "pattern": ["solid", "solid"]
+  },
+
   "schemaExtension": {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {

@@ -2,13 +2,6 @@
   "pedigree": {
     "title": "Simple Family",
 
-    "symbol": {
-      "scheme": 0,
-      "mapping": ["affected"],
-      "color": ["indigo"],
-      "pattern": ["solid"]
-    },
-
     "members": {
       "1": {
         "gender": 2,
@@ -33,6 +26,13 @@
         ]
       }
     }
+  },
+
+  "symbol": {
+    "scheme": 0,
+    "mapping": ["affected"],
+    "color": ["indigo"],
+    "pattern": ["solid"]
   },
 
   "schemaExtension": {

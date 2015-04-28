@@ -68,17 +68,16 @@ var readJson = function(json) {
     return [nestKey, new Nest({pregnancies, fields})];
   });
 
-  symbol = new Symbol(Immutable.fromJS(json.pedigree.symbol));
+  symbol = new Symbol(Immutable.fromJS(json.symbol || {}));
 
   fields = Immutable.Map(json.pedigree)
     .delete('members')
-    .delete('nests')
-    .delete('symbol');
+    .delete('nests');
 
   // Add parents key to member instances.
   members = Utils.populateParents(members, nests);
 
-  pedigree = new Pedigree({members, nests, symbol, fields});
+  pedigree = new Pedigree({members, nests, fields});
 
   schema = new Schema({
     pedigree: schemaExtension.getIn(['definitions', 'pedigree', 'properties']) || Immutable.Map(),
@@ -87,7 +86,7 @@ var readJson = function(json) {
     pregnancy: schemaExtension.getIn(['definitions', 'pregnancy', 'properties']) || Immutable.Map()
   });
 
-  return new Document({pedigree, schema});
+  return new Document({pedigree, schema, symbol});
 };
 
 

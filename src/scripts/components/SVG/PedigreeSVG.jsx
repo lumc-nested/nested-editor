@@ -6,15 +6,16 @@ var AppConstants = require('../../constants/AppConstants');
 var LayoutUtils = require('../../layout/Utils');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
-var Pedigree = require('../../common/Structures').Pedigree;
+var Structures = require('../../common/Structures');
 
 var PedigreeSVG = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.instanceOf(Pedigree).isRequired,
+    data: React.PropTypes.instanceOf(Structures.Pedigree).isRequired,
     focus: React.PropTypes.object.isRequired,
     width: React.PropTypes.number.isRequired,
-    scale: React.PropTypes.number.isRequired
+    scale: React.PropTypes.number.isRequired,
+    symbol: React.PropTypes.instanceOf(Structures.Symbol).isRequired
   },
 
   getInitialState: function() {
@@ -49,7 +50,7 @@ var PedigreeSVG = React.createClass({
                           memberKey={memberKey}
                           location={layout.getIn(['members', memberKey])}
                           focused={isSelected}
-                          symbolDef={pedigree.symbol.mapping}
+                          symbolDef={this.props.symbol.mapping}
                           key={'member-' + memberKey}/>;
       })
       .toArray();

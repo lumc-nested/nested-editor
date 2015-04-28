@@ -4,7 +4,8 @@
   "required": ["pedigree"],
   "properties": {
     "pedigree": { "$ref": "#/definitions/pedigree" },
-    "schemaExtension": { "$ref": "http://json-schema.org/draft-04/schema#" }
+    "schemaExtension": { "$ref": "http://json-schema.org/draft-04/schema#" },
+    "symbol": { "$ref": "#/definitions/symbol" }
   },
   "definitions": {
     "pedigree": {
@@ -17,44 +18,6 @@
           "title": "Title",
           "type": "string"
         },
-
-        "symbol": {
-          "title": "symbol",
-          "type": "object",
-          "properties": {
-            "scheme": {
-              "title": "Symbol scheme",
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 7
-            },
-            "color": {
-              "titile": "Symbol color",
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "color"
-              }
-            },
-            "mapping": {
-              "title": "Symbol mapping",
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "pattern": {
-              "title": "Symbol pattern",
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": ["solid", "dotted", "vertical", "horizontal"]
-              }
-            }
-          },
-          "additionalProperties": false
-        },
-
         "members" : {
           "title": "Members",
           "description": "Members in a pedigree.",
@@ -148,6 +111,50 @@
           }
         }
       }
+    },
+    "symbol": {
+      "title": "symbol",
+      "type": "object",
+      "description": "symbol for affected members.",
+      "properties": {
+        "scheme": {
+          "title": "Symbol scheme",
+          "description": "The scheme used to divide the symbol into multiple areas.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        },
+        "color": {
+          "titile": "Symbol colors",
+          "description": "Colors used in the symbol.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Color for each divided area.",
+            "format": "color"
+          }
+        },
+        "mapping": {
+          "title": "Symbol mappings",
+          "description": "Fields used to construct a symbol.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of the field for deciding if an area should be filled."
+          }
+        },
+        "pattern": {
+          "title": "Symbol patterns",
+          "description": "Patterns used in the symbol.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Fill pattern for each divided area.",
+            "enum": ["solid", "dotted", "vertical", "horizontal"]
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

@@ -167,7 +167,7 @@ var Editor = React.createClass({
             };
         }
 
-        main = <LayoutView pedigree={document.pedigree} focus={focus} />;
+        main = <LayoutView pedigree={document.pedigree} focus={focus} symbol={document.symbol} />;
         sidebar = <FieldsView {...fieldsViewProps} />;
     }
 

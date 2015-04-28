@@ -2,13 +2,6 @@
   "pedigree": {
     "title": "Example Pedigree",
 
-    "symbol": {
-      "scheme": 3,
-      "mapping": ["Test1", "Test2", "Test3"],
-      "color": ["indigo", "gold", "cyan"],
-      "pattern": ["horizontal", "solid", "solid"]
-    },
-
     "members": {
       "1": {
         "gender": 2,
@@ -111,6 +104,14 @@
       }
     }
   },
+
+  "symbol": {
+    "scheme": 3,
+    "mapping": ["Test1", "Test2", "Test3"],
+    "color": ["indigo", "gold", "cyan"],
+    "pattern": ["horizontal", "solid", "solid"]
+  },
+
   "schemaExtension": {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
