@@ -11,5 +11,12 @@ module.exports = Object.freeze({
     Pedigree: 0,
     Member: 1,
     Nest: 2
+  },
+
+  FillPattern: {
+    Dotted: 'dotted',
+    Horizontal: 'horizontal',
+    Solid: 'solid',
+    Vertical: 'vertical'
   }
 });

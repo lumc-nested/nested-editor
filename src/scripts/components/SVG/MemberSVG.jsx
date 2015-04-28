@@ -1,12 +1,13 @@
 'use strict';
 
+var classnames = require('classnames');
 var React = require('react');
 
 
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var Member = require('../../common/Structures').Member;
+var Structures = require('../../common/Structures');
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
 var _size = AppConfig.MemberSize;
@@ -21,9 +22,10 @@ var _isDead = function(fields) {
 var MemberSVG = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.instanceOf(Member).isRequired,
+    data: React.PropTypes.instanceOf(Structures.Member).isRequired,
     focused: React.PropTypes.bool.isRequired,
     location: React.PropTypes.object.isRequired,
+    symbolDef: React.PropTypes.object.isRequired,
     memberKey: React.PropTypes.string.isRequired
   },
 
@@ -34,6 +36,8 @@ var MemberSVG = React.createClass({
     var p;
     var annotation;
     var transform;
+    var symbolState;
+    var shapeProps;
 
     var member = this.props.data;
     var location = this.props.location;
@@ -55,16 +59,22 @@ var MemberSVG = React.createClass({
 
     // TODO: how to detect pregnancies not carried to terms? The triangle shape.
 
+    symbolState = this.props.symbolDef
+      .map(m => member.fields.get(m) ? 1 : 0)
+      .join('');
+    if (parseInt(symbolState, 2) > 0) {
+      shapeProps = {fill: `url('#symbol-pattern-${symbolState}')`};
+    }
+
     switch (member.fields.get('gender')) {
       case 1:
-        // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={_size - 2} height={_size - 2} x={-_radius} y={-_radius} />;
+        shape = <rect width={_size} height={_size} x={-_radius} y={-_radius} {...shapeProps}/>;
         break;
       case 2:
-        shape = <circle r={_radius} />;
+        shape = <circle r={_radius} {...shapeProps}/>;
         break;
       default:
-        shape = <polygon points={_diamondPoints} />;
+        shape = <polygon points={_diamondPoints} {...shapeProps}/>;
     }
 
     // TODO: this is for debugging for now.
@@ -72,7 +82,8 @@ var MemberSVG = React.createClass({
     annotation = <text x={-5} y={_size}>{this.props.memberKey}</text>;
 
     return (
-      <g transform={transform} onClick={this.handleClick} className={this.props.focused ? 'focus' : ''} >
+      <g transform={transform} onClick={this.handleClick}
+         className={classnames({focus: this.props.focused})}>
         {shape}
         {death}
         {arrow}

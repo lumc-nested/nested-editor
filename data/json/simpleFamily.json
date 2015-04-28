@@ -1,6 +1,7 @@
 {
   "pedigree": {
     "title": "Simple Family",
+
     "members": {
       "1": {
         "gender": 2,
@@ -11,7 +12,8 @@
       },
       "3": {
         "gender": 1,
-        "proband": true
+        "proband": true,
+        "affected": true
       },
       "4": {
       }
@@ -22,6 +24,37 @@
           { "children": ["3"] },
           { "children": ["4"] }
         ]
+      }
+    }
+  },
+
+  "symbol": {
+    "scheme": 0,
+    "mapping": ["affected"],
+    "color": ["indigo"],
+    "pattern": ["solid"]
+  },
+
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "pedigree": {
+      },
+      "member": {
+        "properties": {
+          "affected": {
+            "title": "Affected",
+            "type": "boolean"
+          }
+        }
+      },
+      "nest": {
+        "properties": {
+        }
+      },
+      "pregnancy": {
+        "properties": {
+        }
       }
     }
   }

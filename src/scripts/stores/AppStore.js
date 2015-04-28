@@ -19,7 +19,7 @@ var CHANGE_EVENT = 'change';
 var SCHEMA = new Schema({
   pedigree: Immutable.fromJS(
     jsonSchema.definitions.pedigree.properties
-  ).delete('members').delete('nests').delete('schemaExtension'),
+  ).delete('members').delete('nests'),
 
   member: Immutable.fromJS(
     jsonSchema.definitions.member.properties

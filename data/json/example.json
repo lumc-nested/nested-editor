@@ -2,10 +2,13 @@
   "pedigree": {
     "title": "Example Pedigree",
     "author": "Jon Snow",
+
     "members": {
       "1": {
         "gender": 2,
-        "name": "Jane Doe"
+        "name": "Jane Doe",
+        "BRCA1": "c.333G>C",
+        "BRCA2": "c.1345A>G"
       },
       "2": {
         "gender": 1,
@@ -15,10 +18,12 @@
       "3": {
         "gender": 1,
         "dateOfBirth": "1977-04-27",
-        "consultand": true
+        "consultand": true,
+        "BRCA1": "asdf"
       },
       "4": {
-        "gender": 2
+        "gender": 2,
+        "BRCA2": "c.299C>T"
       },
       "5": {
         "gender": 2
@@ -67,6 +72,14 @@
       }
     }
   },
+
+  "symbol": {
+    "scheme": 1,
+    "mapping": ["BRCA1", "BRCA2"],
+    "color": ["indigo", "gold"],
+    "pattern": ["solid", "solid"]
+  },
+
   "schemaExtension": {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
@@ -83,6 +96,16 @@
           "name": {
             "title": "Name",
             "type": "string"
+          },
+          "BRCA1": {
+            "title": "BRCA1",
+            "type": "string",
+            "description": "mutation in BRCA1"
+          },
+          "BRCA2": {
+            "title": "BRCA2",
+            "type": "string",
+            "description": "mutation in BRCA2"
           }
         }
       },

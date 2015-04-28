@@ -1,5 +1,6 @@
 'use strict';
 
+var classnames = require('classnames');
 var React = require('react');
 
 var AppConfig = require('../../constants/AppConfig');
@@ -23,14 +24,23 @@ var NestSVG = React.createClass({
     var nest = this.props.data;
     var membersLayout = this.props.layout.get('members');
     var nestLayout = this.props.layout.getIn(['nests', this.props.nestKey]);
-    var [father, mother] = this.props.nestKey.toArray();
+    var [parent1, parent2] = this.props.nestKey.toArray();
     var pathBuilder = new SVGPathBuilder();
     var sibLineY = nestLayout.get('y') + AppConfig.GenerationDistance / 2;
     var pregnancies;
 
+    if (membersLayout.getIn([parent1, 'x']) > membersLayout.getIn([parent2, 'x'])) {
+      // swap the parents
+      [parent1, parent2] = [parent2, parent1];
+    }
+
     // mating (horizontal) line
-    pathBuilder.moveTo(membersLayout.getIn([father, 'x']), membersLayout.getIn([father, 'y']));
-    pathBuilder.lineTo(membersLayout.getIn([mother, 'x']), membersLayout.getIn([mother, 'y']));
+    pathBuilder.moveTo(
+      membersLayout.getIn([parent1, 'x']) + AppConfig.MemberSize / 2,
+      membersLayout.getIn([parent1, 'y']));
+    pathBuilder.lineTo(
+      membersLayout.getIn([parent2, 'x']) - AppConfig.MemberSize / 2,
+      membersLayout.getIn([parent2, 'y']));
 
     if (nest.pregnancies.size) {
       // kinship (vertical) line
@@ -52,9 +62,15 @@ var NestSVG = React.createClass({
 
     }
 
+    // add a transparent circle to increase the hit area of the nest.
     return (
-      <g onClick={this.handleClick} className={this.props.focused ? 'focus' : ''} >
+      <g onClick={this.handleClick}
+         className={classnames({focus: this.props.focused})}>
         <path d={pathBuilder.toString()} />
+        <circle cx={nestLayout.get('x')}
+                cy={nestLayout.get('y')}
+                r={AppConfig.MemberSize / 2}
+                fill="transparent" stroke="none" />
         {pregnancies}
       </g>
     );
