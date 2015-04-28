@@ -30,11 +30,9 @@ var schemaAsString = function(schema) {
 var Schemas = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
-    // TODO: Use appSchemas as a blacklist for allowed field names. Perhaps
-    //   also show them in the list (non-editable).
     appSchemas: React.PropTypes.object.isRequired,
     documentSchemas: React.PropTypes.object.isRequired,
-    onClose: React.PropTypes.func
+    showFields: React.PropTypes.func.isRequired
   },
 
   renderHeading: function() {
@@ -56,7 +54,7 @@ var Schemas = React.createClass({
       <h1>
         {title}
         <OverlayTrigger placement="left" overlay={<Tooltip>Back</Tooltip>}>
-          <a onClick={this.props.onClose} className="pull-right">
+          <a onClick={this.props.showFields} className="pull-right">
             <Icon name="close" />
           </a>
         </OverlayTrigger>
@@ -85,7 +83,7 @@ var Schemas = React.createClass({
     var rows;
 
     if (!this.props.documentSchemas.size) {
-      return <span />;
+      return null;
     }
 
     rows = this.props.documentSchemas.map(

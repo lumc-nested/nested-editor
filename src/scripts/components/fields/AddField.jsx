@@ -1,12 +1,14 @@
+// Prevent including the FA stylesheet to the document, we include it manually
+// in the iframe.
+var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var {Button, Input, Modal} = require('react-bootstrap');
+var {Button, Modal} = require('react-bootstrap');
+var validate = require('plexus-validate');
 
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
 
-
-// TODO: Validation. We could probably use plexus-form for all our forms to
-//   have them all behave similarly and will do the validation for us.
+var Form = require('../forms/Form');
 
 
 var AddField = React.createClass({
@@ -15,35 +17,54 @@ var AddField = React.createClass({
     onRequestHide: React.PropTypes.func
   },
 
-  onSubmit: function(e) {
+  getInitialState: function() {
+    return {message: undefined};
+  },
+
+  componentWillUnmount: function() {
+    clearTimeout(this.messageTimeout);
+  },
+
+  showMessage: function(message) {
+    this.setState({message});
+    clearTimeout(this.messageTimeout);
+    this.messageTimeout = setTimeout(() => this.setState({message: undefined}), 3000);
+  },
+
+  onSubmit: function(output, value, errors) {
     var schema;
-    var type;
 
-    e.preventDefault();
-
-    if (['submit', 'button'].includes(e.target.type)) {
-      type = this.refs.type.getValue();
-      schema = {
-        title: this.refs.field.getValue(),
-        type: type
-      };
-
-      if (type === 'date') {
-        schema.type = 'string';
-        schema.format = 'date';
-      }
-
-      DocumentActions.addField(
-        this.props.objectType,
-        this.refs.field.getValue(),
-        schema
-      );
-
-      this.props.onRequestHide();
+    if (Object.keys(errors).length) {
+      this.showMessage('Please correct all errors in the form.');
+      return;
     }
+
+    schema = {
+      title: output.field,
+      type: output.type
+    };
+
+    if (output.type === 'date') {
+      schema.type = 'string';
+      schema.format = 'date';
+    }
+
+    DocumentActions.addField(
+      this.props.objectType,
+      output.field,
+      schema
+    );
+
+    this.props.onRequestHide();
+  },
+
+  handleSubmit: function(e) {
+    this.refs.form.handleSubmit(e);
   },
 
   render: function() {
+    var message;
+    var schema;
     var title;
 
     switch (this.props.objectType) {
@@ -58,23 +79,49 @@ var AddField = React.createClass({
         title = 'Add pedigree field';
     }
 
+    if (this.state.message) {
+      message = (
+        <span className="text-danger pull-left message">
+          <Icon name="exclamation-triangle" /> {this.state.message}
+        </span>
+      );
+    }
+
+    schema = {
+      type: 'object',
+      required: ['field'],
+      'x-ordering': ['field', 'type'],
+      properties: {
+        field: {
+          title: 'Field',
+          description: 'Name of the field',
+          type: 'string'
+        },
+        type: {
+          title: 'Value',
+          description: 'Allowed values for the field',
+          type: 'string',
+          'enum': ['string', 'integer', 'number', 'boolean', 'date'],
+          enumNames: ['Text', 'Whole number', 'Any number', 'Yes / No', 'Date']
+        }
+      }
+    };
+
     return (
       <Modal {...this.props} bsStyle="primary" title={title}>
         <div className="modal-body">
-          <form className="form-horizontal" onSubmit={this.onSubmit}>
-            <Input ref="field" type="text" label="Field" labelClassName="col-xs-2" wrapperClassName="col-xs-10" />
-            <Input ref="type" type="select" label="Type" labelClassName="col-xs-2" wrapperClassName="col-xs-10">
-              <option value="string">Text</option>
-              <option value="integer">Whole number</option>
-              <option value="number">Any number</option>
-              <option value="boolean">Yes / No</option>
-              <option value="date">Date</option>
-            </Input>
-          </form>
+          <Form
+            ref="form"
+            buttons={[]}
+            schema={schema}
+            horizontal={true}
+            validate={validate}
+            onSubmit={this.onSubmit} />
         </div>
         <div className="modal-footer">
+          {message}
           <Button onClick={this.props.onRequestHide}>Close</Button>
-          <Button onClick={this.onSubmit} bsStyle="primary">Add field</Button>
+          <Button onClick={this.handleSubmit} bsStyle="primary">Add field</Button>
         </div>
       </Modal>
     );

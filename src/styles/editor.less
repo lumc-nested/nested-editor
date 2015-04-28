@@ -21,6 +21,7 @@ body {
 /*
  * Editor
  */
+
 #nested-editor {
   /* Move down content because we have a fixed toolbar that is 44px tall. */
   padding-top: 44px;
@@ -44,8 +45,12 @@ body {
   margin-left: auto;
   z-index: 200;
 
-  :not(.btn-group) > .btn-group {
+  :not(.btn-group) > .btn-group, .message {
     margin: 5px;
+  }
+
+  .message {
+    padding: @padding-base-vertical 30px;
   }
 }
 
@@ -165,6 +170,7 @@ body {
 /*
  * SVG
  */
+
 #layout {
   background: #ffffff;
   color: #ffffff;
@@ -177,6 +183,7 @@ body {
 /*
  * Table with edit control in first column
  */
+
 .table-editable {
   margin-left: -27px;
 
@@ -203,6 +210,7 @@ body {
 /*
  * Reset some ugly focus styling for our toolbar buttons
  */
+
 #toolbar, #layout-view {
   .btn {
     &,
@@ -237,5 +245,16 @@ body {
   /* http://stackoverflow.com/a/21568066 */
   input[type=range]::-moz-focus-outer {
     border: 0;
+  }
+}
+
+
+/*
+ * Forms
+ */
+
+.modal-footer {
+  .message {
+    padding: @padding-base-vertical @padding-base-horizontal;
   }
 }
