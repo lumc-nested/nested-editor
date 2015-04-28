@@ -24,13 +24,16 @@
           "properties": {
             "scheme": {
               "title": "Symbol scheme",
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 7
             },
             "color": {
               "titile": "Symbol color",
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "format": "color"
               }
             },
             "mapping": {
@@ -45,7 +48,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["solid", "dotted"]
+                "enum": ["solid", "dotted", "vertical", "horizontal"]
               }
             }
           },
@@ -102,10 +105,6 @@
         },
         "deceased": {
           "title": "Deceased",
-          "type": "boolean"
-        },
-        "affected": {
-          "title": "Affected",
           "type": "boolean"
         }
       }

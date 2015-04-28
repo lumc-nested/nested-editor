@@ -6,7 +6,7 @@
       "scheme": 3,
       "mapping": ["Test1", "Test2", "Test3"],
       "color": ["indigo", "gold", "cyan"],
-      "pattern": ["solid", "solid", "solid"]
+      "pattern": ["horizontal", "solid", "solid"]
     },
 
     "members": {

@@ -43,7 +43,10 @@ var LayoutView = React.createClass({
 
   render: function() {
     var zoomLevel = this.state.zoomLevel;
-    var controls = React.addons.createFragment({
+    var controls;
+    var defs;
+
+    controls = React.addons.createFragment({
       zoomIn: Utils.tooltipButton({
         tooltipText: `Zoom to ${Math.round(zoomLevel * 100)}%`,
         tooltipPlacement: 'right',
@@ -60,6 +63,10 @@ var LayoutView = React.createClass({
       }, zoomLevel <= 0.25) // 0.05 padding to avoid floating number errors.
     });
 
+    if (this.props.pedigree.symbol.scheme !== undefined) {
+      defs = <PedigreeDefs symbol={this.props.pedigree.symbol} />;
+    }
+
     return (
       <div ref="layout" id="layout-view">
         <div id="controls">
@@ -69,7 +76,7 @@ var LayoutView = React.createClass({
                  onChange={this.zoomSlide} />
         </div>
         <svg version="1.1" id="layout" onClick={this.handleClick}>
-          <PedigreeDefs symbol={this.props.pedigree.symbol} />
+          {defs}
           <PedigreeSVG data={this.props.pedigree}
                        width={this.state.width}
                        focus={this.props.focus}

@@ -68,8 +68,7 @@ var MemberSVG = React.createClass({
 
     switch (member.fields.get('gender')) {
       case 1:
-        // the rectangle looks bigger than the other two. shrink it a bit.
-        shape = <rect width={_size - 2} height={_size - 2} x={-_radius + 1} y={-_radius + 1} {...shapeProps}/>;
+        shape = <rect width={_size} height={_size} x={-_radius} y={-_radius} {...shapeProps}/>;
         break;
       case 2:
         shape = <circle r={_radius} {...shapeProps}/>;

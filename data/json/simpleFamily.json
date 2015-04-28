@@ -33,5 +33,29 @@
         ]
       }
     }
+  },
+
+  "schemaExtension": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+      "pedigree": {
+      },
+      "member": {
+        "properties": {
+          "affected": {
+            "title": "Affected",
+            "type": "boolean"
+          }
+        }
+      },
+      "nest": {
+        "properties": {
+        }
+      },
+      "pregnancy": {
+        "properties": {
+        }
+      }
+    }
   }
 }
