@@ -6,6 +6,7 @@ env:
 globals:
   Nested: true
 rules:
+  strict: [1, global]
   no-reserved-keys: 1   # ok in es5, dangerous in es3
   vars-on-top: 1
   eqeqeq: 1
@@ -18,6 +19,8 @@ rules:
   no-array-constructor: 1
   no-inner-declarations: [1, both]
   no-shadow-restricted-names: 1
+  no-unused-vars: 1
+  no-unreachable: 1
   brace-style: 1
   semi: [1, always]
   camelcase: 2
@@ -48,6 +51,7 @@ rules:
 ecmaFeatures:
   arrowFunctions: true
   destructuring: true
+  objectLiteralComputedProperties: true
   objectLiteralShorthandProperties: true
   templateStrings: true
   jsx: true

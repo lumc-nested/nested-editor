@@ -36,8 +36,8 @@ For JavaScript, we follow the
 [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript). An
 ESLint configuration for it can be found in `.eslintrc`.
 
-We transpile ES6 constructs using Babel. For now, do not use any ES6 features
-not mentioned below.
+We transpile JSX and ES6 constructs using Babel. For now, do not use any ES6
+features not mentioned below.
 
 
 ### JSX: Multiline JSX
@@ -67,6 +67,21 @@ Rationale: http://stackoverflow.com/a/23045200
 Use `{a, b, c}` instead of `{a: a, b: b, c: c}`.
 
 
+### ES6: Computed property names
+
+Objects with computed property names can directly be written as object
+literals:
+
+```
+var i = 0;
+var a = {
+  ["foo" + ++i]: i,
+  ["foo" + ++i]: i,
+  ["foo" + ++i]: i
+};
+```
+
+
 ### ES6: Template strings
 
 Use template strings instead of concatentation:
@@ -91,4 +106,10 @@ var {p, q} = o;
 function g({name: x}) {
   console.log(x);
 }
+```
+
+This is also the prefered way of importing several module attributes:
+
+```
+var {Someting, AnotherThing} = require('definitions/Things');
 ```
