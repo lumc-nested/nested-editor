@@ -3,12 +3,7 @@
 
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
-
-
-var Button = ReactBootstrap.Button;
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Tooltip = ReactBootstrap.Tooltip;
+var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 
 /**

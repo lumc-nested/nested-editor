@@ -5,18 +5,11 @@
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, ModalTrigger, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
 
 var AppConstants = require('../../constants/AppConstants');
 var AddField = require('./AddField');
 var DeleteField = require('./DeleteField');
-
-
-var Button = ReactBootstrap.Button;
-var ModalTrigger = ReactBootstrap.ModalTrigger;
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Table = ReactBootstrap.Table;
-var Tooltip = ReactBootstrap.Tooltip;
 
 
 var schemaAsString = function(schema) {

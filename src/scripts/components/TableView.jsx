@@ -3,14 +3,11 @@
 
 var Immutable = require('immutable');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Table} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var {Pedigree, Ref} = require('../common/Structures');
-
-
-var Table = ReactBootstrap.Table;
 
 
 var genderTable = Immutable.fromJS(AppConstants.Gender).flip();

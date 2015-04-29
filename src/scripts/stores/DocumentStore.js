@@ -7,16 +7,8 @@ var Immutable = require('immutable');
 
 var ActionTypes = require('../constants/ActionTypes');
 var AppDispatcher = require('../dispatchers/AppDispatcher');
-var Structures = require('../common/Structures');
 var AppConstants = require('../constants/AppConstants');
-
-
-var Document = Structures.Document;
-var Nest = Structures.Nest;
-var Pedigree = Structures.Pedigree;
-var Pregnancy = Structures.Pregnancy;
-var Member = Structures.Member;
-var Ref = Structures.Ref;
+var {Document, Nest, Pedigree, Pregnancy, Member, Ref} = require('../common/Structures');
 
 
 var CHANGE_EVENT = 'change';

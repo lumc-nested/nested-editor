@@ -6,7 +6,7 @@ var FileSaver = require('FileSaver');
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, ButtonGroup, DropdownButton, MenuItem, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 var ExcelWriter = require('../writers/ExcelWriter');
 var JsonWriter = require('../writers/JsonWriter');
@@ -15,14 +15,6 @@ var PedWriter = require('../writers/PedWriter');
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
 var {Document, Ref} = require('../common/Structures');
-
-
-var Button = ReactBootstrap.Button;
-var ButtonGroup = ReactBootstrap.ButtonGroup;
-var DropdownButton = ReactBootstrap.DropdownButton;
-var MenuItem = ReactBootstrap.MenuItem;
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Tooltip = ReactBootstrap.Tooltip;
 
 
 var stringToArrayBuffer = function(string) {

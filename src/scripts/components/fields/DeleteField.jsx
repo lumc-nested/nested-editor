@@ -2,14 +2,10 @@
 
 
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, Modal} = require('react-bootstrap');
 
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-
-
-var Button = ReactBootstrap.Button;
-var Modal = ReactBootstrap.Modal;
 
 
 var DeleteField = React.createClass({

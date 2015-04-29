@@ -5,7 +5,7 @@
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, ButtonGroup, ButtonToolbar, Col, Grid, Row} = require('react-bootstrap');
 
 var ExcelReader = require('../readers/ExcelReader');
 var FamReader = require('../readers/FamReader');
@@ -21,14 +21,6 @@ var LayoutSidebar = require('./LayoutSidebar');
 var LayoutView = require('./LayoutView');
 var TableSidebar = require('./TableSidebar');
 var TableView = require('./TableView');
-
-
-var Button = ReactBootstrap.Button;
-var ButtonGroup = ReactBootstrap.ButtonGroup;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar;
-var Col = ReactBootstrap.Col;
-var Grid = ReactBootstrap.Grid;
-var Row = ReactBootstrap.Row;
 
 
 var VIEWS = {

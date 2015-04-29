@@ -2,15 +2,12 @@
 
 
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var {Pedigree, Ref} = require('../common/Structures');
 var {getFatherAndMother, getSpouses, memberAsString} = require('../common/Utils');
-
-
-var Button = ReactBootstrap.Button;
 
 
 var TableSidebar = React.createClass({

@@ -6,17 +6,13 @@ var Form = require('plexus-form');
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {OverlayTrigger, Tooltip} = require('react-bootstrap');
 var validate = require('plexus-validate');
 
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
 var {Ref} = require('../../common/Structures');
 var Schemas = require('./Schemas');
-
-
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Tooltip = ReactBootstrap.Tooltip;
 
 
 var Fields = React.createClass({

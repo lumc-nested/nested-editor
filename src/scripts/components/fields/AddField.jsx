@@ -2,15 +2,10 @@
 
 
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, Input, Modal} = require('react-bootstrap');
 
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-
-
-var Button = ReactBootstrap.Button;
-var Input = ReactBootstrap.Input;
-var Modal = ReactBootstrap.Modal;
 
 
 // TODO: Validation. We could probably use plexus-form for all our forms to

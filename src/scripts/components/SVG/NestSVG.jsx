@@ -6,12 +6,9 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var Structures = require('../../common/Structures');
+var {Nest, Ref} = require('../../common/Structures');
 var PregnancySVG = require('./PregnancySVG');
 var SVGPathBuilder = require('./SVGPathBuilder');
-
-var Nest = Structures.Nest;
-var Ref = Structures.Ref;
 
 var NestSVG = React.createClass({
 
