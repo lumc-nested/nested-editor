@@ -368,16 +368,9 @@ var _deleteField = function(objectType, field) {
           member => member.deleteIn(['fields', field])
         )
       );
-      symbol = symbol.update(
-        'mapping',
-        mapping => mapping.map(mappedField => {
-          if (mappedField === field) {
-            return undefined;
-          } else {
-            return mappedField;
-          }
-        })
-      );
+      symbol = symbol.update('mapping', mapping => mapping.map(
+        mappedField => (mappedField === field) ? undefined : mappedField
+      ));
       break;
     case AppConstants.ObjectType.Nest:
       schema = schema.deleteIn(['nest', field]);
