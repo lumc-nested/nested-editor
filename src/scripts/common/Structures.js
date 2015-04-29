@@ -102,7 +102,7 @@ var Document = Immutable.Record({
 });
 
 
-var Ref = Immutable.Record({
+var ObjectRef = Immutable.Record({
   // Type of the referenced object.
   type: AppConstants.ObjectType.Pedigree,
 
@@ -111,4 +111,4 @@ var Ref = Immutable.Record({
 });
 
 
-module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema, Symbol, Ref};
+module.exports = {Member, Pregnancy, Nest, Pedigree, Document, Schema, Symbol, ObjectRef};

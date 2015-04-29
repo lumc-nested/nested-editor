@@ -4,7 +4,7 @@
 var React = require('react');
 
 var AppConstants = require('../constants/AppConstants');
-var {Pedigree, Schema, Ref} = require('../common/Structures');
+var {Pedigree, Schema, ObjectRef} = require('../common/Structures');
 
 var Fields = require('./fields/Fields');
 
@@ -14,7 +14,7 @@ var LayoutSidebar = React.createClass({
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired,
     documentSchema: React.PropTypes.instanceOf(Schema).isRequired,
     appSchema: React.PropTypes.instanceOf(Schema).isRequired,
-    focus: React.PropTypes.instanceOf(Ref).isRequired
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired
   },
 
   render: function() {
@@ -25,18 +25,18 @@ var LayoutSidebar = React.createClass({
 
     switch (focus.type) {
       case AppConstants.ObjectType.Member:
-        return <Fields object={focus}
+        return <Fields objectRef={focus}
                        fields={pedigree.members.get(focus.key).fields}
                        appSchemas={appSchema.member}
                        documentSchemas={documentSchema.member} />;
       case AppConstants.ObjectType.Nest:
-        return <Fields object={focus}
+        return <Fields objectRef={focus}
                        fields={pedigree.nests.get(focus.key).fields}
                        appSchemas={appSchema.nest}
                        documentSchemas={documentSchema.nest} />;
       case AppConstants.ObjectType.Pedigree:
       default:
-        return <Fields object={focus}
+        return <Fields objectRef={focus}
                        fields={pedigree.fields}
                        appSchemas={appSchema.pedigree}
                        documentSchemas={documentSchema.pedigree} />;

@@ -14,7 +14,7 @@ var PedWriter = require('../writers/PedWriter');
 
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
-var {Document, Ref} = require('../common/Structures');
+var {Document, ObjectRef} = require('../common/Structures');
 
 
 var stringToArrayBuffer = function(string) {
@@ -45,7 +45,7 @@ var DocumentControls = React.createClass({
 
   propTyps: {
     document: React.PropTypes.instanceOf(Document).isRequired,
-    focus: React.PropTypes.instanceOf(Ref).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     redo: React.PropTypes.string.isRequired,
     undo: React.PropTypes.string.isRequired
   },

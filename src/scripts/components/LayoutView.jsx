@@ -6,13 +6,13 @@ var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
 var PedigreeDefs = require('./SVG/PedigreeDefs');
 var PedigreeSVG = require('./SVG/PedigreeSVG');
-var {Pedigree, Symbol, Ref} = require('../common/Structures');
+var {Pedigree, Symbol, ObjectRef} = require('../common/Structures');
 var Utils = require('./Utils');
 
 
 var LayoutView = React.createClass({
   propTypes: {
-    focus: React.PropTypes.instanceOf(Ref).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired,
     symbol: React.PropTypes.instanceOf(Symbol).isRequired
   },
@@ -88,7 +88,7 @@ var LayoutView = React.createClass({
   },
 
   handleClick: function() {
-    DocumentActions.setFocus(new Ref({type: AppConstants.ObjectType.Pedigree}));
+    DocumentActions.setFocus(new ObjectRef({type: AppConstants.ObjectType.Pedigree}));
   }
 });
 

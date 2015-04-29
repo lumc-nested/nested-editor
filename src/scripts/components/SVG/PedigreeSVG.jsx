@@ -6,13 +6,13 @@ var AppConstants = require('../../constants/AppConstants');
 var LayoutUtils = require('../../layout/Utils');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
-var {Pedigree, Symbol, Ref} = require('../../common/Structures');
+var {Pedigree, Symbol, ObjectRef} = require('../../common/Structures');
 
 var PedigreeSVG = React.createClass({
 
   propTypes: {
     data: React.PropTypes.instanceOf(Pedigree).isRequired,
-    focus: React.PropTypes.instanceOf(Ref).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     width: React.PropTypes.number.isRequired,
     scale: React.PropTypes.number.isRequired,
     symbol: React.PropTypes.instanceOf(Symbol).isRequired

@@ -6,10 +6,10 @@ var AppDispatcher = require('../dispatchers/AppDispatcher');
 
 
 var DocumentActions = {
-  setFocus: function(ref) {
+  setFocus: function(objectRef) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.SET_FOCUS,
-      ref
+      objectRef
     });
   },
 
@@ -56,10 +56,10 @@ var DocumentActions = {
     });
   },
 
-  updateFields: function(ref, fields) {
+  updateFields: function(objectRef, fields) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.UPDATE_FIELDS,
-      ref,
+      objectRef,
       fields
     });
   },

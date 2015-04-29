@@ -11,17 +11,13 @@ var validate = require('plexus-validate');
 
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var {Ref} = require('../../common/Structures');
+var {ObjectRef} = require('../../common/Structures');
 var Schemas = require('./Schemas');
 
 
 var Fields = React.createClass({
   propTypes: {
-    // Note: I'd rather use `ref` here instead of `object`, but it is a
-    //   reserved property name (in React < 0.12, `this.ref` was called
-    //   `this.props.ref`). I hope the name is no longer reserved in a
-    //   future React version.
-    object: React.PropTypes.instanceOf(Ref).isRequired,
+    objectRef: React.PropTypes.instanceOf(ObjectRef).isRequired,
     appSchemas: React.PropTypes.object.isRequired,
     documentSchemas: React.PropTypes.object.isRequired,
     fields: React.PropTypes.object.isRequired
@@ -40,7 +36,7 @@ var Fields = React.createClass({
   },
 
   updateFields: function(fields) {
-    DocumentActions.updateFields(this.props.object, fields);
+    DocumentActions.updateFields(this.props.objectRef, fields);
   },
 
   renderHeading: function() {
@@ -48,7 +44,7 @@ var Fields = React.createClass({
 
     // TODO: I'm getting bored from these switch statements, might be better
     //   to define a quick mapping object type->title instead.
-    switch (this.props.object.type) {
+    switch (this.props.objectRef.type) {
       case AppConstants.ObjectType.Member:
         title = 'Member';
         break;
@@ -89,7 +85,7 @@ var Fields = React.createClass({
 
   render: function() {
     if (this.state.showSchemas) {
-      return <Schemas objectType={this.props.object.type}
+      return <Schemas objectType={this.props.objectRef.type}
                       appSchemas={this.props.appSchemas}
                       documentSchemas={this.props.documentSchemas}
                       onClose={this.closeSchemas} />;

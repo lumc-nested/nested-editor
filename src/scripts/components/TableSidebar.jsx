@@ -6,18 +6,18 @@ var {Button} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var {Pedigree, Ref} = require('../common/Structures');
+var {Pedigree, ObjectRef} = require('../common/Structures');
 var {getFatherAndMother, getSpouses, memberAsString} = require('../common/Utils');
 
 
 var TableSidebar = React.createClass({
   propTypes: {
-    focus: React.PropTypes.instanceOf(Ref).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
   },
 
   focusMember: function(memberKey) {
-    DocumentActions.setFocus(new Ref({
+    DocumentActions.setFocus(new ObjectRef({
       type: AppConstants.ObjectType.Member,
       key: memberKey
     }));

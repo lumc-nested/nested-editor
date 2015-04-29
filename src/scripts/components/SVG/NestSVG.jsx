@@ -6,7 +6,7 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var {Nest, Ref} = require('../../common/Structures');
+var {Nest, ObjectRef} = require('../../common/Structures');
 var PregnancySVG = require('./PregnancySVG');
 var SVGPathBuilder = require('./SVGPathBuilder');
 
@@ -78,7 +78,7 @@ var NestSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    DocumentActions.setFocus(new Ref({
+    DocumentActions.setFocus(new ObjectRef({
       type: AppConstants.ObjectType.Nest,
       key: this.props.nestKey
     }));

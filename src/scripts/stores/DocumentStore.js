@@ -8,7 +8,7 @@ var Immutable = require('immutable');
 var ActionTypes = require('../constants/ActionTypes');
 var AppDispatcher = require('../dispatchers/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
-var {Document, Nest, Pedigree, Pregnancy, Member, Ref} = require('../common/Structures');
+var {Document, Nest, Pedigree, Pregnancy, Member, ObjectRef} = require('../common/Structures');
 
 
 var CHANGE_EVENT = 'change';
@@ -31,12 +31,12 @@ var DEFAULT_DOCUMENT = new Document({
 var Snapshot = Immutable.Record({
   label: 'Unknown change',
   document: new Document(),
-  focus: new Ref()
+  focus: new ObjectRef()
 });
 
 
 var _document = DEFAULT_DOCUMENT;
-var _focus = new Ref();
+var _focus = new ObjectRef();
 
 
 // Undo/redo stacks contain Snapshot instances.
@@ -64,8 +64,8 @@ var _newMemberKey = function() {
 };
 
 
-var _setFocus = function(ref) {
-  _focus = ref;
+var _setFocus = function(objectRef) {
+  _focus = objectRef;
 };
 
 
@@ -127,7 +127,7 @@ var _openDocument = function(document) {
   _redoStack = _redoStack.clear();
 
   _document = document;
-  _focus = new Ref();
+  _focus = new ObjectRef();
 };
 
 
@@ -160,7 +160,7 @@ var _addSpouse = function(memberKey) {
   _changeDocument(
     'Add spouse',
     _document.set('pedigree', pedigree),
-    new Ref({
+    new ObjectRef({
       type: AppConstants.ObjectType.Member,
       key: spouseKey
     })
@@ -191,7 +191,7 @@ var _addChild = function(nestKey, gender) {
   _changeDocument(
     'Add child',
     _document.set('pedigree', pedigree),
-    new Ref({
+    new ObjectRef({
       type: AppConstants.ObjectType.Member,
       key: childKey
     })
@@ -227,7 +227,7 @@ var _addParents = function(memberKey) {
   _changeDocument(
     'Add parents',
     _document.set('pedigree', pedigree),
-    new Ref({
+    new ObjectRef({
       type: AppConstants.ObjectType.Nest,
       key: nestKey
     })
@@ -265,7 +265,7 @@ var _addTwin = function(memberKey) {
   _changeDocument(
     'Add twin',
     _document.set('pedigree', pedigree),
-    new Ref({
+    new ObjectRef({
       type: AppConstants.ObjectType.Member,
       key: twinKey
     })
@@ -310,25 +310,25 @@ var _deleteMember = function(memberKey) {
   _changeDocument(
     'Delete member',
     _document.set('pedigree', pedigree),
-    new Ref({
+    new ObjectRef({
       type: AppConstants.ObjectType.Pedigree
     })
   );
 };
 
 
-var _updateFields = function(ref, fields) {
+var _updateFields = function(objectRef, fields) {
   var label;
   var path;
 
-  switch (ref.type) {
+  switch (objectRef.type) {
     case AppConstants.ObjectType.Member:
       label = 'Update member fields';
-      path = ['pedigree', 'members', ref.key, 'fields'];
+      path = ['pedigree', 'members', objectRef.key, 'fields'];
       break;
     case AppConstants.ObjectType.Nest:
       label = 'Update nest fields';
-      path = ['pedigree', 'nests', ref.key, 'fields'];
+      path = ['pedigree', 'nests', objectRef.key, 'fields'];
       break;
     case AppConstants.ObjectType.Pedigree:
     default:
@@ -432,7 +432,7 @@ var DocumentStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(action) {
   switch (action.actionType) {
     case ActionTypes.SET_FOCUS:
-      _setFocus(action.ref);
+      _setFocus(action.objectRef);
       break;
     case ActionTypes.UNDO:
       _undo();
@@ -459,7 +459,7 @@ AppDispatcher.register(function(action) {
       _deleteMember(action.memberKey);
       break;
     case ActionTypes.UPDATE_FIELDS:
-      _updateFields(action.ref, action.fields);
+      _updateFields(action.objectRef, action.fields);
       break;
     case ActionTypes.ADD_FIELD:
       _addField(action.objectType, action.field, action.schema);

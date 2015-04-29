@@ -7,7 +7,7 @@ var React = require('react');
 var AppConfig = require('../../constants/AppConfig');
 var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
-var {Member, Ref} = require('../../common/Structures');
+var {Member, ObjectRef} = require('../../common/Structures');
 
 
 var _arrowPath = `M${-AppConfig.MemberSize / 2 - 10},${AppConfig.MemberSize / 2 + 10}l9,-9l-3,6l-3,-3l6,-3`;
@@ -96,7 +96,7 @@ var MemberSVG = React.createClass({
 
   handleClick: function(e) {
     e.stopPropagation();
-    DocumentActions.setFocus(new Ref({
+    DocumentActions.setFocus(new ObjectRef({
       type: AppConstants.ObjectType.Member,
       key: this.props.memberKey
     }));
