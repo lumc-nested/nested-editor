@@ -6,16 +6,16 @@ var AppConstants = require('../../constants/AppConstants');
 var LayoutUtils = require('../../layout/Utils');
 var MemberSVG = require('./MemberSVG');
 var NestSVG = require('./NestSVG');
-var Structures = require('../../common/Structures');
+var {Pedigree, Symbol, ObjectRef} = require('../../common/Structures');
 
 var PedigreeSVG = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.instanceOf(Structures.Pedigree).isRequired,
-    focus: React.PropTypes.object.isRequired,
+    data: React.PropTypes.instanceOf(Pedigree).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     width: React.PropTypes.number.isRequired,
     scale: React.PropTypes.number.isRequired,
-    symbol: React.PropTypes.instanceOf(Structures.Symbol).isRequired
+    symbol: React.PropTypes.instanceOf(Symbol).isRequired
   },
 
   getInitialState: function() {
@@ -44,7 +44,7 @@ var PedigreeSVG = React.createClass({
 
     members = pedigree.members
       .map((member, memberKey) => {
-        var isSelected = focus.level === AppConstants.FocusLevel.Member &&
+        var isSelected = focus.type === AppConstants.ObjectType.Member &&
                          focus.key === memberKey;
         return <MemberSVG data={member}
                           memberKey={memberKey}
@@ -57,7 +57,7 @@ var PedigreeSVG = React.createClass({
 
     nests = pedigree.nests
       .map((nest, nestKey) => {
-        var isSelected = focus.level === AppConstants.FocusLevel.Nest &&
+        var isSelected = focus.type === AppConstants.ObjectType.Nest &&
                          focus.key.equals(nestKey);
         return <NestSVG data={nest}
                         nestKey={nestKey}

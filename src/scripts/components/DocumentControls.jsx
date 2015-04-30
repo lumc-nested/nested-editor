@@ -6,7 +6,7 @@ var FileSaver = require('FileSaver');
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button, ButtonGroup, DropdownButton, MenuItem, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 var ExcelWriter = require('../writers/ExcelWriter');
 var JsonWriter = require('../writers/JsonWriter');
@@ -14,14 +14,7 @@ var PedWriter = require('../writers/PedWriter');
 
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
-
-
-var Button = ReactBootstrap.Button;
-var ButtonGroup = ReactBootstrap.ButtonGroup;
-var DropdownButton = ReactBootstrap.DropdownButton;
-var MenuItem = ReactBootstrap.MenuItem;
-var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-var Tooltip = ReactBootstrap.Tooltip;
+var {Document, ObjectRef} = require('../common/Structures');
 
 
 var stringToArrayBuffer = function(string) {
@@ -51,8 +44,8 @@ var writers = indexBy([ExcelWriter, JsonWriter, PedWriter], 'produce');
 var DocumentControls = React.createClass({
 
   propTyps: {
-    document: React.PropTypes.object.isRequired,
-    focus: React.PropTypes.object.isRequired,
+    document: React.PropTypes.instanceOf(Document).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     redo: React.PropTypes.string.isRequired,
     undo: React.PropTypes.string.isRequired
   },
@@ -135,9 +128,10 @@ var DocumentControls = React.createClass({
                                  {downloadItems}
                                </DropdownButton>;
 
+    // todo loose the this.props prefix
     if (focus !== undefined) {
-      switch (focus.get('level')) {
-        case AppConstants.FocusLevel.Member:
+      switch (focus.type) {
+        case AppConstants.ObjectType.Member:
           pedigreeButtons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
           if (pedigree.members.get(focus.key).parents.size) {
             // TODO: add twin with zygosity information.
@@ -181,7 +175,7 @@ var DocumentControls = React.createClass({
 
           break;
 
-        case AppConstants.FocusLevel.Nest:
+        case AppConstants.ObjectType.Nest:
           pedigreeButtons.addChild = <DropdownButton onSelect={this.addChild} title="Add child">
                                        <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
                                        <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>

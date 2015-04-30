@@ -2,29 +2,25 @@
 
 
 var React = require('react');
-var ReactBootstrap = require('react-bootstrap');
+var {Button} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var Pedigree = require('../common/Structures').Pedigree;
+var {Pedigree, ObjectRef} = require('../common/Structures');
 var {getFatherAndMother, getSpouses, memberAsString} = require('../common/Utils');
 
 
-var Button = ReactBootstrap.Button;
-
-
-var RelationsView = React.createClass({
-
+var TableSidebar = React.createClass({
   propTypes: {
-    focus: React.PropTypes.object.isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
   },
 
   focusMember: function(memberKey) {
-    DocumentActions.setFocus(
-      AppConstants.FocusLevel.Member,
-      memberKey
-    );
+    DocumentActions.setFocus(new ObjectRef({
+      type: AppConstants.ObjectType.Member,
+      key: memberKey
+    }));
   },
 
   render: function() {
@@ -35,7 +31,7 @@ var RelationsView = React.createClass({
     var members;
     var mother;
 
-    if (focus.level !== AppConstants.FocusLevel.Member) {
+    if (focus.type !== AppConstants.ObjectType.Member) {
       return <p>Click on a member to see relationships.</p>;
     }
 
@@ -88,4 +84,4 @@ var RelationsView = React.createClass({
 });
 
 
-module.exports = RelationsView;
+module.exports = TableSidebar;

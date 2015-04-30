@@ -7,7 +7,7 @@ module.exports = Object.freeze({
     Male: 1,
     Female: 2
   },
-  FocusLevel: {
+  ObjectType: {
     Pedigree: 0,
     Member: 1,
     Nest: 2

@@ -6,11 +6,10 @@ var AppDispatcher = require('../dispatchers/AppDispatcher');
 
 
 var DocumentActions = {
-  setFocus: function(level, key) {
+  setFocus: function(objectRef) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.SET_FOCUS,
-      level,
-      key
+      objectRef
     });
   },
 
@@ -57,26 +56,28 @@ var DocumentActions = {
     });
   },
 
-  updateMember: function(memberKey, fields) {
+  updateFields: function(objectRef, fields) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_MEMBER,
-      memberKey,
+      actionType: ActionTypes.UPDATE_FIELDS,
+      objectRef,
       fields
     });
   },
 
-  updateNest: function(nestKey, fields) {
+  addField: function(objectType, field, schema) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_NEST,
-      nestKey,
-      fields
+      actionType: ActionTypes.ADD_FIELD,
+      objectType,
+      field,
+      schema
     });
   },
 
-  updatePedigree: function(fields) {
+  deleteField: function(objectType, field) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_PEDIGREE,
-      fields
+      actionType: ActionTypes.DELETE_FIELD,
+      objectType,
+      field
     });
   },
 

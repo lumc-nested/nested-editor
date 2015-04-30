@@ -1,5 +1,6 @@
 /* TODO: Define some variables (e.g., toolbar height) */
 
+// Todo: This might not be the same variables.less as used by the parent page.
 @import "~bootstrap/less/variables";
 
 
@@ -54,6 +55,7 @@ body {
  */
 
 /* Hide for mobile, show later */
+/* TODO: When hidden, main content should extend to full width */
 #sidebar {
   display: none;
 }
@@ -68,6 +70,16 @@ body {
     padding-top: 20px;
     overflow-x: hidden;
     overflow-y: auto;
+
+    h1 {
+      font-size: (@font-size-base * 1.25);
+      font-weight: bold;
+      a {
+        font-size: @font-size-base;
+        line-height: 1;
+        cursor: pointer;
+      }
+    }
 
     .form-section {
       padding: 0 10px 10px 0;
@@ -159,6 +171,32 @@ body {
   width: 100%;
   height: 100%;
   border: 1px solid #dddddd;
+}
+
+
+/*
+ * Table with edit control in first column
+ */
+.table-editable {
+  margin-left: -27px;
+
+  th:first-child, td:first-child {
+    width: 27px;
+    border: none;
+    background: white;
+  }
+  td:first-child a {
+    cursor: pointer;
+    padding-top: 4px;
+    margin-left: -10000000px;
+  }
+  tr:hover td:first-child {
+    background: white;
+    * {
+      position: fixed;
+      margin-left: 0;
+    }
+  }
 }
 
 
