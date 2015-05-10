@@ -1,6 +1,3 @@
-'use strict';
-
-
 var AppConstants = require('../constants/AppConstants');
 
 

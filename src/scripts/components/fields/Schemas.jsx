@@ -1,6 +1,3 @@
-'use strict';
-
-
 // Prevent including the FA stylesheet to the document, we include it manually
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');

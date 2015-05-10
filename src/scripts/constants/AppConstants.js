@@ -1,6 +1,3 @@
-'use strict';
-
-
 module.exports = Object.freeze({
   Gender: {
     Unknown: 0,

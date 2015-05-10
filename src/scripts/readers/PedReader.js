@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Immutable = require('immutable');
 
 var Structures = require('../common/Structures');
@@ -87,7 +84,7 @@ var readParseTree = function(parseTree) {
   nests = originalMembers
     .filter(member => members.has(member.get('father')) && members.has(member.get('mother')))
     .toMap()
-    .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
+    .reduce((oldNests, member) => oldNests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
 
   // Add parents key to member instances.
@@ -114,6 +111,8 @@ var readString = function(string) {
   try {
     parseTree = parser.parse(string);
   } catch (e) {
+    // ESLint seems confused in template strings.
+    /*eslint-disable comma-spacing */
     console.log(`Line ${e.line}, column ${e.column}: ${e.message}`);
     throw new Error('error parsing ped file');
   }

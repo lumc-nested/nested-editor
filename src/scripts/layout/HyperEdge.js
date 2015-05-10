@@ -1,5 +1,3 @@
-'use strict';
-
 var HyperEdge = function(upperLeft, upperRight, lowerGroups) {
   var lowerVertices;
 

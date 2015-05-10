@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Immutable = require('immutable');
 var React = require('react');
 var {Table} = require('react-bootstrap');

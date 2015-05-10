@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Immutable = require('immutable');
 var tv4 = require('tv4');
 
@@ -44,10 +41,10 @@ var readJson = function(json) {
     throw new Error('merged schema validation failed');
   }
 
-  members = Immutable.fromJS(json.pedigree.members).map(fields => new Member({fields}));
+  members = Immutable.fromJS(json.pedigree.members).map(member => new Member({fields: member}));
 
   nests = Immutable.Map(json.pedigree.nests).mapEntries(([nestKey, nest]) => {
-    var fields;
+    var nestFields;
     var pregnancies;
 
     // In JSON, the nest keys are the parent keys joined by comma's. For now
@@ -63,9 +60,9 @@ var readJson = function(json) {
         fields: Immutable.Map(pregnancy).delete('children').delete('zygotes')
       })
     );
-    fields = Immutable.Map(nest).delete('pregnancies');
+    nestFields = Immutable.Map(nest).delete('pregnancies');
 
-    return [nestKey, new Nest({pregnancies, fields})];
+    return [nestKey, new Nest({pregnancies, fields: nestFields})];
   });
 
   symbol = new Symbol(Immutable.fromJS(json.symbol || {}));

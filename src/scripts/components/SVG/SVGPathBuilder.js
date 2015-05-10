@@ -1,4 +1,5 @@
-'use strict';
+// ESLint seems confused in template strings.
+/*eslint-disable comma-spacing */
 
 
 var SVGPathBuilder = function() {

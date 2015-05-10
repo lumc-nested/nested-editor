@@ -1,6 +1,3 @@
-'use strict';
-
-
 /*eslint-disable vars-on-top */
 require('babel-core/polyfill');
 

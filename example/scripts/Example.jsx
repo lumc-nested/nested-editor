@@ -1,6 +1,3 @@
-'use strict';
-
-
 var EventListener = require('react-bootstrap/lib/utils/EventListener');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');

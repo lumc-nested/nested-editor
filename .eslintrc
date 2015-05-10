@@ -1,12 +1,13 @@
 # ESLint has many default rules that are not listed in this file
 # Documentation for all ESLint rules can be found at http://eslint.org/docs/rules/
+parser: babel-eslint
 env:
   browser: true
   node: true
 globals:
   Nested: true
 rules:
-  strict: [1, global]
+  strict: [2, never]    # use strict is added by babel
   no-reserved-keys: 1   # ok in es5, dangerous in es3
   vars-on-top: 1
   eqeqeq: 1

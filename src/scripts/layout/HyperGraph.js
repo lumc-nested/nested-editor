@@ -1,5 +1,3 @@
-'use strict';
-
 var HyperEdge = require('./HyperEdge');
 var Utils = require('../common/Utils');
 var Vertex = require('./Vertex');

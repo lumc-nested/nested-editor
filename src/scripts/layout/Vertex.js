@@ -1,5 +1,3 @@
-'use strict';
-
 var Vertex = function(id) {
   this.id = id;
 
