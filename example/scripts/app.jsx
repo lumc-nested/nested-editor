@@ -1,8 +1,6 @@
 'use strict';
 
 
-// TODO: I hope this is a temporary workaround for an ESLint bug?
-/*eslint-disable no-unused-vars, no-undef */
 var React = require('react');
 var Example = require('./Example');
 

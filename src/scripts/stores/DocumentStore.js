@@ -52,7 +52,7 @@ var _newMemberKeys = function(n) {
   n = n !== undefined ? n : 1;
 
   return Immutable.Range(1)
-    .map(n => n.toString())
+    .map(i => i.toString())
     .filterNot(key => existingKeys.contains(key))
     .take(n);
 };

@@ -238,7 +238,7 @@ var readWorkbook = function(workbook) {
   nests = originalMembers
     .filter(member => members.has(getters.father(member)) && members.has(getters.mother(member)))
     .toMap()
-    .reduce((nests, member) => nests.mergeWith(mergeNests, singletonNestMap(member)),
+    .reduce((oldNests, member) => oldNests.mergeWith(mergeNests, singletonNestMap(member)),
             Immutable.Map());
 
   // Add parents key to member instances.
