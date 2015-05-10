@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Form = require('plexus-form');
 // Prevent including the FA stylesheet to the document, we include it manually
 // in the iframe.

@@ -1,6 +1,3 @@
-'use strict';
-
-
 var FileSaver = require('FileSaver');
 // Prevent including the FA stylesheet to the document, we include it manually
 // in the iframe.

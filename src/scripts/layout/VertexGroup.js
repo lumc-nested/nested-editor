@@ -1,5 +1,3 @@
-'use strict';
-
 var VertexGroup = function(vertices) {
   this.vertices = vertices;
 };

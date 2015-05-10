@@ -1,6 +1,3 @@
-'use strict';
-
-
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var Immutable = require('immutable');

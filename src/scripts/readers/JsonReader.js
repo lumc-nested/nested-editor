@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Immutable = require('immutable');
 var tv4 = require('tv4');
 

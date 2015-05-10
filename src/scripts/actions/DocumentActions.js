@@ -1,6 +1,3 @@
-'use strict';
-
-
 var ActionTypes = require('../constants/ActionTypes');
 var AppDispatcher = require('../dispatchers/AppDispatcher');
 

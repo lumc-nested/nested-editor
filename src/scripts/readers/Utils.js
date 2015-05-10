@@ -1,6 +1,3 @@
-'use strict';
-
-
 var populateParents = function(members, nests) {
   nests.forEach((nest, nestKey) => {
     nest.pregnancies.forEach(pregnancy => {

@@ -1,6 +1,3 @@
-'use strict';
-
-
 var LevelEngine = function() {
   this.levels = {};
 };

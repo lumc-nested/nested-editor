@@ -1,6 +1,3 @@
-'use strict';
-
-
 var getFatherAndMother = require('../common/Utils').getFatherAndMother;
 
 

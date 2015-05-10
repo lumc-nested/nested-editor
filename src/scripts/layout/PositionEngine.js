@@ -1,6 +1,3 @@
-'use strict';
-
-
 var PositionEngine = function() {};
 
 PositionEngine.prototype = {

@@ -1,6 +1,3 @@
-'use strict';
-
-
 var React = require('react');
 var {Button} = require('react-bootstrap');
 

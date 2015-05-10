@@ -1,6 +1,3 @@
-'use strict';
-
-
 var XLSX = require('xlsx');
 
 var AppStore = require('../stores/AppStore');

@@ -1,6 +1,3 @@
-'use strict';
-
-
 var React = require('react');
 var Example = require('./Example');
 

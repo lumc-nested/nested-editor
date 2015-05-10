@@ -1,6 +1,3 @@
-'use strict';
-
-
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
 var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
