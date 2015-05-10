@@ -1,5 +1,6 @@
 # ESLint has many default rules that are not listed in this file
 # Documentation for all ESLint rules can be found at http://eslint.org/docs/rules/
+parser: babel-eslint
 env:
   browser: true
   node: true
