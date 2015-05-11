@@ -1,6 +1,6 @@
 var Immutable = require('immutable');
 var React = require('react');
-var {Table} = require('react-bootstrap');
+var {Col, Grid, Row, Table} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
@@ -11,11 +11,11 @@ var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
 
 
 var MemberRow = React.createClass({
-
   propTypes: {
     fields: React.PropTypes.object.isRequired,
     memberKey: React.PropTypes.string.isRequired,
-    isSelcted: React.PropTypes.bool.isRequired
+    isSelcted: React.PropTypes.bool.isRequired,
+    style: React.PropTypes.object
   },
 
   handleClick: function() {
@@ -40,7 +40,6 @@ var MemberRow = React.createClass({
 
 
 var TableView = React.createClass({
-
   propTypes: {
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
@@ -66,18 +65,24 @@ var TableView = React.createClass({
     // TODO: Better sorting.
 
     return (
-      <Table striped hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Gender</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </Table>
+      <Grid fluid>
+        <Row>
+          <Col id="main" style={this.props.style} sm={12}>
+            <Table striped hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows}
+              </tbody>
+            </Table>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 });

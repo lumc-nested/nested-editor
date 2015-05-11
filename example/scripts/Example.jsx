@@ -142,7 +142,7 @@ var Example = React.createClass({
 
   render: function() {
     var editorStyle = {
-      bottom: this.state.size
+      bottom: this.state.size + 15
     };
 
     var links = (filetype) => examples[filetype].map(([name, data]) => {

@@ -2,7 +2,7 @@
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var {Button, ButtonGroup, ButtonToolbar, Col, Grid, Row} = require('react-bootstrap');
+var {Button, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
 
 var ExcelReader = require('../readers/ExcelReader');
 var FamReader = require('../readers/FamReader');
@@ -14,9 +14,7 @@ var DocumentActions = require('../actions/DocumentActions');
 var DocumentStore = require('../stores/DocumentStore');
 
 var DocumentControls = require('./DocumentControls');
-var LayoutSidebar = require('./LayoutSidebar');
 var LayoutView = require('./LayoutView');
-var TableSidebar = require('./TableSidebar');
 var TableView = require('./TableView');
 
 
@@ -69,6 +67,12 @@ var getDocumentState = function() {
 
 var Editor = React.createClass({
   propTypes: {
+    /**
+     * This is applied to the main layout scaffolds (having `postion: fixed`)
+     * so they can make some space for other elements on the page. We hope
+     * this is temporary until IFrame mode is usable.
+     * https://git.lumc.nl/nested/nested-editor/issues/49
+     */
     style: React.PropTypes.object
   },
 
@@ -125,8 +129,7 @@ var Editor = React.createClass({
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
     var message;
-    var main;
-    var sidebar;
+    var view;
 
     if (this.state.message) {
       message = (
@@ -137,14 +140,14 @@ var Editor = React.createClass({
     }
 
     if (this.state.view === VIEWS.TABLE) {
-      main = <TableView pedigree={document.pedigree} focus={focus} />;
-      sidebar = <TableSidebar pedigree={document.pedigree} focus={focus} />;
+      view = <TableView style={this.props.style} pedigree={document.pedigree} focus={focus} />;
     } else {
-      main = <LayoutView pedigree={document.pedigree} focus={focus} symbol={document.symbol} />;
-      sidebar = <LayoutSidebar pedigree={document.pedigree}
-                               documentSchema={document.schema}
-                               appSchema={this.state.app.schema}
-                               focus={focus} />;
+      view = <LayoutView style={this.props.style}
+                         pedigree={document.pedigree}
+                         focus={focus}
+                         symbol={document.symbol}
+                         documentSchema={document.schema}
+                         appSchema={this.state.app.schema} />;
     }
 
     return (
@@ -171,16 +174,7 @@ var Editor = React.createClass({
             </ButtonGroup>
           </div>
         </ButtonToolbar>
-        <Grid fluid>
-          <Row>
-            <Col id="main" style={this.props.style} sm={8} md={9} lg={10}>
-              {main}
-            </Col>
-            <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
-              {sidebar}
-            </Col>
-          </Row>
-        </Grid>
+        {view}
       </div>
     );
   }
