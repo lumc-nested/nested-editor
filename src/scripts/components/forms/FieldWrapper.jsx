@@ -23,9 +23,9 @@ var makeTitle = function(description, errors) {
 
 /**
  * Bootstrapified plexus-form `FieldWrapper`. Changes are DOM structure and
- * classnames. They depend on the wrapped field type and therefore needs the
- * `schema` prop. This currently depends on a patched version of plexus-form,
- * which by default doesn't pass the schema.
+ * classnames. They depend on the wrapped field type and therefore this needs
+ * the `type` prop. We currently depend on a patched version of plexus-form,
+ * which originally doesn't pass the schema.
  */
 var FieldWrapper = React.createClass({
   contextTypes: {
@@ -37,7 +37,7 @@ var FieldWrapper = React.createClass({
                             'form-element',
                             this.props.classes || []);
 
-    if (this.props.schema.type === 'boolean') {
+    if (this.props.type === 'boolean') {
       classes.push('checkbox');
       return (
         <div className={classes.join(' ')}
