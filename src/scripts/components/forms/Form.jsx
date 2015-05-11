@@ -4,6 +4,7 @@ var React = require('react');
 var FieldWrapper = require('./FieldWrapper');
 var SectionWrapper = require('./SectionWrapper');
 
+var DateField = require('./DateField');
 var InputField = require('./InputField');
 var SelectionField = require('./SelectionField');
 
@@ -44,17 +45,24 @@ var Form = React.createClass({
   render: function() {
     var {horizontal, schema, ...restProps} = this.props;
     var handlers = {
+      date: DateField,
       input: InputField,
       selection: SelectionField
     };
 
     Object.keys(schema.properties).forEach(field => {
       var fieldSchema = schema.properties[field];
+      var setComponent = component => {
+        // TODO: Merge in case there already are hints.
+        fieldSchema['x-hints'] = {form: {inputComponent: component}};
+      };
 
       if (fieldSchema.enum) {
-        fieldSchema['x-hints'] = {form: {inputComponent: 'selection'}};
+        setComponent('selection');
+      } else if (fieldSchema.format === 'date') {
+        setComponent('date');
       } else if (!['boolean', 'object', 'array'].includes(fieldSchema.type)) {
-        fieldSchema['x-hints'] = {form: {inputComponent: 'input'}};
+        setComponent('input');
       }
     });
 
