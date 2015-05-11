@@ -18,18 +18,4 @@ var getFatherAndMother = function(nestKey, members) {
 };
 
 
-var getSpouses = function(memberKey, nests) {
-  return nests.keySeq()
-    .filter(nestKey => nestKey.contains(memberKey) && nestKey.size === 2)
-    .map(nestKey => nestKey.delete(memberKey).first())
-    .toArray();
-};
-
-
-var memberAsString = function(memberKey, members) {
-  var member = members.get(memberKey);
-  return member.fields.get('name') || memberKey;
-};
-
-
-module.exports = {getFatherAndMother, getSpouses, memberAsString};
+module.exports = {getFatherAndMother};
