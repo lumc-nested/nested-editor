@@ -22,9 +22,9 @@ var DateField = React.createClass({
     this.setState({datePickerOpened: false});
   },
 
-  handleChange: function(date) {
+  onChange: function(date) {
     this.hideDatePicker();
-    this.props.update(this.props.path, date, date);
+    this.props.onChange(date);
   },
 
   render: function() {
@@ -51,7 +51,7 @@ var DateField = React.createClass({
       <div className="dp-footer">
         <div className="dp-footer-today" onClick={footerProps.gotoToday}>Today</div>
         <div className="dp-footer-selected" onClick={footerProps.gotoSelected}>Go to selected</div>
-        <div className="dp-footer-clear" onClick={() => this.handleChange()}>Clear</div>
+        <div className="dp-footer-clear" onClick={() => this.onChange('')}>Clear</div>
       </div>
     );
 
@@ -60,7 +60,7 @@ var DateField = React.createClass({
         <div className="modal-body">
           <DatePicker
             date={this.props.value}
-            onChange={this.handleChange}
+            onChange={this.onChange}
             footerFactory={footer} />
         </div>
       </Modal>

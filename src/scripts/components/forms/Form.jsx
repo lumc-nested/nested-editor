@@ -18,8 +18,8 @@ var SelectionField = require('./SelectionField');
  *
  * It depends on a slightly patched version of plexus-form:
  *
- * 1. Wrapper components need the wrapped field schema.
- * 2. Custom input components should not be wrapped in `UserDefinedField`.
+ * 1. Wrapper components need the wrapped field type.
+ * 2. Custom input components need the wrapped field schema.
  */
 var Form = React.createClass({
   propTypes: {
