@@ -30,11 +30,9 @@ var schemaAsString = function(schema) {
 var Schemas = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
-    // TODO: Use appSchemas as a blacklist for allowed field names. Perhaps
-    //   also show them in the list (non-editable).
     appSchemas: React.PropTypes.object.isRequired,
     documentSchemas: React.PropTypes.object.isRequired,
-    onClose: React.PropTypes.func
+    showFields: React.PropTypes.func.isRequired
   },
 
   renderHeading: function() {
@@ -56,7 +54,7 @@ var Schemas = React.createClass({
       <h1>
         {title}
         <OverlayTrigger placement="left" overlay={<Tooltip>Back</Tooltip>}>
-          <a onClick={this.props.onClose} className="pull-right">
+          <a onClick={this.props.showFields} className="pull-right">
             <Icon name="close" />
           </a>
         </OverlayTrigger>
@@ -85,7 +83,7 @@ var Schemas = React.createClass({
     var rows;
 
     if (!this.props.documentSchemas.size) {
-      return <span />;
+      return null;
     }
 
     rows = this.props.documentSchemas.map(
@@ -111,11 +109,18 @@ var Schemas = React.createClass({
   },
 
   render: function() {
+    // Disallowed are any predefined as well as custom field names and titles.
+    var reservedFields = this.props.appSchemas.keySeq().concat(
+      this.props.appSchemas.toList().map(schema => schema.get('title')),
+      this.props.documentSchemas.keySeq(),
+      this.props.documentSchemas.toList().map(schema => schema.get('title')),
+    ).toSet().filter(field => field).toArray();
+
     return (
       <div>
         {this.renderHeading()}
         {this.renderSchemas()}
-        <ModalTrigger modal={<AddField objectType={this.props.objectType} />}>
+        <ModalTrigger modal={<AddField objectType={this.props.objectType} reservedFields={reservedFields} />}>
           <Button bsStyle="link"><Icon name="plus" /> Add field</Button>
         </ModalTrigger>
       </div>

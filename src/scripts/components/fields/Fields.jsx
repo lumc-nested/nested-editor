@@ -1,46 +1,57 @@
-var Form = require('plexus-form');
 // Prevent including the FA stylesheet to the document, we include it manually
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
+var Immutable = require('immutable');
 var React = require('react');
-var {OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var validate = require('plexus-validate');
 
-var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
 var {ObjectRef} = require('../../common/Structures');
-var Schemas = require('./Schemas');
+var AppConstants = require('../../constants/AppConstants');
+var Form = require('../forms/Form');
 
 
 var Fields = React.createClass({
   propTypes: {
     objectRef: React.PropTypes.instanceOf(ObjectRef).isRequired,
-    appSchemas: React.PropTypes.object.isRequired,
-    documentSchemas: React.PropTypes.object.isRequired,
-    fields: React.PropTypes.object.isRequired
+    schemas: React.PropTypes.object.isRequired,
+    fields: React.PropTypes.object.isRequired,
+    showSchemas: React.PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
-    return {showSchemas: false};
+  contextTypes: {
+    showMessage: React.PropTypes.func.isRequired
   },
 
-  openSchemas: function() {
-    this.setState({showSchemas: true});
+  shouldComponentUpdate: function(nextProps) {
+    var is = Immutable.is;
+    var props = this.props;
+
+    // Compare all props, except for the `showSchemas` callback.
+    return !is(props.objectRef, nextProps.objectRef) ||
+           !is(props.schemas, nextProps.schemas) ||
+           !is(props.fields, nextProps.fields);
   },
 
-  closeSchemas: function() {
-    this.setState({showSchemas: false});
+  onSubmit: function(output, value, errors) {
+    if (Object.keys(errors).length) {
+      this.context.showMessage('Please correct all errors in the form.');
+      return;
+    }
+    DocumentActions.updateFields(this.props.objectRef, output);
   },
 
-  updateFields: function(fields) {
-    DocumentActions.updateFields(this.props.objectRef, fields);
-  },
-
-  renderHeading: function() {
+  render: function() {
+    var button;
+    var schema;
     var title;
 
-    // TODO: I'm getting bored from these switch statements, might be better
-    //   to define a quick mapping object type->title instead.
+    schema = {
+      type: 'object',
+      properties: this.props.schemas.toJS()
+    };
+
     switch (this.props.objectRef.type) {
       case AppConstants.ObjectType.Member:
         title = 'Member';
@@ -53,45 +64,29 @@ var Fields = React.createClass({
         title = 'Pedigree';
     }
 
-    return (
-      <h1>
-        {title}
-        <OverlayTrigger placement="left" overlay={<Tooltip>Manage custom fields</Tooltip>}>
-          <a onClick={this.openSchemas} className="pull-right">
-            <Icon name="pencil" />
-          </a>
-        </OverlayTrigger>
-      </h1>
-    );
-  },
+    button = (submit) =>
+      <Button onClick={submit} bsStyle="primary" className="pull-right">Save fields</Button>;
 
-  renderForm: function() {
-    var jsonSchema = {
-      type: 'object',
-      properties: this.props.documentSchemas.mergeDeep(
-        this.props.appSchemas
-      ).toJS()
-    };
-
-    return <Form buttons={['Save']}
-                 schema={jsonSchema}
-                 validate={validate}
-                 values={this.props.fields.toJS()}
-                 onSubmit={this.updateFields} />;
-  },
-
-  render: function() {
-    if (this.state.showSchemas) {
-      return <Schemas objectType={this.props.objectRef.type}
-                      appSchemas={this.props.appSchemas}
-                      documentSchemas={this.props.documentSchemas}
-                      onClose={this.closeSchemas} />;
-    }
+    // When using the `values` prop on `Form`, it's important to implement a
+    // smart `shouldComponentUpdate`. Otherwise, form state by the user will
+    // be destroyed by rendering.
 
     return (
       <div>
-        {this.renderHeading()}
-        {this.renderForm()}
+        <h1>
+          {title}
+          <OverlayTrigger placement="left" overlay={<Tooltip>Manage custom fields</Tooltip>}>
+            <a onClick={this.props.showSchemas} className="pull-right">
+              <Icon name="pencil" />
+            </a>
+          </OverlayTrigger>
+        </h1>
+        <Form
+          buttons={button}
+          schema={schema}
+          validate={validate}
+          values={this.props.fields.toJS()}
+          onSubmit={this.onSubmit} />
       </div>
     );
   }

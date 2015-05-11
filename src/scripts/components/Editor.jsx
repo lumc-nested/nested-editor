@@ -72,11 +72,20 @@ var Editor = React.createClass({
     style: React.PropTypes.object
   },
 
+  childContextTypes: {
+    showMessage: React.PropTypes.func.isRequired
+  },
+
+  getChildContext: function() {
+    return {showMessage: this.showMessage};
+  },
+
   getInitialState: function() {
     return {
       view: VIEWS.LAYOUT,
       app: getAppState(),
-      document: getDocumentState()
+      document: getDocumentState(),
+      message: undefined
     };
   },
 
@@ -93,6 +102,7 @@ var Editor = React.createClass({
 
   componentWillUnmount: function() {
     DocumentStore.removeChangeListener(this._onChange);
+    clearTimeout(this.messageTimeout);
   },
 
   openDocument: function(document, filetype) {
@@ -103,13 +113,28 @@ var Editor = React.createClass({
     this.setState({view});
   },
 
+  showMessage: function(message) {
+    this.setState({message});
+    clearTimeout(this.messageTimeout);
+    this.messageTimeout = setTimeout(() => this.setState({message: undefined}), 3000);
+  },
+
   render: function() {
     var document = this.state.document.document;
     var focus = this.state.document.focus;
     var redo = this.state.document.redo;
     var undo = this.state.document.undo;
+    var message;
     var main;
     var sidebar;
+
+    if (this.state.message) {
+      message = (
+        <p className="text-danger message btn-group">
+          <Icon name="exclamation-triangle" /> {this.state.message}
+        </p>
+      );
+    }
 
     if (this.state.view === VIEWS.TABLE) {
       main = <TableView pedigree={document.pedigree} focus={focus} />;
@@ -129,6 +154,7 @@ var Editor = React.createClass({
             <DocumentControls document={document} focus={focus} undo={undo} redo={redo} />
           </div>
           <div className="pull-right">
+            {message}
             <ButtonGroup>
               <Button
                   key="layout"

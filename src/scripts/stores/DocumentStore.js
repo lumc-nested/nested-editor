@@ -333,7 +333,16 @@ var _updateFields = function(objectRef, fields) {
       path = ['pedigree', 'fields'];
   }
 
-  _changeDocument(label, _document.mergeIn(path, fields));
+  // TODO: We currently have to `setIn` instead of `mergeIn`, which I would
+  //   actually prefer (so we can use this action to selectively update a
+  //   subset of fields). However, empty field values are currently lost by
+  //   plexus-form, so this is a workaround to enable the user to empty
+  //   fields.
+  //   https://github.com/AppliedMathematicsANU/plexus-form/issues/31
+  _changeDocument(
+    label,
+    _document.setIn(path, Immutable.fromJS(fields))
+  );
 };
 
 
