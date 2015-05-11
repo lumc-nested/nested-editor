@@ -28,7 +28,7 @@ var DateField = React.createClass({
   },
 
   render: function() {
-    var display = this.props.value ? moment(this.props.value).format('dddd, MMMM Do YYYY') : '';
+    var display = this.props.value ? moment(this.props.value).format('dddd, MMMM Do YYYY') : <i>Not set</i>;
 
     return (
       <div className="input-group">
