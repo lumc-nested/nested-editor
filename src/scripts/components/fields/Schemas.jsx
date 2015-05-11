@@ -109,11 +109,18 @@ var Schemas = React.createClass({
   },
 
   render: function() {
+    // Disallowed are any predefined as well as custom field names and titles.
+    var reservedFields = this.props.appSchemas.keySeq().concat(
+      this.props.appSchemas.toList().map(schema => schema.get('title')),
+      this.props.documentSchemas.keySeq(),
+      this.props.documentSchemas.toList().map(schema => schema.get('title')),
+    ).toSet().filter(field => field).toArray();
+
     return (
       <div>
         {this.renderHeading()}
         {this.renderSchemas()}
-        <ModalTrigger modal={<AddField objectType={this.props.objectType} />}>
+        <ModalTrigger modal={<AddField objectType={this.props.objectType} reservedFields={reservedFields} />}>
           <Button bsStyle="link"><Icon name="plus" /> Add field</Button>
         </ModalTrigger>
       </div>

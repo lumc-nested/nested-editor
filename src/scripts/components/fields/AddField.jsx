@@ -14,7 +14,8 @@ var Form = require('../forms/Form');
 var AddField = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
-    onRequestHide: React.PropTypes.func
+    onRequestHide: React.PropTypes.func,
+    reservedFields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
   },
 
   getInitialState: function() {
@@ -36,6 +37,11 @@ var AddField = React.createClass({
 
     if (Object.keys(errors).length) {
       this.showMessage('Please correct all errors in the form.');
+      return;
+    }
+
+    if (this.props.reservedFields.includes(output.field)) {
+      this.showMessage('Field already exist, please choose another name.');
       return;
     }
 
