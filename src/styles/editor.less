@@ -208,6 +208,28 @@ body {
 
 
 /*
+ * Sortable reactable
+ */
+
+.table-sortable {
+  th {
+    cursor: pointer;
+    cursor: hand;
+  }
+  .sort-asc:after {
+    float: right;
+    content: '\25BC';
+    font-size: 0.5em;
+  }
+  .sort-desc:after {
+    float: right;
+    content: '\25B2';
+    font-size: 0.5em;
+  }
+}
+
+
+/*
  * Reset some ugly focus styling for our toolbar buttons
  */
 

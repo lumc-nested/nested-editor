@@ -27,6 +27,7 @@
     "plexus-form": "git+https://github.com/martijnvermaat/plexus-form.git#nested",
     "plexus-validate": "0.0.4",
     "react": "~0.13.1",
+    "reactabular": "~0.5.2",
     "react-bootstrap": "~0.20.0",
     "react-date-picker": "~2.0.18",
     "react-fa": "~3.2.0",
