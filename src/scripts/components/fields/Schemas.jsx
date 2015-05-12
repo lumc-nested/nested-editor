@@ -110,6 +110,9 @@ var Schemas = React.createClass({
 
   render: function() {
     // Disallowed are any predefined as well as custom field names and titles.
+    // TODO: I think we should also blacklist some other field names (e.g.,
+    //   'members' and 'nests' on the pedigree level, '_key' on the member
+    //   level which we use as a special field in the table view, etc).
     var reservedFields = this.props.appSchemas.keySeq().concat(
       this.props.appSchemas.toList().map(schema => schema.get('title')),
       this.props.documentSchemas.keySeq(),

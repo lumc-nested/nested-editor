@@ -140,7 +140,9 @@ var Editor = React.createClass({
     }
 
     if (this.state.view === VIEWS.TABLE) {
-      view = <TableView style={this.props.style} pedigree={document.pedigree} focus={focus} />;
+      view = <TableView style={this.props.style}
+                        members={document.pedigree.members}
+                        schemas={document.schema.member.mergeDeep(this.state.app.schema.member)} />;
     } else {
       view = <LayoutView style={this.props.style}
                          pedigree={document.pedigree}

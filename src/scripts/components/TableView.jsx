@@ -1,85 +1,81 @@
 var Immutable = require('immutable');
 var React = require('react');
-var {Col, Grid, Row, Table} = require('react-bootstrap');
+var {sortColumn, Table} = require('reactabular');
+var {Col, Grid, Row} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
-var DocumentActions = require('../actions/DocumentActions');
-var {Pedigree, ObjectRef} = require('../common/Structures');
 
 
 var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
 
 
-var MemberRow = React.createClass({
-  propTypes: {
-    fields: React.PropTypes.object.isRequired,
-    memberKey: React.PropTypes.string.isRequired,
-    isSelcted: React.PropTypes.bool.isRequired,
-    style: React.PropTypes.object
-  },
+var createColumns = function(schemas) {
+  var columns = schemas.map(
+    (schema, field) => ({
+      property: field,
+      header: schema.get('title', field)
+    })
+  ).set('_key', {'property': '_key', 'header': '#'});
 
-  handleClick: function() {
-    DocumentActions.setFocus(new ObjectRef({
-      type: AppConstants.ObjectType.Member,
-      key: this.props.memberKey
-    }));
-  },
+  columns.get('gender').cell = gender => genderTable.get(gender, AppConstants.Gender.Unknown);
 
-  render: function() {
-    var gender = genderTable.get(this.props.fields.get('gender'),
-                                 AppConstants.Gender.Unknown);
+  return columns.toArray();
+};
 
-    return (
-      <tr className={(this.props.isSelected) ? 'info' : ''} onClick={this.handleClick}>
-        <td>{this.props.memberKey}</td>
-        <td>{this.props.fields.get('name')}</td>
-        <td>{gender}</td>
-      </tr>);
-  }
-});
+
+var createData = function(members) {
+  return members.map(
+    (member, key) => member.fields.set('_key', key)
+  ).toList().toJS();
+};
 
 
 var TableView = React.createClass({
   propTypes: {
-    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
-    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired
+    members: React.PropTypes.object.isRequired,
+    schemas: React.PropTypes.object.isRequired,
+    style: React.PropTypes.object
+  },
+
+  getInitialState: function() {
+    var columns = createColumns(this.props.schemas);
+    var data = createData(this.props.members);
+    var header = {
+      onClick: column => {
+        sortColumn(
+          this.state.columns,
+          column,
+          this.state.data,
+          this.setState.bind(this)
+        );
+      }
+    };
+
+    return {columns, data, header};
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    var is = Immutable.is;
+
+    if (!is(nextProps.members, this.props.members)) {
+      this.setState({data: createData(nextProps.members)});
+    }
+
+    if (!is(nextProps.schemas, this.props.schemas)) {
+      this.setState({columns: createColumns(nextProps.schemas)});
+    }
   },
 
   render: function() {
-    var focus = this.props.focus;
-    var pedigree = this.props.pedigree;
-    var rows;
-
-    rows = pedigree.members
-      .map((member, memberKey) => {
-        var isSelected = focus.type === AppConstants.ObjectType.Member &&
-                         focus.key === memberKey;
-        return <MemberRow key={'member-' + memberKey}
-                          fields={member.fields}
-                          memberKey={memberKey}
-                          isSelected={isSelected} />;
-      })
-      .sortBy(row => row.props.memberKey)
-      .toArray();
-
-    // TODO: Better sorting.
-
     return (
       <Grid fluid>
         <Row>
           <Col id="main" style={this.props.style} sm={12}>
-            <Table striped hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Gender</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows}
-              </tbody>
-            </Table>
+            <Table
+              className="table table-striped table-bordered table-sortable"
+              columns={this.state.columns}
+              data={this.state.data}
+              header={this.state.header} />
           </Col>
         </Row>
       </Grid>
