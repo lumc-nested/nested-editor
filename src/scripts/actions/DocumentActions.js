@@ -17,9 +17,9 @@ var DocumentActions = {
     });
   },
 
-  addSpouse: function(memberKey) {
+  addPartner: function(memberKey) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.ADD_SPOUSE,
+      actionType: ActionTypes.ADD_PARTNER,
       memberKey
     });
   },

@@ -128,11 +128,11 @@ var _openDocument = function(document) {
 };
 
 
-var _addSpouse = function(memberKey) {
+var _addPartner = function(memberKey) {
   var pedigree = _document.pedigree;
   var member;
   var fields;
-  var spouseKey;
+  var partnerKey;
 
   member = pedigree.members.get(memberKey);
 
@@ -148,18 +148,18 @@ var _addSpouse = function(memberKey) {
       fields = Immutable.Map({gender: AppConstants.Gender.Unknown});
   }
 
-  spouseKey = _newMemberKey();
+  partnerKey = _newMemberKey();
   pedigree = pedigree
-    .update('members', members => members.set(spouseKey, new Member({fields})))
-    .update('nests', nests => nests.set(Immutable.Set.of(memberKey, spouseKey),
+    .update('members', members => members.set(partnerKey, new Member({fields})))
+    .update('nests', nests => nests.set(Immutable.Set.of(memberKey, partnerKey),
                                         new Nest()));
 
   _changeDocument(
-    'Add spouse',
+    'Add partner',
     _document.set('pedigree', pedigree),
     new ObjectRef({
       type: AppConstants.ObjectType.Member,
-      key: spouseKey
+      key: partnerKey
     })
   );
 };
@@ -449,8 +449,8 @@ AppDispatcher.register(function(action) {
     case ActionTypes.OPEN_DOCUMENT:
       _openDocument(action.document);
       break;
-    case ActionTypes.ADD_SPOUSE:
-      _addSpouse(action.memberKey);
+    case ActionTypes.ADD_PARTNER:
+      _addPartner(action.memberKey);
       break;
     case ActionTypes.ADD_CHILD:
       _addChild(action.nestKey, action.gender);

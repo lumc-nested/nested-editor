@@ -47,8 +47,8 @@ var DocumentControls = React.createClass({
     undo: React.PropTypes.string.isRequired
   },
 
-  addSpouse: function() {
-    DocumentActions.addSpouse(this.props.focus.get('key'));
+  addPartner: function() {
+    DocumentActions.addPartner(this.props.focus.get('key'));
   },
 
   addChild: function(gender) {
@@ -129,7 +129,7 @@ var DocumentControls = React.createClass({
     if (focus !== undefined) {
       switch (focus.type) {
         case AppConstants.ObjectType.Member:
-          pedigreeButtons.addSpouse = <Button onClick={this.addSpouse}>Add spouse</Button>;
+          pedigreeButtons.addPartner = <Button onClick={this.addPartner}>Add partner</Button>;
           if (pedigree.members.get(focus.key).parents.size) {
             // TODO: add twin with zygosity information.
             pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
@@ -144,7 +144,7 @@ var DocumentControls = React.createClass({
             var mateKey;
             var mate;
             if (nestKey.has(focus.key)) {
-              // has spouse
+              // has partner
               if (nest.pregnancies.size) {
                 // has children
                 return false;
@@ -161,7 +161,7 @@ var DocumentControls = React.createClass({
                 }
               }
             } else {
-              // no spouse
+              // no partner
               return true;
             }
           });
