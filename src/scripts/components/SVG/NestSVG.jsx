@@ -9,12 +9,15 @@ var PregnancySVG = require('./PregnancySVG');
 var SVGPathBuilder = require('./SVGPathBuilder');
 
 var NestSVG = React.createClass({
-
   propTypes: {
     data: React.PropTypes.instanceOf(Nest).isRequired,
     focused: React.PropTypes.bool.isRequired,
     layout: React.PropTypes.object.isRequired,
     nestKey: React.PropTypes.object.isRequired
+  },
+
+  contextTypes: {
+    dragging: React.PropTypes.bool.isRequired
   },
 
   render: function() {
@@ -62,7 +65,7 @@ var NestSVG = React.createClass({
 
     // add a transparent circle to increase the hit area of the nest.
     return (
-      <g onClick={this.handleClick}
+      <g onMouseUp={this.handleMouseUp}
          className={classnames({focus: this.props.focused})}>
         <path d={pathBuilder.toString()} />
         <circle cx={nestLayout.get('x')}
@@ -74,12 +77,16 @@ var NestSVG = React.createClass({
     );
   },
 
-  handleClick: function(e) {
-    e.stopPropagation();
-    DocumentActions.setFocus(new ObjectRef({
-      type: AppConstants.ObjectType.Nest,
-      key: this.props.nestKey
-    }));
+  handleMouseUp: function(event) {
+    // This has to be bound to `mouseup` instead of `click`, since otherwise
+    // we cannot detect dragging state.
+    if (!this.context.dragging) {
+      DocumentActions.setFocus(new ObjectRef({
+        type: AppConstants.ObjectType.Nest,
+        key: this.props.nestKey
+      }));
+      event.stopPropagation();
+    }
   }
 });
 

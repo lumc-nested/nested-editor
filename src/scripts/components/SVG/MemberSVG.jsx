@@ -23,13 +23,16 @@ var _isDead = function(fields) {
 };
 
 var MemberSVG = React.createClass({
-
   propTypes: {
     data: React.PropTypes.instanceOf(Member).isRequired,
     focused: React.PropTypes.bool.isRequired,
     location: React.PropTypes.object.isRequired,
     symbolDef: React.PropTypes.object.isRequired,
     memberKey: React.PropTypes.string.isRequired
+  },
+
+  contextTypes: {
+    dragging: React.PropTypes.bool.isRequired
   },
 
   render: function() {
@@ -85,7 +88,7 @@ var MemberSVG = React.createClass({
     annotation = <text x={-5} y={_size}>{this.props.memberKey}</text>;
 
     return (
-      <g transform={transform} onClick={this.handleClick}
+      <g transform={transform} onMouseUp={this.handleMouseUp}
          className={classnames({focus: this.props.focused})}>
         {shape}
         {death}
@@ -96,12 +99,16 @@ var MemberSVG = React.createClass({
     );
   },
 
-  handleClick: function(e) {
-    e.stopPropagation();
-    DocumentActions.setFocus(new ObjectRef({
-      type: AppConstants.ObjectType.Member,
-      key: this.props.memberKey
-    }));
+  handleMouseUp: function(event) {
+    // This has to be bound to `mouseup` instead of `click`, since otherwise
+    // we cannot detect dragging state.
+    if (!this.context.dragging) {
+      DocumentActions.setFocus(new ObjectRef({
+        type: AppConstants.ObjectType.Member,
+        key: this.props.memberKey
+      }));
+      event.stopPropagation();
+    }
   }
 });
 
