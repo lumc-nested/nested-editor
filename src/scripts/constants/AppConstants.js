@@ -1,4 +1,8 @@
+var Package = require('../../../package.json');
+
+
 module.exports = Object.freeze({
+  Version: Package.version,
   Gender: {
     Unknown: 0,
     Male: 1,

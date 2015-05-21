@@ -21,7 +21,9 @@ var examples = {
     ['SI 004', require('!raw!../../data/ped/si_004.ped')]
   ],
   fam: [
-    ['Example', require('!binary!../../data/fam/example.fam')]
+    ['Example', require('!binary!../../data/fam/example.fam')],
+    ['Simple', require('!binary!../../data/fam/simple.fam')],
+    ['Twins', require('!binary!../../data/fam/twins.fam')]
   ],
   xlsx: [
     ['XLSX (Excel 2007+)', require('!binary!../../data/spreadsheet/example.xlsx')],
