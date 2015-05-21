@@ -14,6 +14,7 @@ var ownerDocument = function(componentOrElement) {
   return (elem && elem.ownerDocument) || document;
 };
 
+
 /**
  * Shortcut to compute ReactComponent style
  *
@@ -47,4 +48,4 @@ var tooltipButton = function(config, isDisabled) {
 };
 
 
-module.exports = {getComputedStyles, tooltipButton};
+module.exports = {ownerDocument, getComputedStyles, tooltipButton};

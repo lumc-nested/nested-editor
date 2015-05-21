@@ -17,6 +17,8 @@ var PedigreeSVG = React.createClass({
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     width: React.PropTypes.number.isRequired,
     scale: React.PropTypes.number.isRequired,
+    x: React.PropTypes.number.isRequired,
+    y: React.PropTypes.number.isRequired,
     symbol: React.PropTypes.instanceOf(Symbol).isRequired
   },
 
@@ -53,7 +55,7 @@ var PedigreeSVG = React.createClass({
                           location={layout.getIn(['members', memberKey])}
                           focused={isSelected}
                           symbolDef={this.props.symbol.mapping}
-                          key={'member-' + memberKey}/>;
+                          key={'member-' + memberKey} />;
       })
       .toArray();
 
@@ -65,7 +67,7 @@ var PedigreeSVG = React.createClass({
                         nestKey={nestKey}
                         layout={layout}
                         focused={isSelected}
-                        key={'nest-' + nestKey.join(',')}/>;
+                        key={'nest-' + nestKey.join(',')} />;
       })
       .toArray();
 
@@ -78,7 +80,7 @@ var PedigreeSVG = React.createClass({
       .get('x');
 
     shift = this.props.width / 2 - (leftmost + (rightmost - leftmost) / 2);
-    transform = `translate(${shift},50) scale(${this.props.scale})`;
+    transform = `translate(${shift+this.props.x},${50+this.props.y}) scale(${this.props.scale})`;
 
     return (
       <g transform={transform} key={'pedigree'}>

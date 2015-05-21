@@ -6,6 +6,12 @@ svg#layout {
     stroke: indigo;
     stroke-width: 2;
 
+    &.dragging {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
+      cursor: -moz-grabbing;
+    }
+
     polyline, path {
       fill: transparent;
     }
