@@ -3,7 +3,7 @@ var FileSaver = require('FileSaver');
 // in the iframe.
 var Icon = require('react-fa/dist/Icon');
 var React = require('react');
-var {Button, ButtonGroup, DropdownButton, MenuItem, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {Button, ButtonGroup, DropdownButton, MenuItem, ModalTrigger, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 var ExcelWriter = require('../writers/ExcelWriter');
 var JsonWriter = require('../writers/JsonWriter');
@@ -12,6 +12,7 @@ var PedWriter = require('../writers/PedWriter');
 var DocumentActions = require('../actions/DocumentActions');
 var AppConstants = require('../constants/AppConstants');
 var {Document, ObjectRef} = require('../common/Structures');
+var FieldsEditor = require('./FieldsEditor');
 
 
 var stringToArrayBuffer = function(string) {
@@ -124,6 +125,12 @@ var DocumentControls = React.createClass({
     documentButtons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
                                  {downloadItems}
                                </DropdownButton>;
+
+    documentButtons.fields = (
+      <ModalTrigger modal={<FieldsEditor />}>
+        <Button><Icon name="plus" /> Fields editor</Button>
+      </ModalTrigger>
+    );
 
     // todo loose the this.props prefix
     if (focus !== undefined) {
