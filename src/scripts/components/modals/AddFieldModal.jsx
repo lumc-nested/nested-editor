@@ -11,7 +11,7 @@ var DocumentActions = require('../../actions/DocumentActions');
 var Form = require('../forms/Form');
 
 
-var AddField = React.createClass({
+var AddFieldModal = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
     onRequestHide: React.PropTypes.func,
@@ -140,4 +140,4 @@ var AddField = React.createClass({
 });
 
 
-module.exports = AddField;
+module.exports = AddFieldModal;

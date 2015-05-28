@@ -5,8 +5,8 @@ var React = require('react');
 var {Button, ModalTrigger, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
 
 var AppConstants = require('../../constants/AppConstants');
-var AddField = require('./AddField');
-var DeleteField = require('./DeleteField');
+var AddFieldModal = require('../modals/AddFieldModal');
+var DeleteFieldModal = require('../modals/DeleteFieldModal');
 
 
 var schemaAsString = function(schema) {
@@ -30,7 +30,7 @@ var schemaAsString = function(schema) {
 };
 
 
-var Schemas = React.createClass({
+var SchemasSidebar = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
     appSchemas: React.PropTypes.object.isRequired,
@@ -72,7 +72,7 @@ var Schemas = React.createClass({
     return (
       <tr key={field}>
         <td>
-          <ModalTrigger modal={<DeleteField objectType={this.props.objectType} field={field} />}>
+          <ModalTrigger modal={<DeleteFieldModal objectType={this.props.objectType} field={field} />}>
             <a title="Remove field"><Icon name="remove" /></a>
           </ModalTrigger>
         </td>
@@ -126,7 +126,7 @@ var Schemas = React.createClass({
       <div>
         {this.renderHeading()}
         {this.renderSchemas()}
-        <ModalTrigger modal={<AddField objectType={this.props.objectType} reservedFields={reservedFields} />}>
+        <ModalTrigger modal={<AddFieldModal objectType={this.props.objectType} reservedFields={reservedFields} />}>
           <Button bsStyle="link"><Icon name="plus" /> Add field</Button>
         </ModalTrigger>
       </div>
@@ -135,4 +135,4 @@ var Schemas = React.createClass({
 });
 
 
-module.exports = Schemas;
+module.exports = SchemasSidebar;

@@ -5,7 +5,7 @@ var AppConstants = require('../../constants/AppConstants');
 var DocumentActions = require('../../actions/DocumentActions');
 
 
-var DeleteField = React.createClass({
+var DeleteFieldModal = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
     field: React.PropTypes.string.isRequired,
@@ -49,4 +49,4 @@ var DeleteField = React.createClass({
 });
 
 
-module.exports = DeleteField;
+module.exports = DeleteFieldModal;

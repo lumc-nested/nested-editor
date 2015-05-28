@@ -12,7 +12,7 @@ var AppConstants = require('../../constants/AppConstants');
 var Form = require('../forms/Form');
 
 
-var Fields = React.createClass({
+var FieldsSidebar = React.createClass({
   propTypes: {
     objectRef: React.PropTypes.instanceOf(ObjectRef).isRequired,
     schemas: React.PropTypes.object.isRequired,
@@ -93,4 +93,4 @@ var Fields = React.createClass({
 });
 
 
-module.exports = Fields;
+module.exports = FieldsSidebar;

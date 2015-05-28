@@ -1,11 +1,11 @@
 var Immutable = require('immutable');
 var React = require('react');
 
-var AppConstants = require('../constants/AppConstants');
-var {Pedigree, Schema, ObjectRef} = require('../common/Structures');
+var AppConstants = require('../../constants/AppConstants');
+var {Pedigree, Schema, ObjectRef} = require('../../common/Structures');
 
-var Fields = require('./fields/Fields');
-var Schemas = require('./fields/Schemas');
+var Fields = require('./Fields');
+var Schemas = require('./Schemas');
 
 
 var VIEWS = {
@@ -14,7 +14,7 @@ var VIEWS = {
 };
 
 
-var LayoutSidebar = React.createClass({
+var FieldsSidebar = React.createClass({
   propTypes: {
     pedigree: React.PropTypes.instanceOf(Pedigree).isRequired,
     documentSchema: React.PropTypes.instanceOf(Schema).isRequired,
@@ -83,4 +83,4 @@ var LayoutSidebar = React.createClass({
 });
 
 
-module.exports = LayoutSidebar;
+module.exports = FieldsSidebar;

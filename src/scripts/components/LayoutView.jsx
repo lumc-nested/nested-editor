@@ -8,7 +8,7 @@ var {Pedigree, ObjectRef, Schema, Symbol} = require('../common/Structures');
 var PedigreeDefs = require('./SVG/PedigreeDefs');
 var PedigreeSVG = require('./SVG/PedigreeSVG');
 var Utils = require('./Utils');
-var LayoutSidebar = require('./LayoutSidebar');
+var Sidebar = require('./Sidebar');
 
 
 var LayoutView = React.createClass({
@@ -187,10 +187,10 @@ var LayoutView = React.createClass({
             </div>
           </Col>
           <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
-            <LayoutSidebar pedigree={this.props.pedigree}
-                           focus={this.props.focus}
-                           documentSchema={this.props.documentSchema}
-                           appSchema={this.props.appSchema} />
+            <Sidebar pedigree={this.props.pedigree}
+                     focus={this.props.focus}
+                     documentSchema={this.props.documentSchema}
+                     appSchema={this.props.appSchema} />
           </Col>
         </Row>
       </Grid>
