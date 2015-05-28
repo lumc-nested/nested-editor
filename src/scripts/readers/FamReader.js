@@ -41,7 +41,12 @@ var parseDate = function(date) {
   if (date === 'UNKNOWN' || date === 'DEFINED') {
     return undefined;
   }
-  return moment(date, '%Y%j').format('YYYY-MM-DD');
+  date = moment(date, 'YYYYDDD');
+  if (date.isValid()) {
+    return date.format('YYYY-MM-DD');
+  } else {
+    return undefined;
+  }
 };
 
 
