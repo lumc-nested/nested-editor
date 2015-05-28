@@ -404,6 +404,14 @@ var _deleteField = function(objectType, field) {
 };
 
 
+var _setSymbol = function(symbol) {
+  _changeDocument(
+    'Update annotation',
+    _document.set('symbol', symbol)
+  );
+};
+
+
 var DocumentStore = assign({}, EventEmitter.prototype, {
   getFocus: function() {
     return _focus;
@@ -472,6 +480,9 @@ AppDispatcher.register(function(action) {
       break;
     case ActionTypes.DELETE_FIELD:
       _deleteField(action.objectType, action.field);
+      break;
+    case ActionTypes.SET_SYMBOL:
+      _setSymbol(action.symbol);
       break;
     default:
   }

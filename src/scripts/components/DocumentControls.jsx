@@ -74,6 +74,10 @@ var DocumentControls = React.createClass({
     DocumentActions.redo();
   },
 
+  showSymbol: function() {
+    DocumentActions.setFocus(new ObjectRef({type: AppConstants.ObjectType.Symbol}));
+  },
+
   download: function(eventKey) {
     var Writer = writers[eventKey];
     var blob;
@@ -185,6 +189,11 @@ var DocumentControls = React.createClass({
       <div>
         <ButtonGroup>
           {React.addons.createFragment(documentButtons)}
+        </ButtonGroup>
+        <ButtonGroup>
+          <Button onClick={this.showSymbol} active={focus.type === AppConstants.ObjectType.Symbol}>
+            <Icon name="adjust" />
+          </Button>
         </ButtonGroup>
         <ButtonGroup>
           {React.addons.createFragment(pedigreeButtons)}

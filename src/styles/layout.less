@@ -41,3 +41,52 @@ svg#layout {
       fill: indigo;
     }
 }
+
+
+svg.scheme {
+  width: 26px;
+  height: 26px;
+  /* todo: margin-right only on the button */
+  margin-right: 8px;
+  border: 1px solid @btn-default-border;
+  fill: transparent;
+  stroke: darkGrey;
+}
+
+
+.btn-check {
+  cursor: pointer;
+  &.active, &:hover {
+    svg.scheme {
+      background-color: darken(@btn-default-bg, 10%);
+      border-color: darken(@btn-default-border, 12%);
+      // these styles should be on the button, not the image
+      box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    }
+  }
+  &.active {
+    svg.scheme {
+      stroke: black;
+    }
+  }
+}
+
+
+.btn-picker {
+  cursor: pointer;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: table-cell;
+  svg.scheme {
+    padding: 8px;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+
+label svg.scheme {
+  width: 16px;
+  height: 16px;
+}

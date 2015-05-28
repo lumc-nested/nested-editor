@@ -10,8 +10,10 @@ module.exports = Object.freeze({
   },
   ObjectType: {
     Pedigree: 0,
-    Member: 1,
-    Nest: 2
+    Nest: 1,
+    Pregnancy: 2,
+    Member: 3,
+    Symbol: 4
   },
 
   FillPattern: {

@@ -78,6 +78,13 @@ var DocumentActions = {
     });
   },
 
+  setSymbol: function(symbol) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.SET_SYMBOL,
+      symbol
+    });
+  },
+
   undo: function() {
     AppDispatcher.dispatch({
       actionType: ActionTypes.UNDO

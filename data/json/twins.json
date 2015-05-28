@@ -109,7 +109,7 @@
     "scheme": 3,
     "mapping": ["Test1", "Test2", "Test3"],
     "color": ["indigo", "gold", "cyan"],
-    "pattern": ["horizontal", "solid", "solid"]
+    "pattern": ["horizontal", "dotted", "solid"]
   },
 
   "schemaExtension": {

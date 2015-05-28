@@ -8,6 +8,12 @@ var {Button, Modal, OverlayMixin} = require('react-bootstrap');
 
 
 var DateField = React.createClass({
+  /**
+   * TODO: Instead of using a modal for the date picker, we probably want to
+   * make it just a collapsable. As long as it looks ok in our sidebar (and in
+   * an IFrame).
+   * https://github.com/zippyui/react-date-picker/issues/21
+   */
   mixins: [OverlayMixin],
 
   getInitialState: function() {

@@ -20,6 +20,7 @@ var writeJson = function(document) {
   });
 
   return {
+    // TODO: Symbol.
     pedigree: pedigree,
     schemaExtension: {
       $schema: 'http://json-schema.org/draft-04/schema#',

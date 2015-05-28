@@ -190,7 +190,8 @@ var LayoutView = React.createClass({
             <Sidebar pedigree={this.props.pedigree}
                      focus={this.props.focus}
                      documentSchema={this.props.documentSchema}
-                     appSchema={this.props.appSchema} />
+                     appSchema={this.props.appSchema}
+                     symbol={this.props.symbol} />
           </Col>
         </Row>
       </Grid>
