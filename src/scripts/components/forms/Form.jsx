@@ -7,6 +7,7 @@ var SectionWrapper = require('./SectionWrapper');
 var DateField = require('./DateField');
 var InputField = require('./InputField');
 var SelectionField = require('./SelectionField');
+var TextareaField = require('./TextareaField');
 
 
 /**
@@ -47,7 +48,8 @@ var Form = React.createClass({
     var handlers = {
       date: DateField,
       input: InputField,
-      selection: SelectionField
+      selection: SelectionField,
+      textarea: TextareaField
     };
 
     Object.keys(schema.properties).forEach(field => {
@@ -61,6 +63,8 @@ var Form = React.createClass({
         setComponent('selection');
       } else if (fieldSchema.format === 'date') {
         setComponent('date');
+      } else if (fieldSchema.format === 'multiline') {
+        setComponent('textarea');
       } else if (!['boolean', 'object', 'array'].includes(fieldSchema.type)) {
         setComponent('input');
       }

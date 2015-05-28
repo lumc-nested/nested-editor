@@ -55,6 +55,11 @@ var AddField = React.createClass({
       schema.format = 'date';
     }
 
+    if (output.type === 'text') {
+      schema.type = 'string';
+      schema.format = 'multiline';
+    }
+
     DocumentActions.addField(
       this.props.objectType,
       output.field,
@@ -107,8 +112,8 @@ var AddField = React.createClass({
           title: 'Value',
           description: 'Allowed values for the field',
           type: 'string',
-          'enum': ['string', 'integer', 'number', 'boolean', 'date'],
-          enumNames: ['Text', 'Whole number', 'Any number', 'Yes / No', 'Date']
+          'enum': ['string', 'text', 'integer', 'number', 'boolean', 'date'],
+          enumNames: ['Text', 'Multi-line text', 'Whole number', 'Any number', 'Yes / No', 'Date']
         }
       }
     };

@@ -285,7 +285,8 @@ var readString = function(string) {
         'text' + (index + 1),
         Immutable.Map({
           title: 'Text ' + (index + 1),
-          type: 'string'
+          type: 'string',
+          format: 'multiline'
         })
       ])
     )),
@@ -321,7 +322,8 @@ var readString = function(string) {
       },
       comment: {
         title: 'Comment',
-        type: 'string'
+        type: 'string',
+        format: 'multiline'
       },
       forenames: {
         title: 'Forenames',
