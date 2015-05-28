@@ -22,6 +22,9 @@ var schemaAsString = function(schema) {
       if (schema.get('format') === 'date') {
         return 'Date';
       }
+      if (schema.get('format') === 'multiline') {
+        return 'Multi-line text';
+      }
       return 'Text';
   }
 };
