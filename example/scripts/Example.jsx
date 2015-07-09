@@ -1,6 +1,7 @@
 var EventListener = require('react-bootstrap/lib/utils/EventListener');
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
+// TODO: All of react/lib/* is considered private.
 var TransitionEvents = require('react/lib/ReactTransitionEvents');
 
 // Provided by webpack.
