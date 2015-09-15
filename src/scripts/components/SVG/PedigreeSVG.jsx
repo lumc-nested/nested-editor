@@ -80,7 +80,7 @@ var PedigreeSVG = React.createClass({
       .get('x');
 
     shift = this.props.width / 2 - (leftmost + (rightmost - leftmost) / 2);
-    transform = `translate(${shift+this.props.x},${50+this.props.y}) scale(${this.props.scale})`;
+    transform = `translate(${shift + this.props.x},${50 + this.props.y}) scale(${this.props.scale})`;
 
     return (
       <g transform={transform} key={'pedigree'}>

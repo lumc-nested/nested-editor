@@ -76,7 +76,7 @@ var Form = React.createClass({
       sectionWrapper={SectionWrapper}
       fieldWrapper={FieldWrapper}
       handlers={handlers}
-      className={horizontal ? 'form-horizontal':''}
+      className={horizontal ? 'form-horizontal' : ''}
       schema={schema} />;
   }
 });
