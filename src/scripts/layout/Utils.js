@@ -27,20 +27,20 @@ var getLayout = function(data) {
         index: vertex.lowerEdgeIndex
       })),
     nests: Immutable.Map(hyperGraph.hyperEdges.map(edge => [
-        Immutable.Set([edge.upperLeft.id, edge.upperRight.id]),
-        Immutable.Map({
-          x: xTransform(edge.position),
-          y: yTransfrom(edge.level),
-          pregnancies: Immutable.List(edge.lowerGroups)
-            .map(group => {
-              var groupLayout = group.layout();
-              return Immutable.Map({
-                x: xTransform(groupLayout.position),
-                width: xTransform(groupLayout.width)
-              });
-            })
-        })
-      ]))
+      Immutable.Set([edge.upperLeft.id, edge.upperRight.id]),
+      Immutable.Map({
+        x: xTransform(edge.position),
+        y: yTransfrom(edge.level),
+        pregnancies: Immutable.List(edge.lowerGroups)
+          .map(group => {
+            var groupLayout = group.layout();
+            return Immutable.Map({
+              x: xTransform(groupLayout.position),
+              width: xTransform(groupLayout.width)
+            });
+          })
+      })
+    ]))
   });
 
   console.info('layout: ', coordinates.toJS());

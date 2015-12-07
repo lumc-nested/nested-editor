@@ -15,7 +15,7 @@ var createColumns = function(schemas) {
       property: field,
       header: schema.get('title', field)
     })
-  ).set('_key', {'property': '_key', 'header': '#'});
+  ).set('_key', {property: '_key', header: '#'});
 
   columns.get('gender').cell = gender => genderTable.get(gender, AppConstants.Gender.Unknown);
 

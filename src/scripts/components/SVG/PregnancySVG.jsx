@@ -38,7 +38,7 @@ var PregnancySVG = React.createClass({
       symbolHeight = (AppConfig.GenerationDistance - AppConfig.MemberSize / 2) / 5;
       symbolY = layout.get('y') + symbolHeight - 2;
 
-      /*eslint-disable no-empty */
+      /* eslint-disable no-empty */
 
       if (Immutable.Set(pregnancy.zygotes).size === 1) {
         // Complete monozygotic pregnancy: Connect children with a horizontal line.
@@ -54,7 +54,7 @@ var PregnancySVG = React.createClass({
                  </g>;
       }
 
-      /*eslint-enable no-empty */
+      /* eslint-enable no-empty */
     }
 
     return (

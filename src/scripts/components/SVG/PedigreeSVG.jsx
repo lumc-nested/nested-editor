@@ -1,7 +1,3 @@
-// ESLint seems confused in template strings.
-/*eslint-disable comma-spacing */
-
-
 var React = require('react');
 
 var AppConstants = require('../../constants/AppConstants');
