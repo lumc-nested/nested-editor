@@ -1,5 +1,5 @@
 /*eslint-disable vars-on-top */
-require('babel-core/polyfill');
+require('babel-polyfill');
 
 
 var Frame = require('react-frame-component');
