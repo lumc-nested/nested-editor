@@ -21,6 +21,7 @@
     "bootstrap": "~3.3.4",
     "classnames": "^1.2.1",
     "fam-parser": "git+https://git.lumc.nl/nested/fam-parser.git#v0.0.2",
+    "font-awesome": "~4.5.0",
     "FileSaver": "git+https://github.com/martijnvermaat/FileSaver.js#npm-package",
     "flux": "~2.0.1",
     "immutable": "~3.6.2",
