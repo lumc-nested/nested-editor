@@ -8,7 +8,7 @@ globals:
   Nested: true
 rules:
   strict: [2, never]    # use strict is added by babel
-  no-reserved-keys: 1   # ok in es5, dangerous in es3
+  quote-props: [1, as-needed]
   vars-on-top: 1
   eqeqeq: 1
   radix: 1
@@ -16,7 +16,6 @@ rules:
   no-self-compare: 2
   no-void: 2
   no-new-object: 2
-  no-reserved-keys: 1
   no-array-constructor: 1
   no-inner-declarations: [1, both]
   no-shadow-restricted-names: 1
@@ -29,7 +28,7 @@ rules:
     - 1
     - capIsNewExceptions: [List, Map, Range, Record, Repeat, Set, Stack]
   comma-style: 2
-  no-comma-dangle: 1
+  comma-dangle: [1, never]
   consistent-this: [2, self]
   no-underscore-dangle: 0
   quotes: [2, single]
@@ -37,13 +36,15 @@ rules:
   indent:
     - 2
     - 2
-    - indentSwitchCase: true
+    - SwitchCase: 1
   no-mixed-spaces-and-tabs: 2
   space-after-keywords: 2
   space-before-blocks: 2
-  space-in-brackets: 2
+  object-curly-spacing: 2
+  array-bracket-spacing: 2
+  computed-property-spacing: 2
   space-in-parens: 2
-  spaced-line-comment: 2
+  spaced-comment: 2
   eol-last: 1
   max-depth: [1, 4]
   max-len: [1, 120]

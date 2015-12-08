@@ -2,7 +2,7 @@ var React = require('react');
 var Example = require('./Example');
 
 
-require('babel-core/polyfill');
+require('babel-polyfill');
 
 
 require('../styles/main.less');

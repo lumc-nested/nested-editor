@@ -112,7 +112,7 @@ var AddField = React.createClass({
           title: 'Value',
           description: 'Allowed values for the field',
           type: 'string',
-          'enum': ['string', 'text', 'integer', 'number', 'boolean', 'date'],
+          enum: ['string', 'text', 'integer', 'number', 'boolean', 'date'],
           enumNames: ['Text', 'Multi-line text', 'Whole number', 'Any number', 'Yes / No', 'Date']
         }
       }

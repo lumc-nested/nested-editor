@@ -28,10 +28,14 @@ var readParseTree = function(parseTree) {
   var singletonNestMap;
   var uniqueKeys;
 
+  /* eslint-disable comma-dangle, array-bracket-spacing */
+
   // List of member Maps with the fields we got from the PEG.js parser.
   originalMembers = Immutable.fromJS(parseTree)
     .filter(([type, ]) => type === 'member')
     .map(([, member]) => member);
+
+  /* eslint-ensable comma-dangle, array-bracket-spacing */
 
   // Are the member keys unique?
   uniqueKeys = originalMembers.map(m => m.get('member')).toSet().size === originalMembers.size;
@@ -111,8 +115,6 @@ var readString = function(string) {
   try {
     parseTree = parser.parse(string);
   } catch (e) {
-    // ESLint seems confused in template strings.
-    /*eslint-disable comma-spacing */
     console.log(`Line ${e.line}, column ${e.column}: ${e.message}`);
     throw new Error('error parsing ped file');
   }

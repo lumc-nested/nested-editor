@@ -14,8 +14,8 @@ var CHANGE_EVENT = 'change';
 var DEFAULT_DOCUMENT = new Document({
   pedigree: new Pedigree({
     members: Immutable.Map({
-      '1': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
-      '2': new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
+      1: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
+      2: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
     }),
     nests: Immutable.Map([
       [Immutable.Set.of('1', '2'),
@@ -218,7 +218,7 @@ var _addParents = function(memberKey) {
                         .update(memberKey, member => member.set('parents', nestKey)))
     .update('nests',
             nests => nests.set(nestKey, new Nest({
-              'pregnancies': Immutable.List.of(new Pregnancy({'children': Immutable.List.of(memberKey)}))
+              pregnancies: Immutable.List.of(new Pregnancy({children: Immutable.List.of(memberKey)}))
             })));
 
   _changeDocument(
