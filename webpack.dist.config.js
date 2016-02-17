@@ -55,10 +55,10 @@ module.exports = {
       loader: 'pegjs-loader'
     }, {
       test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader?limit=10000&minetype=application/font-woff'
+      loader: 'url-loader?limit=10000&mimetype=application/font-woff'
     }, {
       test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader?limit=10000&minetype=application/font-woff2'
+      loader: 'url-loader?limit=10000&mimetype=application/font-woff2'
     }, {
       test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'file-loader'
