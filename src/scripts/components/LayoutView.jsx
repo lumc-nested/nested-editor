@@ -4,11 +4,8 @@ var ReactDOM = require('react-dom');
 var createFragment = require('react-addons-create-fragment');
 var {Col, Grid, Row} = require('react-bootstrap');
 
-var AppConstants = require('../constants/AppConstants');
-var DocumentActions = require('../actions/DocumentActions');
 var {Pedigree, ObjectRef, Schema, Symbol} = require('../common/Structures');
-var PedigreeDefs = require('./SVG/PedigreeDefs');
-var PedigreeSVG = require('./SVG/PedigreeSVG');
+var Layout = require('./Layout');
 var Utils = require('./Utils');
 var LayoutSidebar = require('./LayoutSidebar');
 
@@ -21,14 +18,6 @@ var LayoutView = React.createClass({
     documentSchema: React.PropTypes.instanceOf(Schema).isRequired,
     appSchema: React.PropTypes.instanceOf(Schema).isRequired,
     style: React.PropTypes.object
-  },
-
-  childContextTypes: {
-    dragging: React.PropTypes.bool.isRequired
-  },
-
-  getChildContext: function() {
-    return {dragging: this.state.dragging};
   },
 
   getInitialState: function() {
@@ -61,14 +50,6 @@ var LayoutView = React.createClass({
     this.setState({zoomLevel: parseFloat(event.target.value, 10)});
   },
 
-  handleMouseUp: function() {
-    // This has to be bound to `mouseup` instead of `click`, since otherwise
-    // we cannot detect dragging state.
-    if (!this.state.dragging) {
-      DocumentActions.setFocus(new ObjectRef({type: AppConstants.ObjectType.Pedigree}));
-    }
-  },
-
   handleMouseDown: function (event) {
     if (event.button !== 0) {
       // Only left mouse button.
@@ -86,6 +67,11 @@ var LayoutView = React.createClass({
   },
 
   addDragListeners: function() {
+    // TODO: There is still a subtle bug in Firefox, where sometimes we get
+    // stuck in dragging mode.
+    // Here we are attaching event listeners to the browser DOM that interact
+    // with (synthetic) event listeners attached on React components. These
+    // are not the same and I guess this might lead to bugs?!
     var doc = Utils.ownerDocument(ReactDOM.findDOMNode(this));
 
     // Prevents all kinds of frantic selection events when moving outside
@@ -144,7 +130,6 @@ var LayoutView = React.createClass({
   render: function() {
     var zoomLevel = this.state.zoomLevel;
     var controls;
-    var defs;
 
     controls = createFragment({
       zoomIn: Utils.tooltipButton({
@@ -165,10 +150,6 @@ var LayoutView = React.createClass({
       }, zoomLevel <= 0.25) // 0.05 padding to avoid floating number errors.
     });
 
-    if (this.props.symbol.scheme !== undefined) {
-      defs = <PedigreeDefs symbol={this.props.symbol} />;
-    }
-
     return (
       <Grid fluid>
         <Row>
@@ -180,17 +161,13 @@ var LayoutView = React.createClass({
                        value={this.state.zoomLevel}
                        onChange={this.zoomSlide} />
               </div>
-              <svg version="1.1" id="layout" className={this.state.dragging ? 'dragging' : ''}
-                   onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
-                {defs}
-                <PedigreeSVG data={this.props.pedigree}
-                             width={this.state.width}
-                             focus={this.props.focus}
-                             scale={zoomLevel}
-                             x={this.state.x}
-                             y={this.state.y}
-                             symbol={this.props.symbol} />
-              </svg>
+              <Layout width={this.state.width}
+                      scale={zoomLevel}
+                      x={this.state.x}
+                      y={this.state.y}
+                      dragging={this.state.dragging}
+                      pedigree={this.props.pedigree}
+                      onMouseDown={this.handleMouseDown} />
             </div>
           </Col>
           <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>

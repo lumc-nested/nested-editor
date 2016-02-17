@@ -15,11 +15,16 @@ var DEFAULT_DOCUMENT = new Document({
   pedigree: new Pedigree({
     members: Immutable.Map({
       1: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
-      2: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})})
+      2: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})}),
+      3: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Unknown}),
+                     parents: Immutable.Set.of('1', '2')})
     }),
     nests: Immutable.Map([
       [Immutable.Set.of('1', '2'),
-       new Nest()]
+       new Nest({pregnancies: Immutable.List.of(
+         new Pregnancy({children: Immutable.List.of('3'), zygotes: Immutable.List.of(0)})
+       )})
+      ]
     ])
   })
 });

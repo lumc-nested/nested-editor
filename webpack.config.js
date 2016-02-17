@@ -30,8 +30,10 @@ var config = {
   },
 
   module: {
-    // JSZip is bundled with xlsx as a pre-built javascript file.
-    noParse: [/\/jszip\.js$/],
+    // JSZip is bundled with xlsx as a pre-built javascript file. It probably
+    // also doesn't make sense to parse the pre-uglified Madeline JS (this has
+    // not been tested thoroughly).
+    noParse: [/\/jszip\.js$/, /\/madeline\.js$/],
 
     preLoaders: [{
       test: /\.jsx?$/,

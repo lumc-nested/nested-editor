@@ -124,7 +124,7 @@ var DocumentControls = React.createClass({
     documentButtons.download = <DropdownButton
                                    id="dropdown-download"
                                    key="download"
-                                   onSelect={this.download}
+                                   onSelect={(_, eventKey) => this.download(eventKey)}
                                    title={<Icon name="download" />}>
                                  {downloadItems}
                                </DropdownButton>;
@@ -177,7 +177,10 @@ var DocumentControls = React.createClass({
           break;
 
         case AppConstants.ObjectType.Nest:
-          pedigreeButtons.addChild = <DropdownButton id="dropdown-add-child" onSelect={this.addChild} title="Add child">
+          pedigreeButtons.addChild = <DropdownButton
+                                         id="dropdown-add-child"
+                                         onSelect={(_, gender) => this.addChild(gender)}
+                                         title="Add child">
                                        <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
                                        <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
                                        <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
