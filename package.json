@@ -2,6 +2,7 @@
   "name": "nested-editor",
   "version": "0.0.1",
   "description": "React pedigree editor component",
+  "license": "MIT",
   "main": "src/scripts/index.js",
   "scripts": {
     "dev": "webpack-dev-server --progress --colors --port 8000 --config webpack.dev.config.js",
