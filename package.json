@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --progress --colors --port 8000 --config webpack.config.js",
     "dev-iframe": "NESTED_IFRAME=true webpack-dev-server --progress --colors --port 8000 --config webpack.dev.config.js",
-    "clean": "rm -Rf dist/*",
+    "clean": "rm -Rf dist",
     "dist": "npm run clean && webpack -p --config webpack.config.js --bail",
     "test": "karma start karma.conf.js"
   },

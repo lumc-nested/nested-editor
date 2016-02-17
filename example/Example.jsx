@@ -5,30 +5,30 @@ var ReactBootstrap = require('react-bootstrap');
 var TransitionEvents = require('react/lib/ReactTransitionEvents');
 
 // Provided by webpack.
-// var Nested = require('../../src/scripts/index');
+// var Nested = require('../src/scripts/index');
 
 
 var examples = {
   json: [
-    ['Example', require('!raw!../../data/json/example.json')],
-    ['Simple family', require('!raw!../../data/json/simpleFamily.json')],
-    ['Twins', require('!raw!../../data/json/twins.json')],
-    ['Two roots', require('!raw!../../data/json/twoRoots.json')],
-    ['Complex', require('!raw!../../data/json/complex.json')]
+    ['Example', require('!raw!../data/json/example.json')],
+    ['Simple family', require('!raw!../data/json/simpleFamily.json')],
+    ['Twins', require('!raw!../data/json/twins.json')],
+    ['Two roots', require('!raw!../data/json/twoRoots.json')],
+    ['Complex', require('!raw!../data/json/complex.json')]
   ],
   ped: [
-    ['Example', require('!raw!../../data/ped/example.ped')],
-    ['SI 003', require('!raw!../../data/ped/si_003.ped')],
-    ['SI 004', require('!raw!../../data/ped/si_004.ped')]
+    ['Example', require('!raw!../data/ped/example.ped')],
+    ['SI 003', require('!raw!../data/ped/si_003.ped')],
+    ['SI 004', require('!raw!../data/ped/si_004.ped')]
   ],
   fam: [
-    ['Example', require('!binary!../../data/fam/example.fam')],
-    ['Simple', require('!binary!../../data/fam/simple.fam')],
-    ['Twins', require('!binary!../../data/fam/twins.fam')]
+    ['Example', require('!binary!../data/fam/example.fam')],
+    ['Simple', require('!binary!../data/fam/simple.fam')],
+    ['Twins', require('!binary!../data/fam/twins.fam')]
   ],
   xlsx: [
-    ['XLSX (Excel 2007+)', require('!binary!../../data/spreadsheet/example.xlsx')],
-    ['ODS (OpenDocument)', require('!binary!../../data/spreadsheet/example.ods')]
+    ['XLSX (Excel 2007+)', require('!binary!../data/spreadsheet/example.xlsx')],
+    ['ODS (OpenDocument)', require('!binary!../data/spreadsheet/example.ods')]
   ]
 };
 

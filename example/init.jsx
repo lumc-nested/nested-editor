@@ -5,7 +5,7 @@ var Example = require('./Example');
 require('babel-polyfill');
 
 
-require('../styles/main.less');
+require('./styles.less');
 
 
 // Export React so the devtools can find it

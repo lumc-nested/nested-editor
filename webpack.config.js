@@ -21,7 +21,7 @@ var config = {
   entry: './src/scripts/index.js',
 
   output: {
-    filename: 'bundle.min.js',
+    filename: 'main.js',
     path: 'dist/'
   },
 
@@ -81,7 +81,7 @@ if (devServer) {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.ProvidePlugin({
-      Nested: nestedIFrame ? '../../src/scripts/components/FramedEditor' : '../../src/scripts/index'
+      Nested: nestedIFrame ? '../src/scripts/components/FramedEditor' : '../src/scripts/index'
     }),
     new webpack.DefinePlugin({
       __NESTED_IFRAME__: nestedIFrame,
@@ -90,16 +90,13 @@ if (devServer) {
   );
   config.entry = [
     'webpack/hot/only-dev-server',
-    './example/scripts/app.jsx'
+    './example/init.jsx'
   ];
   config.devServer = {
     contentBase: './example',
     hot: true
   };
-  config.output = {
-    filename: 'main.js',
-    publicPath: '/assets/'
-  };
+  config.output.publicPath = '/dist/';
   config.module.loaders[0].loader = 'react-hot!babel-loader?stage=1&optional=runtime';
   config.cache = true;
   config.debug = true;
