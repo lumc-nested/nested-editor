@@ -1,0 +1,14 @@
+# Validate this file using http://lint.travis-ci.org/
+language: node_js
+node_js: stable
+sudo: false
+script: npm run dist
+before_deploy: tar -czf dist.tar.gz dist
+deploy:
+  provider: releases
+  api_key:
+    secure: XJEma9TiynVf8xa5OXk7k2YOyHyLK8QavW97mTYKMKKyWLh2jY6sipmMfRmdLKEV3R25a6d1pFtdZFo353w7eyvGb0R4t934QWp9TDcTeTTsvC0+XNLep6IH/uIpKsdZalfaMjL8nSlzt2eWpkLxRNyEKFwAgqyfci5VrFS6xZzHDosaQZ8Ix71Uc5GgxmjKxN6NmBXdiS3r5Dk4ZfRjsATmMklFg1quUjd19QQ+NosdvUP63hi4yI6dtBxQrfxNnDG4AxFiedCQanf2f0qpjPIhma9W8hztkCEs+zZ4Z24fY28InEulmT3BAZN4+z185khpYX4rUpm8+Q9TSBKTc0XeY4lG6S3z5Ejxj67QgfhqFKMBWzhR5y+SJy/YVaFnxqg6Eg6xznCrz3C/lJsvSlmkeH/6qg2dWfTdeFs/kz003Czy8xXTUQT/mMVxoFW1OBxl2v/gko1iGQHLqTkncniTzIjLqT01ywHvkrszDbFsZEOjC29LlqhvxB28dZ6FwVsBf9GcwlbcdIWzyH2I/lFoLDxXsxKSIo+E/G/6G+iXNTCNI8I4fBvFMl2txy5+XhVSXcl2IG3m2PDtPIhCLwIt0JLdhE5RDfJ45ebHYG0gX5YtPLsxYkywrm4JDupopGCGiavud+jIbaBBVMeRl0Ch5laadl3/oDGHk47shZQ=
+  file: dist.tar.gz
+  skip_cleanup: true
+  on:
+    tags: true
