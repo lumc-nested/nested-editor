@@ -3,30 +3,52 @@ Nested Editor
 
 Pedigree editor component for [React](http://facebook.github.io/react/).
 
+Example usage:
+
+```javascript
+var Nested = require('nested-editor');
+var React = require('react');
+
+var Example = React.createClass({
+  componentDidMount: function() {
+    this.refs.editor.openDocument('... [ some pedigree ] ...', 'ped');
+  },
+  render: function() {
+    <Nested ref="editor" />
+  }
+});
+
+React.render(<Example />, document.getElementById('content'));
+```
+
 
 Development
 -----------
 
-To get started, first install all dependencies:
+First install [Node.js](https://nodejs.org/). Then install package
+dependencies with NPM:
 
     npm install
 
-During development you can run the example page with webpack-dev-server:
+A live-reloading development webserver serves an example application when
+running:
 
     npm run dev
 
-Point your browser to http://localhost:8000/webpack-dev-server/ and code
-changes will hot reload.
 
-To run the test suite:
+Deployment
+----------
 
-    npm test
-
-To build a minified bundle:
+To compile the component to a bundle, install the package dependencies as
+above and run:
 
     npm run dist
 
-The result can be found in `dist/bundle.min.js`.
+The bundle can now be found in the `dist` subdirectory.
+
+*Warning:* You most probably don't want to use the bundle. Instead, use the
+ source package and your own bundling. In the future, the bundle may be a
+ simple way to embed the editor in websites without using React.
 
 
 Style guide
