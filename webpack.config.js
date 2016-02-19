@@ -15,7 +15,7 @@ var nestedIFrame = JSON.parse(process.env.NESTED_IFRAME || 'false');
 
 var config = {
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ],
 
   entry: './src/scripts/index.js',
