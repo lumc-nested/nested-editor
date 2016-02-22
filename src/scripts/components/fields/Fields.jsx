@@ -1,6 +1,5 @@
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var Immutable = require('immutable');
 var React = require('react');
 var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
@@ -46,6 +45,7 @@ var Fields = React.createClass({
     var button;
     var schema;
     var title;
+    var tooltip;
 
     schema = {
       type: 'object',
@@ -67,6 +67,8 @@ var Fields = React.createClass({
     button = (submit) =>
       <Button onClick={submit} bsStyle="primary" className="pull-right">Save fields</Button>;
 
+    tooltip = <Tooltip id="tooltip-manage-custom-fields">Manage custom fields</Tooltip>;
+
     // When using the `values` prop on `Form`, it's important to implement a
     // smart `shouldComponentUpdate`. Otherwise, form state by the user will
     // be destroyed by rendering.
@@ -75,7 +77,7 @@ var Fields = React.createClass({
       <div>
         <h1>
           {title}
-          <OverlayTrigger placement="left" overlay={<Tooltip>Manage custom fields</Tooltip>}>
+          <OverlayTrigger placement="left" overlay={tooltip}>
             <a onClick={this.props.showSchemas} className="pull-right">
               <Icon name="pencil" />
             </a>

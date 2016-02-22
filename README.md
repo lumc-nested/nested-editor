@@ -8,6 +8,7 @@ Example usage:
 ```javascript
 var Nested = require('nested-editor');
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var Example = React.createClass({
   componentDidMount: function() {
@@ -18,7 +19,7 @@ var Example = React.createClass({
   }
 });
 
-React.render(<Example />, document.getElementById('content'));
+ReactDOM.render(<Example />, document.getElementById('content'));
 ```
 
 

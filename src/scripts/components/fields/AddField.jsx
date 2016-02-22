@@ -1,6 +1,5 @@
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var React = require('react');
 var {Button, Modal} = require('react-bootstrap');
 var validate = require('plexus-validate');
@@ -14,7 +13,7 @@ var Form = require('../forms/Form');
 var AddField = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
-    onRequestHide: React.PropTypes.func,
+    onHide: React.PropTypes.func,
     reservedFields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
   },
 
@@ -66,7 +65,7 @@ var AddField = React.createClass({
       schema
     );
 
-    this.props.onRequestHide();
+    this.props.onHide();
   },
 
   handleSubmit: function(e) {
@@ -119,8 +118,11 @@ var AddField = React.createClass({
     };
 
     return (
-      <Modal {...this.props} bsStyle="primary" title={title}>
-        <div className="modal-body">
+      <Modal {...this.props}>
+        <Modal.Header className="bg-primary text-primary" closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Form
             ref="form"
             buttons={[]}
@@ -128,12 +130,12 @@ var AddField = React.createClass({
             horizontal={true}
             validate={validate}
             onSubmit={this.onSubmit} />
-        </div>
-        <div className="modal-footer">
+        </Modal.Body>
+        <Modal.Footer>
           {message}
-          <Button onClick={this.props.onRequestHide}>Close</Button>
+          <Button onClick={this.props.onHide}>Close</Button>
           <Button onClick={this.handleSubmit} bsStyle="primary">Add field</Button>
-        </div>
+        </Modal.Footer>
       </Modal>
     );
   }

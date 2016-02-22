@@ -9,13 +9,13 @@ var DeleteField = React.createClass({
   propTypes: {
     objectType: React.PropTypes.number.isRequired,
     field: React.PropTypes.string.isRequired,
-    onRequestHide: React.PropTypes.func
+    onHide: React.PropTypes.func
   },
 
   onDelete: function() {
     console.log('deleting field');
     DocumentActions.deleteField(this.props.objectType, this.props.field);
-    this.props.onRequestHide();
+    this.props.onHide();
   },
 
   render: function() {
@@ -34,15 +34,18 @@ var DeleteField = React.createClass({
     }
 
     return (
-      <Modal {...this.props} bsStyle="primary" title={title}>
-        <div className="modal-body">
+      <Modal {...this.props}>
+        <Modal.Header className="bg-primary text-primary" closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <p>Are you sure you want to remove the field <i>{this.props.field}</i>?</p>
           <p><strong>Warning:</strong> This will remove all values for this field from the current document.</p>
-        </div>
-        <div className="modal-footer">
-          <Button onClick={this.props.onRequestHide}>Close</Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.props.onHide}>Close</Button>
           <Button onClick={this.onDelete} bsStyle="primary">Remove field</Button>
-        </div>
+        </Modal.Footer>
       </Modal>
     );
   }

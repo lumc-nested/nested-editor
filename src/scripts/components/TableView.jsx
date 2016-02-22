@@ -2,6 +2,7 @@ var Immutable = require('immutable');
 var React = require('react');
 var {sortColumn, Table} = require('reactabular');
 var {Col, Grid, Row} = require('react-bootstrap');
+var sortByOrder = require('lodash.sortbyorder');
 
 var AppConstants = require('../constants/AppConstants');
 
@@ -40,18 +41,18 @@ var TableView = React.createClass({
   getInitialState: function() {
     var columns = createColumns(this.props.schemas);
     var data = createData(this.props.members);
-    var header = {
+    var columnNames = {
       onClick: column => {
         sortColumn(
           this.state.columns,
           column,
-          this.state.data,
           this.setState.bind(this)
         );
       }
     };
+    var sortingColumn = 'key';
 
-    return {columns, data, header};
+    return {columns, data, columnNames, sortingColumn};
   },
 
   componentWillReceiveProps: function(nextProps) {
@@ -67,15 +68,18 @@ var TableView = React.createClass({
   },
 
   render: function() {
+    var data = sortColumn.sort(this.state.data, this.state.sortingColumn, sortByOrder);
+
     return (
       <Grid fluid>
         <Row>
           <Col id="main" style={this.props.style} sm={12}>
             <Table
-              className="table table-striped table-bordered table-sortable"
-              columns={this.state.columns}
-              data={this.state.data}
-              header={this.state.header} />
+                className="table table-striped table-bordered table-sortable"
+                columns={this.state.columns}
+                data={data}
+                columnNames={this.state.columnNames}
+                rowKey={'key'} />
           </Col>
         </Row>
       </Grid>

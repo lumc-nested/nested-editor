@@ -1,6 +1,5 @@
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var React = require('react');
 var {Button, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
 
