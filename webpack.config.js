@@ -42,7 +42,11 @@ var config = {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader?stage=1&optional=runtime'
+      loaders: ['babel-loader?' + JSON.stringify({
+        presets: ['es2015', 'react', 'stage-1'],
+        plugins: ['transform-runtime'],
+        cacheDirectory: true
+      })]
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
@@ -97,7 +101,7 @@ if (devServer) {
     hot: true
   };
   config.output.publicPath = '/dist/';
-  config.module.loaders[0].loader = 'react-hot!babel-loader?stage=1&optional=runtime';
+  config.module.loaders[0].loaders.unshift('react-hot');
   config.cache = true;
   config.debug = true;
   config.devtool = 'eval';
