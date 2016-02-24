@@ -128,10 +128,13 @@ var LayoutView = React.createClass({
 
   componentDidMount: function () {
     var style = Utils.getComputedStyles(this.refs.layout);
+    /* eslint-disable react/no-did-mount-set-state */
+    // TODO: This is an anti-pattern.
     this.setState({
       width: parseInt(style.width, 10),
       height: parseInt(style.height, 10)
     });
+    /* eslint-enable react/no-did-mount-set-state */
   },
 
   componentWillUnmount: function() {
