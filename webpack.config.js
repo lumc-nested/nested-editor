@@ -36,37 +36,41 @@ var config = {
     preLoaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'eslint-loader'
+      loader: 'eslint'
     }],
 
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader?stage=1&optional=runtime'
+      loaders: ['babel?' + JSON.stringify({
+        presets: ['es2015', 'react', 'stage-1'],
+        plugins: ['transform-runtime'],
+        cacheDirectory: true
+      })]
     }, {
       test: /\.css$/,
-      loader: 'style-loader!css-loader'
+      loaders: ['style', 'css']
     }, {
       test: /\.less$/,
-      loader: 'style-loader!css-loader!less-loader'
+      loaders: ['style', 'css', 'less']
     }, {
       test: /\.(png|jpg)$/,
-      loader: 'url-loader?limit=8192'
+      loader: 'url?limit=8192'
     }, {
       test: /\.json$/,
       loader: 'json'
     }, {
       test: /\.pegjs$/,
-      loader: 'pegjs-loader'
+      loader: 'pegjs'
     }, {
       test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      loader: 'url?limit=10000&mimetype=application/font-woff'
     }, {
       test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader?limit=10000&mimetype=application/font-woff2'
+      loader: 'url?limit=10000&mimetype=application/font-woff2'
     }, {
       test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file-loader'
+      loader: 'file'
     }]
   },
 
@@ -97,7 +101,7 @@ if (devServer) {
     hot: true
   };
   config.output.publicPath = '/dist/';
-  config.module.loaders[0].loader = 'react-hot!babel-loader?stage=1&optional=runtime';
+  config.module.loaders[0].loaders.unshift('react-hot');
   config.cache = true;
   config.debug = true;
   config.devtool = 'eval';

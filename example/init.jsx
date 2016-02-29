@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Example = require('./Example');
 
 
@@ -12,7 +13,7 @@ require('./styles.less');
 (window !== window.top ? window.top : window).React = React;
 
 
-React.render(<Example />, document.getElementById('content'));
+ReactDOM.render(<Example />, document.getElementById('content'));
 
 
 module.exports = {};

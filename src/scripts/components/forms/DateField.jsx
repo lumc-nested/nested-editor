@@ -1,15 +1,12 @@
 var DatePicker = require('react-date-picker');
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var moment = require('moment');
 var React = require('react');
-var {Button, Modal, OverlayMixin} = require('react-bootstrap');
+var {Button, Modal} = require('react-bootstrap');
 
 
 var DateField = React.createClass({
-  mixins: [OverlayMixin],
-
   getInitialState: function() {
     return {datePickerOpened: false};
   },
@@ -36,18 +33,13 @@ var DateField = React.createClass({
         <span className="input-group-btn">
           <Button onClick={this.showDatePicker} bsStyle="link"><Icon name="calendar" /></Button>
         </span>
+        {this.renderPicker()}
       </div>
     );
   },
 
-  renderOverlay: function() {
-    var footer;
-
-    if (!this.state.datePickerOpened) {
-      return null;
-    }
-
-    footer = footerProps => (
+  renderPicker: function() {
+    var footer = footerProps => (
       <div className="dp-footer">
         <div className="dp-footer-today" onClick={footerProps.gotoToday}>Today</div>
         <div className="dp-footer-selected" onClick={footerProps.gotoSelected}>Go to selected</div>
@@ -56,13 +48,17 @@ var DateField = React.createClass({
     );
 
     return (
-      <Modal bsStyle="primary" onRequestHide={this.hideDatePicker} animation={false} className="date-picker-modal">
-        <div className="modal-body">
+      <Modal
+          show={this.state.datePickerOpened}
+          onHide={this.hideDatePicker}
+          animation={false}
+          className="date-picker-modal">
+        <Modal.Body>
           <DatePicker
             date={this.props.value}
             onChange={this.onChange}
             footerFactory={footer} />
-        </div>
+        </Modal.Body>
       </Modal>
     );
   }

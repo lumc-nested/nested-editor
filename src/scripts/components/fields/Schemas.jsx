@@ -1,10 +1,10 @@
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var React = require('react');
-var {Button, ModalTrigger, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
+var {Button, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
 
 var AppConstants = require('../../constants/AppConstants');
+var {ModalTrigger} = require('../Utils');
 var AddField = require('./AddField');
 var DeleteField = require('./DeleteField');
 
@@ -39,6 +39,7 @@ var Schemas = React.createClass({
   },
 
   renderHeading: function() {
+    var backTooltip;
     var title;
 
     switch (this.props.objectType) {
@@ -53,10 +54,12 @@ var Schemas = React.createClass({
         title = 'Custom pedigree fields';
     }
 
+    backTooltip = <Tooltip id="tooltip-back">Back</Tooltip>;
+
     return (
       <h1>
         {title}
-        <OverlayTrigger placement="left" overlay={<Tooltip>Back</Tooltip>}>
+        <OverlayTrigger placement="left" overlay={backTooltip}>
           <a onClick={this.props.showFields} className="pull-right">
             <Icon name="close" />
           </a>
@@ -66,14 +69,16 @@ var Schemas = React.createClass({
   },
 
   renderSchema: function(field, schema) {
-    // Note: OverlayTrigger and ModalTrigger cannot be mixed yet, so for now
-    //   we just add a title attribute on the remove field link.
-    //   https://github.com/react-bootstrap/react-bootstrap/pull/569
+    // We add some top margin to fix incorrect tooltip placement (hack).
+    var deleteTooltip = <Tooltip id="tooltip-remove" style={{marginTop: 10}}>Remove field</Tooltip>;
+    var deleteModal = <DeleteField objectType={this.props.objectType} field={field} />;
     return (
       <tr key={field}>
         <td>
-          <ModalTrigger modal={<DeleteField objectType={this.props.objectType} field={field} />}>
-            <a title="Remove field"><Icon name="remove" /></a>
+          <ModalTrigger modal={deleteModal}>
+            <OverlayTrigger placement="left" overlay={deleteTooltip}>
+              <a><Icon name="remove" /></a>
+            </OverlayTrigger>
           </ModalTrigger>
         </td>
         <td>{schema.get('title')}</td>
@@ -122,11 +127,13 @@ var Schemas = React.createClass({
       this.props.documentSchemas.toList().map(schema => schema.get('title')),
     ).toSet().filter(field => field).toArray();
 
+    var addModal = <AddField objectType={this.props.objectType} reservedFields={reservedFields} />;
+
     return (
       <div>
         {this.renderHeading()}
         {this.renderSchemas()}
-        <ModalTrigger modal={<AddField objectType={this.props.objectType} reservedFields={reservedFields} />}>
+        <ModalTrigger modal={addModal}>
           <Button bsStyle="link"><Icon name="plus" /> Add field</Button>
         </ModalTrigger>
       </div>

@@ -1,28 +1,29 @@
-var Icon = require('react-fa/dist/Icon');
 var React = require('react');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var createChainedFunction = require('react-bootstrap/lib/utils/createChainedFunction');
 
 
 /**
  * Get elements owner document
  *
- * @param {ReactComponent|HTMLElement} componentOrElement
+ * @param {HTMLElement} element
  * @returns {HTMLElement}
  */
-var ownerDocument = function(componentOrElement) {
-  var elem = React.findDOMNode(componentOrElement);
-  return (elem && elem.ownerDocument) || document;
+var ownerDocument = function(element) {
+  return (element && element.ownerDocument) || document;
 };
 
 
 /**
- * Shortcut to compute ReactComponent style
+ * Shortcut to get computed style
  *
- * @param {ReactComponent} component
+ * @param {HTMLelement} element
  * @returns {CssStyle}
  */
-var getComputedStyles = function(component) {
-  return ownerDocument(component).defaultView.getComputedStyle(React.findDOMNode(component), null);
+var getComputedStyles = function(element) {
+  return ownerDocument(element).defaultView.getComputedStyle(element, null);
 };
 
 
@@ -39,7 +40,7 @@ var tooltipButton = function(config, isDisabled) {
   } else {
     return <OverlayTrigger
              placement={config.tooltipPlacement}
-             overlay={<Tooltip>{config.tooltipText}</Tooltip>}>
+             overlay={<Tooltip id={config.tooltipId}>{config.tooltipText}</Tooltip>}>
              <Button className={config.buttonClass} onClick={config.onClickHandle}>
                <Icon name={config.iconName} />
              </Button>
@@ -48,4 +49,40 @@ var tooltipButton = function(config, isDisabled) {
 };
 
 
-module.exports = {ownerDocument, getComputedStyles, tooltipButton};
+var ModalTrigger = React.createClass({
+  propTypes: {
+    modal: React.PropTypes.node.isRequired
+  },
+
+  getInitialState: function() {
+    return {showModal: false};
+  },
+
+  close: function() {
+    this.setState({showModal: false});
+  },
+
+  open: function() {
+    this.setState({showModal: true});
+  },
+
+  render: function() {
+    var modal = React.cloneElement(this.props.modal, {
+      show: this.state.showModal,
+      onHide: this.close
+    });
+    var child = React.Children.only(this.props.children);
+    var trigger = React.cloneElement(child, {
+      onClick: createChainedFunction(child.props.onClick, this.open)
+    });
+    return (
+      <div>
+        {modal}
+        {trigger}
+      </div>
+    );
+  }
+});
+
+
+module.exports = {ownerDocument, getComputedStyles, tooltipButton, ModalTrigger};

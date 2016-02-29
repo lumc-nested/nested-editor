@@ -1,8 +1,8 @@
 var FileSaver = require('FileSaver');
-// Prevent including the FA stylesheet to the document, we include it manually
-// in the iframe.
-var Icon = require('react-fa/dist/Icon');
+// Prevent including the FA stylesheet by a deep require of Icon.
+var Icon = require('react-fa/lib/Icon');
 var React = require('react');
+var createFragment = require('react-addons-create-fragment');
 var {Button, ButtonGroup, DropdownButton, MenuItem, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 var ExcelWriter = require('../writers/ExcelWriter');
@@ -101,7 +101,7 @@ var DocumentControls = React.createClass({
     var canDelete;
 
     if (this.props.undo !== undefined) {
-      tooltip = <Tooltip>Undo: <strong>{this.props.undo}</strong></Tooltip>;
+      tooltip = <Tooltip id="tooltip-undo">Undo: <strong>{this.props.undo}</strong></Tooltip>;
       documentButtons.undo = <OverlayTrigger placement="bottom" overlay={tooltip}>
                                <Button key="undo" onClick={this.undo}><Icon name="undo" /></Button>
                              </OverlayTrigger>;
@@ -110,7 +110,7 @@ var DocumentControls = React.createClass({
     }
 
     if (this.props.redo !== undefined) {
-      tooltip = <Tooltip>Redo: <strong>{this.props.redo}</strong></Tooltip>;
+      tooltip = <Tooltip id="tooltip-redo">Redo: <strong>{this.props.redo}</strong></Tooltip>;
       documentButtons.redo = <OverlayTrigger placement="bottom" overlay={tooltip}>
                                <Button key="redo" onClick={this.redo}><Icon name="repeat" /></Button>
                              </OverlayTrigger>;
@@ -121,7 +121,11 @@ var DocumentControls = React.createClass({
     downloadItems = Object.keys(writers).map(
       produce => <MenuItem key={produce} eventKey={produce}>Save as .{produce}</MenuItem>
     );
-    documentButtons.download = <DropdownButton key="download" onSelect={this.download} title={<Icon name="download" />}>
+    documentButtons.download = <DropdownButton
+                                   id="dropdown-download"
+                                   key="download"
+                                   onSelect={this.download}
+                                   title={<Icon name="download" />}>
                                  {downloadItems}
                                </DropdownButton>;
 
@@ -173,7 +177,7 @@ var DocumentControls = React.createClass({
           break;
 
         case AppConstants.ObjectType.Nest:
-          pedigreeButtons.addChild = <DropdownButton onSelect={this.addChild} title="Add child">
+          pedigreeButtons.addChild = <DropdownButton id="dropdown-add-child" onSelect={this.addChild} title="Add child">
                                        <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
                                        <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
                                        <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
@@ -185,10 +189,10 @@ var DocumentControls = React.createClass({
     return (
       <div>
         <ButtonGroup>
-          {React.addons.createFragment(documentButtons)}
+          {createFragment(documentButtons)}
         </ButtonGroup>
         <ButtonGroup>
-          {React.addons.createFragment(pedigreeButtons)}
+          {createFragment(pedigreeButtons)}
         </ButtonGroup>
       </div>
     );

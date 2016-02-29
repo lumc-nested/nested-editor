@@ -1,5 +1,7 @@
 var EventListener = require('react-bootstrap/lib/utils/EventListener');
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var createFragment = require('react-addons-create-fragment');
 var {Col, Grid, Row} = require('react-bootstrap');
 
 var AppConstants = require('../constants/AppConstants');
@@ -84,7 +86,7 @@ var LayoutView = React.createClass({
   },
 
   addDragListeners: function() {
-    var doc = Utils.ownerDocument(this);
+    var doc = Utils.ownerDocument(ReactDOM.findDOMNode(this));
 
     // Prevents all kinds of frantic selection events when moving outside
     // the window. Doesn't help in Firefox unfortunately.
@@ -126,10 +128,13 @@ var LayoutView = React.createClass({
 
   componentDidMount: function () {
     var style = Utils.getComputedStyles(this.refs.layout);
+    /* eslint-disable react/no-did-mount-set-state */
+    // TODO: This is an anti-pattern.
     this.setState({
       width: parseInt(style.width, 10),
       height: parseInt(style.height, 10)
     });
+    /* eslint-enable react/no-did-mount-set-state */
   },
 
   componentWillUnmount: function() {
@@ -141,8 +146,9 @@ var LayoutView = React.createClass({
     var controls;
     var defs;
 
-    controls = React.addons.createFragment({
+    controls = createFragment({
       zoomIn: Utils.tooltipButton({
+        tooltipId: 'tooltip-zoom-in',
         tooltipText: `Zoom to ${Math.round(zoomLevel * 100)}%`,
         tooltipPlacement: 'right',
         onClickHandle: this.zoomStep.bind(this, 0.2),
@@ -150,6 +156,7 @@ var LayoutView = React.createClass({
         iconName: 'search-plus'
       }, zoomLevel >= 2),
       zoomOut: Utils.tooltipButton({
+        tooltipId: 'tooltip-zoom-out',
         tooltipText: `Zoom to ${Math.round(zoomLevel * 100)}%`,
         tooltipPlacement: 'right',
         onClickHandle: this.zoomStep.bind(this, -0.2),

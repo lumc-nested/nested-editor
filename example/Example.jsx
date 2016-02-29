@@ -1,8 +1,7 @@
 var EventListener = require('react-bootstrap/lib/utils/EventListener');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var ReactBootstrap = require('react-bootstrap');
-// TODO: All of react/lib/* is considered private.
-var TransitionEvents = require('react/lib/ReactTransitionEvents');
 
 // Provided by webpack.
 // var Nested = require('../src/scripts/index');
@@ -130,17 +129,9 @@ var Example = React.createClass({
 
   getSize: function() {
     return parseInt(
-      document.defaultView.getComputedStyle(React.findDOMNode(this.refs.panel), null).height,
+      document.defaultView.getComputedStyle(ReactDOM.findDOMNode(this.refs.panel), null).height,
       10
     );
-  },
-
-  componentDidMount: function() {
-    TransitionEvents.addEndEventListener(this.refs.panel.getCollapsableDOMNode(), this.resize);
-  },
-
-  componentWillUnmount: function() {
-    TransitionEvents.removeEndEventListener(this.refs.panel.getCollapsableDOMNode(), this.resize);
   },
 
   render: function() {
@@ -155,8 +146,10 @@ var Example = React.createClass({
 
     var panelProps = {
       header: <h3>Example pedigrees</h3>,
-      collapsable: true,
-      defaultExpanded: true
+      collapsible: true,
+      defaultExpanded: true,
+      onEntered: this.resize,
+      onExited: this.resize
     };
 
     return (

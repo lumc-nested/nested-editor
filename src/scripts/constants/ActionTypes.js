@@ -1,5 +1,4 @@
-// TODO: All of react/lib/* is considered private.
-var keyMirror = require('react/lib/keyMirror');
+var keyMirror = require('keymirror');
 
 
 module.exports = keyMirror({
