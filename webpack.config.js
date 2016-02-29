@@ -52,7 +52,9 @@ var config = {
       loaders: ['style', 'css']
     }, {
       test: /\.less$/,
-      loaders: ['style', 'css', 'less']
+      // The mergeRules transformation breaks our zoom slider thumb.
+      // https://github.com/ben-eb/postcss-merge-rules/issues/18
+      loaders: ['style', 'css?-mergeRules', 'less']
     }, {
       test: /\.(png|jpg)$/,
       loader: 'url?limit=8192'
