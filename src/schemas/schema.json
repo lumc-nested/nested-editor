@@ -1,52 +1,56 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "required": ["pedigree"],
+  "required": ["members"],
   "properties": {
-    "pedigree": { "$ref": "#/definitions/pedigree" },
-    "schemaExtension": { "$ref": "http://json-schema.org/draft-04/schema#" },
-    "symbol": { "$ref": "#/definitions/symbol" }
-  },
-  "definitions": {
-    "pedigree": {
-      "title": "Pedigree",
-      "description": "Schema for Pedigree",
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "members" : {
+      "title": "Members",
+      "description": "Members in a pedigree.",
       "type": "object",
-      "required": ["members", "nests"],
-      "properties": {
-        "title": {
-          "title": "Title",
-          "type": "string"
-        },
-        "members" : {
-          "title": "Members",
-          "description": "Members in a pedigree.",
-          "type": "object",
-          "patternProperties": {
-            "^[^,]+$": { "$ref": "#/definitions/member" }
-          },
-          "additionalProperties": false
-        },
-        "nests": {
-          "title": "Nests",
-          "description": "Relationship units in a pedigree.",
-          "type": "object",
-          "patternProperties": {
-            "^[^,]+(,[^,]+)*$": { "$ref": "#/definitions/nest" }
-          },
-          "additionalProperties": false
-        }
+      "additionalProperties": {
+        "$ref": "#/definitions/member"
       }
     },
+    "customMemberPropertySchemas": {
+      "additionalProperties": {
+        "$ref": "#/definitions/customMemberPropertySchema"
+      }
+    }
+  },
+  "definitions": {
     "member": {
       "title": "Member",
       "type": "object",
       "properties": {
+        "father": {
+          "title": "Father",
+          "type": "string"
+        },
+        "mother": {
+          "title": "Mother",
+          "type": "string"
+        },
         "gender": {
           "title": "Gender",
-          "type": "integer",
-          "enum": [0, 1, 2],
+          "type": "string",
+          "enum": ["unknown", "male", "female"],
           "enumNames": ["Unknown or ambiguous", "Male", "Female"]
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "monozygote": {
+          "title": "Monozygote twin key",
+          "type": "string"
+        },
+        "dizygote": {
+          "title": "Dizygote twin key",
+          "type": "string"
         },
         "proband": {
           "title": "Proband",
@@ -72,89 +76,59 @@
         }
       }
     },
-    "nest": {
-      "title": "Nest",
+    "customMemberPropertySchema": {
+      "title": "Custom member property schema",
       "type": "object",
-      "required": ["pregnancies"],
       "properties": {
-        "pregnancies": {
-          "title": "Pregnancies",
-          "type": "array",
-          "items": { "$ref": "#/definitions/pregnancy" }
+        "title": {
+          "type": "string"
         },
-        "consanguineous": {
-          "title": "Consanguineous",
-          "type": "boolean"
-        }
-      }
-    },
-    "pregnancy": {
-      "title": "Pregnancy",
-      "type": "object",
-      "required": ["children"],
-      "properties": {
-        "children": {
-          "title": "Children",
+        "type": {
+          "type": "string",
+          "enum": ["string", "boolean", "integer", "number"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "enum": {
           "type": "array",
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "enumNames": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
           "items": {
-            "title": "Child",
-            "type": "string",
-            "pattern": "^[^,]+$"
+            "type": "string"
           }
         },
-        "zygotes": {
-          "title": "Zygotes",
-          "type": "array",
-          "items": {
-            "title": "Zygote",
-            "type": "integer"
-          }
-        }
-      }
-    },
-    "symbol": {
-      "title": "symbol",
-      "type": "object",
-      "description": "symbol for affected members.",
-      "properties": {
-        "scheme": {
-          "title": "Symbol scheme",
-          "description": "The scheme used to divide the symbol into multiple areas.",
+        "maximum": {
+          "type": "number"
+        },
+        "exclusiveMaximum": {
+          "type": "boolean",
+          "default": false
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "exclusiveMinimum": {
+          "type": "boolean",
+          "default": false
+        },
+        "maxLength": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 7
+          "minimum": 0
         },
-        "color": {
-          "titile": "Symbol colors",
-          "description": "Colors used in the symbol.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "Color for each divided area.",
-            "format": "color"
-          }
-        },
-        "mapping": {
-          "title": "Symbol mappings",
-          "description": "Fields used to construct a symbol.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "Name of the field for deciding if an area should be filled."
-          }
-        },
-        "pattern": {
-          "title": "Symbol patterns",
-          "description": "Patterns used in the symbol.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "Fill pattern for each divided area.",
-            "enum": ["solid", "dotted", "vertical", "horizontal"]
-          }
+        "minLength": {
+          "type": "integer",
+          "minimum": 0
         }
-      },
-      "additionalProperties": false
+      }
     }
   }
 }

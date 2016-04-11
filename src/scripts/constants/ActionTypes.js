@@ -9,9 +9,9 @@ module.exports = keyMirror({
   ADD_PARENTS: null,
   ADD_TWIN: null,
   DELETE_MEMBER: null,
-  UPDATE_FIELDS: null,
-  ADD_FIELD: null,
-  DELETE_FIELD: null,
+  UPDATE_MEMBER_FIELDS: null,
+  ADD_CUSTOM_MEMBER_FIELD: null,
+  DELETE_CUSTOM_MEMBER_FIELD: null,
   UNDO: null,
   REDO: null
 });

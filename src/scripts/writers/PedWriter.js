@@ -1,19 +1,15 @@
-var getFatherAndMother = require('../common/Utils').getFatherAndMother;
-
-
 var produce = 'ped';
 
 
 var flatten = function(document) {
-  return document.pedigree.members
+  return document.members
     .map((member, memberKey) => {
-      var [father, mother] = getFatherAndMother(member.parents, document.pedigree.members);
       return [
-        member.fields.get('family', 'default'),
+        member.get('family', 'default'),
         memberKey,
-        father || 0,
-        mother || 0,
-        member.fields.get('gender'),
+        member.get('father', 0),
+        member.get('mother', 0),
+        member.get('gender'),
         2
       ];
     })
@@ -22,7 +18,7 @@ var flatten = function(document) {
 
 
 var writeString = function(document) {
-  return '# Exported from Pedigree Webapp\n' +
+  return '# Exported from Nested\n' +
     flatten(document).map(line => line.join('\t')).join('\n') + '\n';
 };
 

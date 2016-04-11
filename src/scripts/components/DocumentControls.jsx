@@ -10,7 +10,6 @@ var JsonWriter = require('../writers/JsonWriter');
 var PedWriter = require('../writers/PedWriter');
 
 var DocumentActions = require('../actions/DocumentActions');
-var AppConstants = require('../constants/AppConstants');
 var {Document, ObjectRef} = require('../common/Structures');
 
 
@@ -52,7 +51,8 @@ var DocumentControls = React.createClass({
   },
 
   addChild: function(gender) {
-    DocumentActions.addChild(this.props.focus.get('key'), gender);
+    var {father, mother} = this.props.focus.get('key');
+    DocumentActions.addChild(father, mother, gender);
   },
 
   addParents: function() {
@@ -94,8 +94,8 @@ var DocumentControls = React.createClass({
   render: function() {
     var documentButtons = {};
     var pedigreeButtons = {};
+    var document = this.props.document;
     var focus = this.props.focus;
-    var pedigree = this.props.document.pedigree;
     var downloadItems;
     var tooltip;
     var canDelete;
@@ -132,9 +132,9 @@ var DocumentControls = React.createClass({
     // todo loose the this.props prefix
     if (focus !== undefined) {
       switch (focus.type) {
-        case AppConstants.ObjectType.Member:
+        case 'member':
           pedigreeButtons.addPartner = <Button onClick={this.addPartner}>Add partner</Button>;
-          if (pedigree.members.get(focus.key).parents.size) {
+          if (document.members.get(focus.key).get('father') && document.members.get(focus.key).get('mother')) {
             // TODO: add twin with zygosity information.
             pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
           } else {
@@ -144,31 +144,10 @@ var DocumentControls = React.createClass({
           // TODO: should we cache this?
           // this is recalculated everytime we switch focus between members.
           // but this property based on the member is key is probably not changed.
-          canDelete = pedigree.nests.every((nest, nestKey) => {
-            var mateKey;
-            var mate;
-            if (nestKey.has(focus.key)) {
-              // has partner
-              if (nest.pregnancies.size) {
-                // has children
-                return false;
-              } else {
-                // no children. Is the mate connected with other members?
-                mateKey = nestKey.delete(focus.key).first();
-                mate = pedigree.members.get(mateKey);
-                if (mate.parents.size) {
-                  return true;
-                } else {
-                  // true if mate has other mates.
-                  return pedigree.nests
-                    .some((n, nk) => n !== nest && nk.has(mateKey));
-                }
-              }
-            } else {
-              // no partner
-              return true;
-            }
-          });
+          canDelete = !document.members.some((member, memberKey) =>
+            !memberKey.startsWith('^') && (member.get('father') === focus.key ||
+                                           member.get('mother') === focus.key)
+          );
 
           if (canDelete) {
             pedigreeButtons.deleteMember = <Button onClick={this.deleteMember}>Delete member</Button>;
@@ -176,14 +155,14 @@ var DocumentControls = React.createClass({
 
           break;
 
-        case AppConstants.ObjectType.Nest:
+        case 'nest':
           pedigreeButtons.addChild = <DropdownButton
                                          id="dropdown-add-child"
                                          onSelect={(_, gender) => this.addChild(gender)}
                                          title="Add child">
-                                       <MenuItem eventKey={AppConstants.Gender.Male}>Male</MenuItem>
-                                       <MenuItem eventKey={AppConstants.Gender.Female}>Female</MenuItem>
-                                       <MenuItem eventKey={AppConstants.Gender.Unknown}>Unknown</MenuItem>
+                                       <MenuItem eventKey="male">Male</MenuItem>
+                                       <MenuItem eventKey="female">Female</MenuItem>
+                                       <MenuItem eventKey="unknown">Unknown</MenuItem>
                                      </DropdownButton>;
           break;
       }

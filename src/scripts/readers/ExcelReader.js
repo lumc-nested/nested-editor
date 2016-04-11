@@ -1,17 +1,7 @@
 var Immutable = require('immutable');
 var XLSX = require('xlsx');
 
-var AppConstants = require('../constants/AppConstants');
-var Structures = require('../common/Structures');
-var Utils = require('./Utils');
-
-
-var Document = Structures.Document;
-var Member = Structures.Member;
-var Nest = Structures.Nest;
-var Pedigree = Structures.Pedigree;
-var Pregnancy = Structures.Pregnancy;
-var Schema = Structures.Schema;
+var {Document} = require('../common/Structures');
 
 
 var accept = ['xlsx', 'ods'];
@@ -61,12 +51,12 @@ var mappers = {
       switch (value.toString().toLowerCase()) {
         case 'male':
         case '1':
-          return AppConstants.Gender.Male;
+          return 'male';
         case 'female':
         case '2':
-          return AppConstants.Gender.Female;
+          return 'female';
         default:
-          return AppConstants.Gender.Unknown;
+          return 'unknown';
       }
     }
   },
@@ -119,17 +109,13 @@ var getColumnNames = function(sheet) {
 
 var readWorkbook = function(workbook) {
   var columns;
+  var customMemberFieldSchemas;
+  var fields;
   var getters;
   var mappedColumns;
   var members;
-  var mergeNests;
-  var nests;
   var originalMembers;
-  var pedigree;
-  var schema;
   var sheet;
-  var singletonNest;
-  var singletonNestMap;
 
   sheet = workbook.Sheets[workbook.SheetNames[0]];
 
@@ -190,7 +176,7 @@ var readWorkbook = function(workbook) {
 
   // Map of strings (member keys) to Maps (member fields).
   // We first get the values for mapped columns using `getters` and then add
-  // the remaining columns as strings, and finally wrap it to a Member instance.
+  // the remaining columns as strings.
   // TODO: Do we want to lowercase the unmapped column keys (and remove
   //   whitespace)? We should probably take the same approach as we will in
   //   the custom field editor (which has not be implemented at this point).
@@ -202,70 +188,27 @@ var readWorkbook = function(workbook) {
       getters.key(member),
       Immutable.Map(getters)
         .delete('key')
-        .delete('father')
-        .delete('mother')
         .map(getter => getter(member))
         .merge(
           Immutable.Map(member)
             .filter((_, key) => mappedColumns.indexOf(key) === -1)
             .map(value => value === undefined ? value : value.toString())
         )
-    ])
-    .map(fields => new Member({fields}));
+    ]);
 
-  // Nest of one child with given key.
-  singletonNest = key => {
-    var pregnancy = new Pregnancy({children: Immutable.List.of(key)});
-    return new Nest({pregnancies: Immutable.List.of(pregnancy)});
-  };
-
-  // Map of one singleton nest for the given member, indexed by the parent keys.
-  singletonNestMap = member => Immutable.Map([
-    [Immutable.Set.of(getters.father(member), getters.mother(member)),
-     singletonNest(getters.key(member))]
-  ]);
-
-  // Combine pregnancies from two nests.
-  mergeNests = (nestA, nestB) => new Nest({
-    pregnancies: nestA.pregnancies.concat(nestB.pregnancies)
-  });
-
-  // Create a singleton nest for each member that we know both parents of,
-  // index these nests by their parents and merge any duplicates.
-  nests = originalMembers
-    .filter(member => members.has(getters.father(member)) && members.has(getters.mother(member)))
-    .toMap()
-    .reduce((oldNests, member) => oldNests.mergeWith(mergeNests, singletonNestMap(member)),
-            Immutable.Map());
-
-  // Add parents key to member instances.
-  members = Utils.populateParents(members, nests);
-
-  pedigree = new Pedigree({
-    members,
-    nests,
-    fields: Immutable.Map({note: 'Imported from Excel'})
-  });
+  fields = Immutable.Map({title: 'Imported from Excel'});
 
   // We include custom field definitions for all columns we could not map (for
   // now all as type string).
-  schema = new Schema({
-    pedigree: Immutable.fromJS({
-      note: {
-        title: 'Note',
-        type: 'string'
-      }
-    }),
-    member: Immutable.List(columns)
-      .filterNot(column => mappedColumns.includes(column))
-      .toMap()
-      .mapEntries(([, column]) => [
-        column,
-        Immutable.Map({title: column, type: 'string'})
-      ])
-  });
+  customMemberFieldSchemas = Immutable.List(columns)
+    .filterNot(column => mappedColumns.includes(column))
+    .toMap()
+    .mapEntries(([, column]) => [
+      column,
+      Immutable.Map({title: column, type: 'string'})
+    ]);
 
-  return new Document({pedigree, schema});
+  return new Document({members, fields, customMemberFieldSchemas});
 };
 
 

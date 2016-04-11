@@ -4,28 +4,18 @@ var Immutable = require('immutable');
 
 var ActionTypes = require('../constants/ActionTypes');
 var AppDispatcher = require('../dispatchers/AppDispatcher');
-var AppConstants = require('../constants/AppConstants');
-var {Document, Nest, Pedigree, Pregnancy, Member, ObjectRef} = require('../common/Structures');
+var {Document, NestKey, ObjectRef} = require('../common/Structures');
 
 
 var CHANGE_EVENT = 'change';
 
 
 var DEFAULT_DOCUMENT = new Document({
-  pedigree: new Pedigree({
-    members: Immutable.Map({
-      1: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})}),
-      2: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})}),
-      3: new Member({fields: Immutable.Map({gender: AppConstants.Gender.Unknown}),
-                     parents: Immutable.Set.of('1', '2')})
-    }),
-    nests: Immutable.Map([
-      [Immutable.Set.of('1', '2'),
-       new Nest({pregnancies: Immutable.List.of(
-         new Pregnancy({children: Immutable.List.of('3'), zygotes: Immutable.List.of(0)})
-       )})
-      ]
-    ])
+  fields: Immutable.Map({title: 'Untitled pedigree'}),
+  members: Immutable.Map({
+    1: Immutable.Map({gender: 'male', name: 'Father'}),
+    2: Immutable.Map({gender: 'female', name: 'Mother'}),
+    3: Immutable.Map({father: '1', mother: '2', gender: 'unknown', name: 'Child'})
   })
 });
 
@@ -48,9 +38,9 @@ var _redoStack = Immutable.Stack();
 
 // Generate new member keys.
 var _newMemberKeys = function(n) {
-  var existingKeys = Immutable.Set.fromKeys(_document.pedigree.members);
+  var existingKeys = Immutable.Set.fromKeys(_document.members);
 
-  // default to 1.
+  // Default to 1.
   n = n !== undefined ? n : 1;
 
   return Immutable.Range(1)
@@ -134,67 +124,59 @@ var _openDocument = function(document) {
 
 
 var _addPartner = function(memberKey) {
-  var pedigree = _document.pedigree;
-  var member;
-  var fields;
+  var childKey;
+  var members;
   var partnerKey;
-
-  member = pedigree.members.get(memberKey);
-
-  switch (member.fields.get('gender')) {
-    case AppConstants.Gender.Male:
-      fields = Immutable.Map({gender: AppConstants.Gender.Female});
-      break;
-    case AppConstants.Gender.Female:
-      fields = Immutable.Map({gender: AppConstants.Gender.Male});
-      break;
-    case AppConstants.Gender.Unknown:
-    default:
-      fields = Immutable.Map({gender: AppConstants.Gender.Unknown});
-  }
+  var partnerGender;
 
   partnerKey = _newMemberKey();
-  pedigree = pedigree
-    .update('members', members => members.set(partnerKey, new Member({fields})))
-    .update('nests', nests => nests.set(Immutable.Set.of(memberKey, partnerKey),
-                                        new Nest()));
+  partnerGender =_document.members.get(memberKey).get('gender') === 'male' ? 'female' : 'male';
+
+  // Nests without children are encoded by a dummy child (starting with a ^
+  // character).
+  childKey = `^no-child-${memberKey}-${partnerKey}`;
+
+  members = _document.members
+    .set(partnerKey, Immutable.Map({
+      gender: partnerGender
+    }))
+    .set(childKey, Immutable.Map({
+      father: partnerGender === 'male' ? partnerKey : memberKey,
+      mother: partnerGender === 'male' ? memberKey : partnerKey
+    }));
 
   _changeDocument(
     'Add partner',
-    _document.set('pedigree', pedigree),
+    _document.set('members', members),
     new ObjectRef({
-      type: AppConstants.ObjectType.Member,
+      type: 'member',
       key: partnerKey
     })
   );
 };
 
 
-var _addChild = function(nestKey, gender) {
-  var pedigree = _document.pedigree;
-  var child;
+var _addChild = function(fatherKey, motherKey, gender) {
   var childKey;
-  var pregnancy;
-
-  child = new Member({
-    parents: nestKey,
-    fields: Immutable.Map({gender})
-  });
+  var members;
 
   childKey = _newMemberKey();
 
-  pregnancy = new Pregnancy({children: Immutable.List.of(childKey)});
-
-  pedigree = pedigree
-    .update('members', members => members.set(childKey, child))
-    .updateIn(['nests', nestKey, 'pregnancies'],
-              pregnancies => pregnancies.push(pregnancy));
+  members = _document.members
+    // Remove any leftover dummy children (their keys start with ^).
+    // IE: Is String.prototype.startsWith() supported?
+    .filterNot((_, memberKey) => memberKey.startsWith('^'))
+    .set(childKey, Immutable.Map({
+      gender,
+      father: fatherKey,
+      mother: motherKey
+    }));
 
   _changeDocument(
     'Add child',
-    _document.set('pedigree', pedigree),
+    _document.set('members', members),
     new ObjectRef({
-      type: AppConstants.ObjectType.Member,
+      type: 'member',
       key: childKey
     })
   );
@@ -202,73 +184,59 @@ var _addChild = function(nestKey, gender) {
 
 
 var _addParents = function(memberKey) {
-  var pedigree = _document.pedigree;
-  var father;
-  var mother;
   var fatherKey;
   var motherKey;
-  var nestKey;
-
-  father = new Member({fields: Immutable.Map({gender: AppConstants.Gender.Male})});
-  mother = new Member({fields: Immutable.Map({gender: AppConstants.Gender.Female})});
+  var members;
 
   [fatherKey, motherKey] = _newMemberKeys(2).toArray();
-  nestKey = Immutable.Set.of(fatherKey, motherKey);
 
-  pedigree = pedigree
-    .update('members',
-            members => members
-                        .set(fatherKey, father)
-                        .set(motherKey, mother)
-                        .update(memberKey, member => member.set('parents', nestKey)))
-    .update('nests',
-            nests => nests.set(nestKey, new Nest({
-              pregnancies: Immutable.List.of(new Pregnancy({children: Immutable.List.of(memberKey)}))
-            })));
+  members = _document.members
+    .merge({
+      [fatherKey]: Immutable.Map({gender: 'male'}),
+      [motherKey]: Immutable.Map({gender: 'female'})
+    })
+    .update(memberKey, member => member.merge({
+      father: fatherKey,
+      mother: motherKey
+    }));
 
   _changeDocument(
     'Add parents',
-    _document.set('pedigree', pedigree),
+    _document.set('members', members),
     new ObjectRef({
-      type: AppConstants.ObjectType.Nest,
-      key: nestKey
+      type: 'nest',
+      key: new NestKey({father: fatherKey, mother: motherKey})
     })
   );
 };
 
 
 var _addTwin = function(memberKey) {
-  var pedigree = _document.pedigree;
   var member;
-  var twin;
+  var members;
+  var monozygote;
   var twinKey;
 
-  member = pedigree.members.get(memberKey);
-  twin = new Member({
-    parents: member.parents,
-    fields: Immutable.Map({gender: member.fields.get('gender')})
-  });
+  // TODO: Dizygote twins.
 
+  member = _document.members.get(memberKey);
+  monozygote = member.get('monozygote', `monozygote-${memberKey}`);
   twinKey = _newMemberKey();
 
-  pedigree = pedigree
-    .update('members', members => members.set(twinKey, twin))
-    .updateIn(['nests', member.parents, 'pregnancies'],
-      pregnancies => pregnancies.map(pregnancy => {
-        if (pregnancy.children.contains(memberKey)) {
-          return pregnancy
-            .update('children', children => children.push(twinKey))
-            .update('zygotes', zygotes => zygotes === undefined ? zygotes : zygotes.push(zygotes.max() + 1));
-        }
-
-        return pregnancy;
-      }));
+  members = _document.members
+    .set(twinKey, Immutable.Map({
+      gender: member.get('gender'),
+      father: member.get('father'),
+      mother: member.get('mother'),
+      monozygote: monozygote
+    }))
+    .set(memberKey, member.set('monozygote', monozygote));
 
   _changeDocument(
     'Add twin',
-    _document.set('pedigree', pedigree),
+    _document.set('members', members),
     new ObjectRef({
-      type: AppConstants.ObjectType.Member,
+      type: 'member',
       key: twinKey
     })
   );
@@ -276,68 +244,42 @@ var _addTwin = function(memberKey) {
 
 
 var _deleteMember = function(memberKey) {
-  var pedigree = _document.pedigree;
-  var member = pedigree.members.get(memberKey);
-  var matingNests = pedigree.nests.filter((n, nk) => nk.has(memberKey));
+  var member;
+  var members;
 
-  // remove member
-  pedigree = pedigree
-    .update('members', members => members.delete(memberKey));
+  member = _document.members.get(memberKey);
 
-  // remove members nests
-  if (matingNests.size) {
-    pedigree = pedigree
-      .update('nests', nests => nests.filterNot((n, nk) => matingNests.has(nk)));
+  members = _document.members
+    .delete(memberKey)
+    // Delete any children (should only be dummy children).
+    .filterNot(m => m.get('father') === memberKey || m.get('mother') === memberKey);
+
+  // If this was the last child in a nest, add a dummy child.
+  if (member.get('father') &&
+      member.get('mother') &&
+      !members.some(m => m.get('father') === member.get('father') && m.get('mother') === member.get('mother'))) {
+    members = members.set(
+      `^no-child-${member.get('father')}-${member.get('mother')}`,
+      Immutable.Map({
+        father: member.get('father'),
+        mother: member.get('mother')
+      }));
   }
 
-  // remove member from his/her parents' nest
-  if (member.parents.size) {
-    pedigree = pedigree
-      .updateIn(['nests', member.parents, 'pregnancies'],
-        pregnancies => pregnancies
-          .map(pregnancy => {
-            var index = pregnancy.children.indexOf(memberKey);
-            if (index >= 0) {
-              return pregnancy
-                .update('children', children => children.delete(index))
-                .update('zygotes', zygotes => zygotes === undefined ? zygotes : zygotes.delete(index));
-            } else {
-              return pregnancy;
-            }
-          })
-          .filter(pregnancy => pregnancy.children.size)
-      );
-  }
+  // TODO: If this was one of a twins (size two), the remaining should no
+  // longer have the twin field set.
 
   _changeDocument(
     'Delete member',
-    _document.set('pedigree', pedigree),
+    _document.set('members', members),
     new ObjectRef({
-      type: AppConstants.ObjectType.Pedigree
+      type: 'pedigree'
     })
   );
 };
 
 
-var _updateFields = function(objectRef, fields) {
-  var label;
-  var path;
-
-  switch (objectRef.type) {
-    case AppConstants.ObjectType.Member:
-      label = 'Update member fields';
-      path = ['pedigree', 'members', objectRef.key, 'fields'];
-      break;
-    case AppConstants.ObjectType.Nest:
-      label = 'Update nest fields';
-      path = ['pedigree', 'nests', objectRef.key, 'fields'];
-      break;
-    case AppConstants.ObjectType.Pedigree:
-    default:
-      label = 'Update pedigree fields';
-      path = ['pedigree', 'fields'];
-  }
-
+var _updateMemberFields = function(memberKey, fields) {
   // TODO: We currently have to `setIn` instead of `mergeIn`, which I would
   //   actually prefer (so we can use this action to selectively update a
   //   subset of fields). However, empty field values are currently lost by
@@ -345,65 +287,29 @@ var _updateFields = function(objectRef, fields) {
   //   fields.
   //   https://github.com/AppliedMathematicsANU/plexus-form/issues/31
   _changeDocument(
-    label,
-    _document.setIn(path, Immutable.fromJS(fields))
+    'Update member fields',
+    _document.setIn(['members', memberKey], Immutable.fromJS(fields))
   );
 };
 
 
-var _addField = function(objectType, field, schema) {
-  var typePaths = {
-    [AppConstants.ObjectType.Member]: 'member',
-    [AppConstants.ObjectType.Nest]: 'nest',
-    [AppConstants.ObjectType.Pedigree]: 'pedigree'
-  };
-
+var _addCustomMemberField = function(field, schema) {
   _changeDocument(
     'Add custom field',
-    _document.setIn(['schema', typePaths[objectType], field], Immutable.Map(schema))
+    _document.setIn(['customMemberFieldSchemas', field], Immutable.Map(schema))
   );
 };
 
 
-var _deleteField = function(objectType, field) {
-  var pedigree = _document.pedigree;
-  var schema = _document.schema;
-  var symbol = _document.symbol;
-
-  switch (objectType) {
-    case AppConstants.ObjectType.Member:
-      schema = schema.deleteIn(['member', field]);
-      pedigree = pedigree.update(
-        'members',
-        members => members.map(
-          member => member.deleteIn(['fields', field])
-        )
-      );
-      symbol = symbol.update('mapping', mapping => mapping.map(
-        mappedField => (mappedField === field) ? undefined : mappedField
-      ));
-      break;
-    case AppConstants.ObjectType.Nest:
-      schema = schema.deleteIn(['nest', field]);
-      pedigree = pedigree.update(
-        'nests',
-        nests => nests.map(
-          nest => nest.deleteIn(['fields', field])
-        )
-      );
-      break;
-    case AppConstants.ObjectType.Pedigree:
-    default:
-      schema = schema.deleteIn(['pedigree', field]);
-      pedigree = pedigree.deleteIn(['fields', field]);
-  }
+var _deleteCustomMemberField = function(field) {
+  var members = _document.members;
+  var schemas = _document.customMemberFieldSchemas;
 
   _changeDocument(
     'Remove custom field',
     _document.merge({
-      pedigree: pedigree,
-      schema: schema,
-      symbol: symbol
+      members: members.map(member => member.delete(field)),
+      customMemberFieldSchemas: schemas.delete(field)
     })
   );
 };
@@ -458,7 +364,7 @@ AppDispatcher.register(function(action) {
       _addPartner(action.memberKey);
       break;
     case ActionTypes.ADD_CHILD:
-      _addChild(action.nestKey, action.gender);
+      _addChild(action.fatherKey, action.motherKey, action.gender);
       break;
     case ActionTypes.ADD_PARENTS:
       _addParents(action.memberKey);
@@ -469,14 +375,14 @@ AppDispatcher.register(function(action) {
     case ActionTypes.DELETE_MEMBER:
       _deleteMember(action.memberKey);
       break;
-    case ActionTypes.UPDATE_FIELDS:
-      _updateFields(action.objectRef, action.fields);
+    case ActionTypes.UPDATE_MEMBER_FIELDS:
+      _updateMemberFields(action.memberKey, action.fields);
       break;
-    case ActionTypes.ADD_FIELD:
-      _addField(action.objectType, action.field, action.schema);
+    case ActionTypes.ADD_CUSTOM_MEMBER_FIELD:
+      _addCustomMemberField(action.field, action.schema);
       break;
-    case ActionTypes.DELETE_FIELD:
-      _deleteField(action.objectType, action.field);
+    case ActionTypes.DELETE_CUSTOM_MEMBER_FIELD:
+      _deleteCustomMemberField(action.field);
       break;
     default:
   }

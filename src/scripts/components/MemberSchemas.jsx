@@ -1,12 +1,12 @@
 // Prevent including the FA stylesheet by a deep require of Icon.
 var Icon = require('react-fa/lib/Icon');
+var Immutable = require('immutable');
 var React = require('react');
 var {Button, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
 
-var AppConstants = require('../../constants/AppConstants');
-var {ModalTrigger} = require('../Utils');
-var AddField = require('./AddField');
-var DeleteField = require('./DeleteField');
+var {ModalTrigger} = require('./Utils');
+var AddCustomMemberField = require('./AddCustomMemberField');
+var DeleteCustomMemberField = require('./DeleteCustomMemberField');
 
 
 var schemaAsString = function(schema) {
@@ -30,35 +30,19 @@ var schemaAsString = function(schema) {
 };
 
 
-var Schemas = React.createClass({
+var MemberSchemas = React.createClass({
   propTypes: {
-    objectType: React.PropTypes.number.isRequired,
-    appSchemas: React.PropTypes.object.isRequired,
-    documentSchemas: React.PropTypes.object.isRequired,
+    schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    customSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     showFields: React.PropTypes.func.isRequired
   },
 
   renderHeading: function() {
-    var backTooltip;
-    var title;
-
-    switch (this.props.objectType) {
-      case AppConstants.ObjectType.Member:
-        title = 'Custom member fields';
-        break;
-      case AppConstants.ObjectType.Nest:
-        title = 'Custom nest fields';
-        break;
-      case AppConstants.ObjectType.Pedigree:
-      default:
-        title = 'Custom pedigree fields';
-    }
-
-    backTooltip = <Tooltip id="tooltip-back">Back</Tooltip>;
+    var backTooltip = <Tooltip id="tooltip-back">Back</Tooltip>;
 
     return (
       <h1>
-        {title}
+        Custom fields
         <OverlayTrigger placement="left" overlay={backTooltip}>
           <a onClick={this.props.showFields} className="pull-right">
             <Icon name="close" />
@@ -71,7 +55,7 @@ var Schemas = React.createClass({
   renderSchema: function(field, schema) {
     // We add some top margin to fix incorrect tooltip placement (hack).
     var deleteTooltip = <Tooltip id="tooltip-remove" style={{marginTop: 10}}>Remove field</Tooltip>;
-    var deleteModal = <DeleteField objectType={this.props.objectType} field={field} />;
+    var deleteModal = <DeleteCustomMemberField field={field} />;
     return (
       <tr key={field}>
         <td>
@@ -90,11 +74,11 @@ var Schemas = React.createClass({
   renderSchemas: function() {
     var rows;
 
-    if (!this.props.documentSchemas.size) {
+    if (!this.props.customSchemas.size) {
       return null;
     }
 
-    rows = this.props.documentSchemas.map(
+    rows = this.props.customSchemas.map(
       (schema, field) => this.renderSchema(field, schema)
     ).toArray();
 
@@ -121,13 +105,13 @@ var Schemas = React.createClass({
     // TODO: I think we should also blacklist some other field names (e.g.,
     //   'members' and 'nests' on the pedigree level, '_key' on the member
     //   level which we use as a special field in the table view, etc).
-    var reservedFields = this.props.appSchemas.keySeq().concat(
-      this.props.appSchemas.toList().map(schema => schema.get('title')),
-      this.props.documentSchemas.keySeq(),
-      this.props.documentSchemas.toList().map(schema => schema.get('title')),
+    var reservedFields = this.props.schemas.keySeq().concat(
+      this.props.schemas.toList().map(schema => schema.get('title')),
+      this.props.customSchemas.keySeq(),
+      this.props.customSchemas.toList().map(schema => schema.get('title')),
     ).toSet().filter(field => field).toArray();
 
-    var addModal = <AddField objectType={this.props.objectType} reservedFields={reservedFields} />;
+    var addModal = <AddCustomMemberField reservedFields={reservedFields} />;
 
     return (
       <div>
@@ -142,4 +126,4 @@ var Schemas = React.createClass({
 });
 
 
-module.exports = Schemas;
+module.exports = MemberSchemas;

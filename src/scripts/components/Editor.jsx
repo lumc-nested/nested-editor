@@ -49,7 +49,8 @@ var readers = indexByArray([ExcelReader, FamReader, JsonReader, PedReader], 'acc
 
 var getAppState = function() {
   return {
-    schema: AppStore.getSchema()
+    documentFieldSchemas: AppStore.getDocumentFieldSchemas(),
+    memberFieldSchemas: AppStore.getMemberFieldSchemas()
   };
 };
 
@@ -140,15 +141,16 @@ var Editor = React.createClass({
 
     if (this.state.view === VIEWS.TABLE) {
       view = <TableView style={this.props.style}
-                        members={document.pedigree.members}
-                        schemas={document.schema.member.mergeDeep(this.state.app.schema.member)} />;
+                        document={document}
+                        focus={focus}
+                        documentFieldSchemas={this.state.app.documentFieldSchemas}
+                        memberFieldSchemas={this.state.app.memberFieldSchemas} />;
     } else {
       view = <LayoutView style={this.props.style}
-                         pedigree={document.pedigree}
+                         document={document}
                          focus={focus}
-                         symbol={document.symbol}
-                         documentSchema={document.schema}
-                         appSchema={this.state.app.schema} />;
+                         documentFieldSchemas={this.state.app.documentFieldSchemas}
+                         memberFieldSchemas={this.state.app.memberFieldSchemas} />;
     }
 
     return (

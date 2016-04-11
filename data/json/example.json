@@ -1,122 +1,87 @@
 {
-  "pedigree": {
-    "title": "Example Pedigree",
-    "author": "Jon Snow",
+  "title": "Example Pedigree",
 
-    "members": {
-      "1": {
-        "gender": 2,
-        "name": "Jane Doe",
-        "BRCA1": "c.333G>C",
-        "BRCA2": "c.1345A>G"
-      },
-      "2": {
-        "gender": 1,
-        "name": "John Smith",
-        "dateOfDeath": "2012-05-07"
-      },
-      "3": {
-        "gender": 1,
-        "dateOfBirth": "1977-04-27",
-        "consultand": true,
-        "BRCA1": "asdf"
-      },
-      "4": {
-        "gender": 2,
-        "BRCA2": "c.299C>T"
-      },
-      "5": {
-        "gender": 2
-      },
-      "6": {
-        "gender": 2,
-        "proband": true
-      },
-      "7": {
-        "gender": 2
-      },
-      "8": {
-        "gender": 0,
-        "consultand": true
-      },
-      "9": {
-        "gender": 1
-      },
-      "10": {
-        "gender": 2
-      },
-      "11": {
-        "gender": 1
-      },
-      "12": {
-        "gender": 1
-      }
+  "members": {
+    "1": {
+      "gender": "female",
+      "name": "Jane Doe",
+      "BRCA1": "c.333G>C",
+      "BRCA2": "c.1345A>G"
     },
-    "nests": {
-      "2,1": {
-        "pregnancies": [
-          { "children": ["3"] },
-          { "children": ["4"] },
-          {
-            "children": ["5", "6"],
-            "zygotes": [0, 0]
-          }
-        ]
-      },
-      "3,7": {
-        "pregnancies": [{ "children" : ["8"] }],
-        "consanguineous": true
-      },
-      "9,6": {
-        "pregnancies": [{"children": ["10", "11", "12"]}]
-      }
+    "2": {
+      "gender": "male",
+      "name": "John Smith",
+      "dateOfDeath": "2012-05-07"
+    },
+    "3": {
+      "father": "2",
+      "mother": "1",
+      "gender": "male",
+      "dateOfBirth": "1977-04-27",
+      "consultand": true,
+      "BRCA1": "asdf"
+    },
+    "4": {
+      "father": "2",
+      "mother": "1",
+      "gender": "female",
+      "BRCA2": "c.299C>T"
+    },
+    "5": {
+      "father": "2",
+      "mother": "1",
+      "gender": "female",
+      "monozygote": "a"
+    },
+    "6": {
+      "father": "2",
+      "mother": "1",
+      "gender": "female",
+      "monozygote": "a",
+      "proband": true
+    },
+    "7": {
+      "gender": "female"
+    },
+    "8": {
+      "father": "3",
+      "mother": "7",
+      "gender": "female",
+      "consultand": true
+    },
+    "9": {
+      "gender": "male"
+    },
+    "10": {
+      "father": "9",
+      "mother": "6",
+      "gender": "female",
+      "dizygote": "a"
+    },
+    "11": {
+      "father": "9",
+      "mother": "6",
+      "gender": "male",
+      "dizygote": "a"
+    },
+    "12": {
+      "father": "9",
+      "mother": "6",
+      "gender": "male",
+      "dizygote": "a"
     }
   },
 
-  "symbol": {
-    "scheme": 1,
-    "mapping": ["BRCA1", "BRCA2"],
-    "color": ["indigo", "gold"],
-    "pattern": ["solid", "solid"]
-  },
-
-  "schemaExtension": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "definitions": {
-      "pedigree": {
-        "properties": {
-          "author": {
-            "title": "Author",
-            "type": "string"
-          }
-        }
-      },
-      "member": {
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "BRCA1": {
-            "title": "BRCA1",
-            "type": "string",
-            "description": "mutation in BRCA1"
-          },
-          "BRCA2": {
-            "title": "BRCA2",
-            "type": "string",
-            "description": "mutation in BRCA2"
-          }
-        }
-      },
-      "nest": {
-        "properties": {
-        }
-      },
-      "pregnancy": {
-        "properties": {
-        }
-      }
+  "customMemberPropertySchemas": {
+    "BRCA1": {
+      "title": "BRCA1",
+      "type": "string",
+      "description": "mutation in BRCA1"
+    },
+    "BRCA2": {
+      "title": "BRCA2",
+      "type": "string",
+      "description": "mutation in BRCA2"
     }
   }
 }

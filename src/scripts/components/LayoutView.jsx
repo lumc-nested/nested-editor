@@ -3,8 +3,9 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var createFragment = require('react-addons-create-fragment');
 var {Col, Grid, Row} = require('react-bootstrap');
+var Immutable = require('immutable');
 
-var {Pedigree, ObjectRef, Schema, Symbol} = require('../common/Structures');
+var {Document, ObjectRef} = require('../common/Structures');
 var Layout = require('./Layout');
 var Utils = require('./Utils');
 var LayoutSidebar = require('./LayoutSidebar');
@@ -13,10 +14,9 @@ var LayoutSidebar = require('./LayoutSidebar');
 var LayoutView = React.createClass({
   propTypes: {
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
-    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired,
-    symbol: React.PropTypes.instanceOf(Symbol).isRequired,
-    documentSchema: React.PropTypes.instanceOf(Schema).isRequired,
-    appSchema: React.PropTypes.instanceOf(Schema).isRequired,
+    document: React.PropTypes.instanceOf(Document).isRequired,
+    documentFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    memberFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     style: React.PropTypes.object
   },
 
@@ -166,15 +166,16 @@ var LayoutView = React.createClass({
                       x={this.state.x}
                       y={this.state.y}
                       dragging={this.state.dragging}
-                      pedigree={this.props.pedigree}
+                      document={this.props.document}
+                      focus={this.props.focus}
                       onMouseDown={this.handleMouseDown} />
             </div>
           </Col>
           <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>
-            <LayoutSidebar pedigree={this.props.pedigree}
+            <LayoutSidebar document={this.props.document}
                            focus={this.props.focus}
-                           documentSchema={this.props.documentSchema}
-                           appSchema={this.props.appSchema} />
+                           documentFieldSchemas={this.props.documentFieldSchemas}
+                           memberFieldSchemas={this.props.memberFieldSchemas} />
           </Col>
         </Row>
       </Grid>

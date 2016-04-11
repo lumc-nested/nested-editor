@@ -4,10 +4,7 @@ var {sortColumn, Table} = require('reactabular');
 var {Col, Grid, Row} = require('react-bootstrap');
 var sortByOrder = require('lodash.sortbyorder');
 
-var AppConstants = require('../constants/AppConstants');
-
-
-var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
+var {Document, ObjectRef} = require('../common/Structures');
 
 
 var createColumns = function(schemas) {
@@ -17,30 +14,29 @@ var createColumns = function(schemas) {
       header: schema.get('title', field)
     })
   ).set('_key', {property: '_key', header: '#'});
-
-  columns.get('gender').cell = gender => genderTable.get(gender, AppConstants.Gender.Unknown);
-
   return columns.toArray();
 };
 
 
 var createData = function(members) {
   return members.map(
-    (member, key) => member.fields.set('_key', key)
+    (member, key) => member.set('_key', key)
   ).toList().toJS();
 };
 
 
 var TableView = React.createClass({
   propTypes: {
-    members: React.PropTypes.object.isRequired,
-    schemas: React.PropTypes.object.isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
+    document: React.PropTypes.instanceOf(Document).isRequired,
+    documentFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    memberFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     style: React.PropTypes.object
   },
 
   getInitialState: function() {
-    var columns = createColumns(this.props.schemas);
-    var data = createData(this.props.members);
+    var columns = createColumns(this.props.document.customMemberFieldSchemas.merge(this.props.memberFieldSchemas));
+    var data = createData(this.props.document.members);
     var columnNames = {
       onClick: column => {
         sortColumn(
@@ -58,12 +54,15 @@ var TableView = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     var is = Immutable.is;
 
-    if (!is(nextProps.members, this.props.members)) {
-      this.setState({data: createData(nextProps.members)});
+    if (!is(nextProps.document, this.props.document)) {
+      this.setState({data: createData(nextProps.document)});
     }
 
-    if (!is(nextProps.schemas, this.props.schemas)) {
-      this.setState({columns: createColumns(nextProps.schemas)});
+    if (!is(nextProps.memberFieldSchemas, this.props.memberFieldSchemas) ||
+        !is(nextProps.document.customMemberFieldSchemas, this.props.document.customMemberFieldSchemas)) {
+      this.setState({columns: createColumns(
+        nextProps.document.customMemberFieldSchemas.merge(nextProps.memberFieldSchemas))}
+      );
     }
   },
 

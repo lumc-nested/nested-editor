@@ -1,87 +1,37 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Immutable = require('immutable');
 var classNames = require('classnames');
 var Madeline = require('madeline');
 
-var AppConstants = require('../constants/AppConstants');
 var DocumentActions = require('../actions/DocumentActions');
-var {Pedigree, ObjectRef} = require('../common/Structures');
-var getFatherAndMother = require('../common/Utils').getFatherAndMother;
+var {Document, NestKey, ObjectRef} = require('../common/Structures');
 
 
-var genderTable = Immutable.fromJS(AppConstants.Gender).flip();
-
-
-var drawSVG = function(pedigree) {
-  var columns;
+var drawSVG = function(document) {
   var content;
-  var data;
   var defs;
   var svg;
 
-  // The following blob of code flattens our pedigree to a list of tabular
-  // structure, basically a list of members each consisting of a list of field
-  // values. It takes into account various differences between our data model
-  // and the Madeline data model.
-  // TODO: This is not pretty and should be refactored.
-  columns = ['Individualid', 'Familyid', 'Gender', 'Mother', 'Father', 'DZTwin', 'MZTwin', 'DOB'];
-  data = pedigree.members
-    // A list of fields per member, much like the Excel and PED encodings.
-    .map((member, memberKey) => {
-      var father, mother, pregnancyIndex, pregnancy, zygote, zygoteSize, monozygote, dizygote, dob;
-      dob = '.';
-
-      [father, mother] = getFatherAndMother(member.parents, pedigree.members);
-      if (member.parents.size) {
-        [pregnancyIndex, pregnancy] = pedigree.nests.get(member.parents).pregnancies.findEntry(
-          p => p.children.contains(memberKey));
-        if (pregnancy.zygotes) {
-          zygote = pregnancy.zygotes.get(pregnancy.children.findEntry(c => c === memberKey)[0]);
-          zygoteSize = pregnancy.zygotes.filter(z => z === zygote).size
-          monozygote = zygoteSize > 1;
-          dizygote = zygoteSize === 1 && pregnancy.zygotes.size > 1;
-        } else if (pregnancy.children.size > 1) {
-          dob = (pregnancyIndex + 1) + '-01-01';
-        }
-      }
-      return [
-        'member-' + memberKey,
-        'Family',
-        genderTable.get(member.fields.get('gender'), AppConstants.Gender.Unknown).toString(),
-        father ? 'member-' + father : '.',
-        mother ? 'member-' + mother : '.',
-        monozygote ? String.fromCharCode(97 + pregnancyIndex) : '.',
-        dizygote ? String.fromCharCode(97 + pregnancyIndex) : '.',
-        dob
-      ];
-    }).toList()
-    // Nests without children are encoded by a dummy child (starting with a ^
-    // character).
-    .concat(
-      pedigree.nests.filter(nest => nest.pregnancies.size === 0)
-      .map((nest, nestKey) => {
-        var [father, mother] = getFatherAndMother(nestKey, pedigree.members);
-        return [
-          '^no-child-' + nestKey.join('-'),
-          'Family',
-          AppConstants.Gender.Unknown.toString(),
-          'member-' + father,
-          'member-' + mother,
-          '.',
-          '.',
-          '.'
-        ];
-      })
-      .toList()
-    )
-    // Madeline expects a flattened list of member data.
-    .toArray().reduce((a, b) => a.concat(b));
-
-  svg = Madeline.draw(columns, data);
+  svg = Madeline.draw(
+    document.members.map((member, memberKey) => Immutable.Map({
+      IndividualId: memberKey,
+      Familyid: document.fields.get('title'),
+      Gender: member.get('gender', 'unknown'),
+      Mother: member.get('mother', ''),
+      Father: member.get('father', ''),
+      DZTwin: member.get('dizygote', ''),
+      MZTwin: member.get('monozygote', ''),
+      DOB: '',
+      Name: member.get('name') || '\n'
+    })).toList().toJS(),
+    ['Name']
+  );
 
   if (!svg) {
-    console.log('Could not render pedigree:', data);
-    // TODO: What to store in this.svg in this case?
+    // TODO: What to store in this.svg in this case? Perhaps Madeline should
+    // always return a default empty SVG? We could also auto-undo the last
+    // change?
     return {}
   }
 
@@ -93,47 +43,83 @@ var drawSVG = function(pedigree) {
 };
 
 
-var StaticSVG = React.createClass({
+var updateFocus = function(svg, focus) {
+  [].map.call(svg.querySelectorAll('.individual, .mating'), function(element) {
+    element.classList.remove('selected');
+  });
+
+  switch (focus.type) {
+    case 'member':
+      svg.getElementById(`individual-${focus.key}`).classList.add('selected');
+      break;
+    case 'nest':
+      svg.getElementById(`mating-${focus.key.mother}:${focus.key.father}`).classList.add('selected');
+      svg.getElementById(`individual-${focus.key.mother}`).classList.add('selected');
+      svg.getElementById(`individual-${focus.key.father}`).classList.add('selected');
+      break;
+    case 'pedigree':
+    default:
+  }
+};
+
+
+var Layout = React.createClass({
   propTypes: {
     width: React.PropTypes.number.isRequired,
     scale: React.PropTypes.number.isRequired,
     x: React.PropTypes.number.isRequired,
     y: React.PropTypes.number.isRequired,
     dragging: React.PropTypes.bool.isRequired,
-    pedigree: React.PropTypes.instanceOf(Pedigree).isRequired,
+    document: React.PropTypes.instanceOf(Document).isRequired,
+    focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     onMouseDown: React.PropTypes.func.isRequired
   },
 
   handleMouseUp: function(event) {
-    var element;
+    var individual;
+    var mating;
+    var fatherKey;
+    var motherKey;
     // This has to be bound to `mouseup` instead of `click`, since otherwise
     // we cannot detect dragging state.
     if (!this.props.dragging) {
-      // TODO: Check browser support for .closest().
-      element = event.nativeEvent.target.closest('.individual');
-      if (element) {
+      // IE: Is Element.closest() supported?
+      individual = event.nativeEvent.target.closest('.individual');
+      mating = event.nativeEvent.target.closest('.mating');
+      if (individual) {
         DocumentActions.setFocus(new ObjectRef({
-          type: AppConstants.ObjectType.Member,
-          key: element.getAttribute('id').substr(7)
+          type: 'member',
+          key: individual.getAttribute('id').substr(11)
         }));
-      } else if (event.nativeEvent.target.getAttribute('class') === 'mating') {
+      } else if (mating) {
+        [motherKey, fatherKey] = mating.getAttribute('id').substr(7).split(':')
         DocumentActions.setFocus(new ObjectRef({
-          type: AppConstants.ObjectType.Nest,
-          key: Immutable.Set(event.nativeEvent.target.getAttribute('id').split(':').map(s => s.substr(7)))
+          type: 'nest',
+          key: new NestKey({father: fatherKey, mother: motherKey})
         }));
       } else {
-        DocumentActions.setFocus(new ObjectRef({type: AppConstants.ObjectType.Pedigree}));
+        DocumentActions.setFocus(new ObjectRef({type: 'pedigree'}));
       }
     }
   },
 
-  componentWillMount() {
-    this.svg = drawSVG(this.props.pedigree);
+  componentWillMount: function() {
+    this.svg = drawSVG(this.props.document);
   },
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.pedigree !== this.props.pedigree) {
-      this.svg = drawSVG(nextProps.pedigree);
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.document !== this.props.document) {
+      this.svg = drawSVG(nextProps.document);
+    }
+  },
+
+  componentDidMount: function() {
+    updateFocus(ReactDOM.findDOMNode(this.refs.svg), this.props.focus);
+  },
+
+  componentDidUpdate: function(prevProps) {
+    if (prevProps.focus !== this.props.focus || prevProps.document !== this.props.document) {
+      updateFocus(ReactDOM.findDOMNode(this.refs.svg), this.props.focus);
     }
   },
 
@@ -142,6 +128,7 @@ var StaticSVG = React.createClass({
     /* eslint-disable react/no-danger */
     return (
       <svg
+          ref="svg"
           version="1.1"
           id="layout"
           className={classNames({dragging: this.props.dragging})}
@@ -157,4 +144,4 @@ var StaticSVG = React.createClass({
 });
 
 
-module.exports = StaticSVG;
+module.exports = Layout;

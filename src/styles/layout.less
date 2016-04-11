@@ -1,0 +1,250 @@
+#layout {
+    background: #ffffff;
+    color: #ffffff;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #dddddd;
+
+    &.dragging {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+        cursor: -moz-grabbing;
+    }
+
+    .legend {
+        display: none;
+    }
+
+    line{
+	    stroke: #000;
+	    stroke-width: 0.5mm;
+	    stroke-linejoin: miter;
+	    stroke-linecap: square;
+    }
+
+    rect{
+	    stroke:#000;
+	    stroke-width:0.5mm;
+	    stroke-linejoin:miter;
+	    stroke-linecap:square;
+    }
+
+    ellipse{
+	    stroke: #000;
+        fill: #fff;
+	    stroke-width:0.25mm;
+    }
+
+    text{
+	    font-family:"DejaVu Sans",sans-serif;
+	    font-size:12px;
+    }
+
+    .smallText{
+	    font-family:"DejaVu Sans",sans-serif;
+	    font-size:9px;
+	    fill:#444;
+    }
+
+    .layer text{
+	    fill:#930;
+    }
+
+    .layer line{
+	    stroke:#000;
+    }
+
+    .birthOrder,.unknownTwins{
+	    font-size: 8px;
+    }
+
+    .header{
+	    font-size:18px;
+	    font-weight:bold;
+    }
+
+    .keyBox{
+	    fill:#e5e5e5;
+	    stroke:#000;
+	    stroke-width:0.5mm;
+	    stroke-linejoin:miter;
+	    stroke-linecap:square;
+    }
+
+    .mating-normal {
+	    stroke-width: 0.5mm;
+	    stroke-linecap: square;
+	    stroke-linejoin: miter;
+	    stroke: #000;
+	    fill: #ffffff;
+	    fill-opacity: 0.0;
+    }
+
+    .mating-ghost {
+        pointer-events: all;
+        stroke-opacity: 0.0;
+        stroke-width: 20px;
+    }
+
+    .mating-ghost:hover + .mating-normal, .mating-normal:hover {
+	    stroke: #d56300;
+    }
+
+    .mating.selected .mating-normal {
+        stroke: #d00;
+        stroke-width: 1mm;
+        stroke-linejoin: miter;
+        stroke-linecap: square;
+    }
+
+    .individual.selected * {
+        stroke-width: 1mm;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        stroke: #d00;
+        fill: none;
+    }
+
+    .individual.selected:hover * {
+	    stroke:#d00;
+	    fill:#ffbbbb;
+	    fill-opacity:0.70;
+    }
+
+    .solid{
+	    stroke-width:0.5mm;
+	    stroke-linecap:square;
+	    stroke-linejoin:miter;
+	    stroke:#000;
+	    fill:#ffffff;
+	    fill-opacity:0.0;
+    }
+
+    .dashed{
+	    stroke-width:0.5mm;
+	    stroke-linecap:square;
+	    stroke-linejoin:miter;
+	    stroke:#98afc7;
+	    stroke-dasharray:2mm,1mm;
+	    stroke-dashoffset:1.0mm;
+	    fill:#ffffff;
+	    fill-opacity:0.0;
+    }
+
+    .solid:hover{
+	    fill:#ffb787;
+	    fill-opacity:0.70;
+	    stroke:#d56300;
+	    stroke-width:1mm;
+    }
+
+    .dashed:hover{
+	    fill:#ffb787;
+	    fill-opacity:0.70;
+	    stroke:#d56300;
+	    stroke-width:1mm;
+    }
+
+    .filled{
+	    stroke-width:0.5mm;
+	    stroke-linecap:square;
+	    stroke-linejoin:miter;
+	    stroke:#000;
+	    fill:#000;
+    }
+
+    .specialIcons{
+	    stroke-width:0.25mm;
+	    stroke-linecap:round;
+	    stroke-linejoin:miter;
+	    stroke:#000;
+	    fill:#fff;
+    }
+
+    .specialLines{
+	    stroke-linecap:square;
+	    stroke-linejoin:miter;
+	    stroke:#000;
+	    stroke-width:0.5mm;
+	    fill:none;
+    }
+
+    .thinLine{
+	    fill:none;
+	    stroke: #000;
+	    stroke-width:0.25mm;
+    }
+
+    .curvedConnector{
+	    stroke-linecap:square;
+	    stroke-linejoin:miter;
+	    stroke:#98afc7;
+	    stroke-width:0.5mm;
+	    stroke-dasharray:2mm,1mm;
+	    stroke-dashoffset:1.0mm;
+	    fill:none;
+    }
+
+    .curvedConnector:hover{
+	    stroke:#d56300;
+    }
+
+    .whiteInkLetter_1{
+	    font-size: 12px;
+	    fill: #fff;
+    }
+
+    .whiteInkLetter_2{
+	    font-size: 10px;
+	    fill: #fff;
+    }
+
+    .whiteInkLetter_3{
+	    font-size: 8px;
+	    fill: #fff;
+    }
+
+    .whiteInkLetter{
+	    font-size: 8px;
+	    fill: #fff;
+    }
+
+    .blackInkLetter_1{
+	    font-size: 12px;
+    }
+
+    .blackInkLetter_2{
+	    font-size: 10px;
+    }
+
+    .blackInkLetter_3{
+	    font-size: 8px;
+    }
+
+    .blackInkLetter{
+	    font-size: 8px;
+	    fill: #000;
+    }
+
+    .blackInk{
+	    fill: #000;
+    }
+
+    .whiteInk{
+	    fill: #fff;
+    }
+
+    .counter{
+	    font-size: 14px;
+	    fill: #000;
+    }
+
+    .counterFill{
+	    fill: #fff;
+    }
+
+    .sampleLevel{
+	    stroke:none;
+	    fill:#f99;
+    }
+}

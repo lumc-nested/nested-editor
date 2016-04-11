@@ -1,7 +1,6 @@
 var XLSX = require('xlsx');
 
 var AppStore = require('../stores/AppStore');
-var getFatherAndMother = require('../common/Utils').getFatherAndMother;
 
 
 var produce = 'xlsx';
@@ -78,23 +77,18 @@ var sheetFromArrayOfArrays = function(data) {
 
 var flatten = function(document) {
   var flattened;
-  var schema;
+  var memberFieldSchemas;
 
   // TODO: Perhaps it's not a good idea to query the AppStore from here.
-  schema = document.schema.mergeDeep(AppStore.getSchema());
+  memberFieldSchemas = document.customMemberFieldSchemas.mergeDeep(AppStore.getMemberFieldSchemas());
 
-  flattened = document.pedigree.members
-    .map((member, memberKey) => {
-      var [father, mother] = getFatherAndMother(member.parents, document.pedigree.members);
-
-      return [memberKey, father, mother].concat(
-        schema.member.map((_, fieldKey) => member.fields.get(fieldKey)).toArray()
-      );
-    })
-    .toArray();
+  flattened = document.members
+    .map((member, memberKey) => [memberKey, member.get('father', ''), member.get('mother', '')].concat(
+      memberFieldSchemas.map((_, fieldKey) => member.get(fieldKey)).toArray()
+    )).toArray();
 
   flattened.unshift(['ID', 'Father', 'Mother'].concat(
-    schema.member.map(field => field.get('title')).toArray()
+    memberFieldSchemas.map(field => field.get('title')).toArray()
   ));
 
   return flattened;
