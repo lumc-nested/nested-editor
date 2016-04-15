@@ -17,6 +17,7 @@ var LayoutView = React.createClass({
     document: React.PropTypes.instanceOf(Document).isRequired,
     documentFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     memberFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    undo: React.PropTypes.string,
     style: React.PropTypes.object
   },
 
@@ -168,7 +169,8 @@ var LayoutView = React.createClass({
                       dragging={this.state.dragging}
                       document={this.props.document}
                       focus={this.props.focus}
-                      onMouseDown={this.handleMouseDown} />
+                      onMouseDown={this.handleMouseDown}
+                      undo={this.props.undo} />
             </div>
           </Col>
           <Col id="sidebar" style={this.props.style} sm={4} smOffset={8} md={3} mdOffset={9} lg={2} lgOffset={10}>

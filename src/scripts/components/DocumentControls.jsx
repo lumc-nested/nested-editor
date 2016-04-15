@@ -38,7 +38,6 @@ var writers = indexBy([ExcelWriter, JsonWriter, PedWriter], 'produce');
 
 
 var DocumentControls = React.createClass({
-
   propTyps: {
     document: React.PropTypes.instanceOf(Document).isRequired,
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,

@@ -147,6 +147,7 @@ var Editor = React.createClass({
                         memberFieldSchemas={this.state.app.memberFieldSchemas} />;
     } else {
       view = <LayoutView style={this.props.style}
+                         undo={undo}
                          document={document}
                          focus={focus}
                          documentFieldSchemas={this.state.app.documentFieldSchemas}

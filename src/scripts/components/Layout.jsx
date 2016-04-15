@@ -32,7 +32,7 @@ var drawSVG = function(document) {
     // TODO: What to store in this.svg in this case? Perhaps Madeline should
     // always return a default empty SVG? We could also auto-undo the last
     // change?
-    return {}
+    return;
   }
 
   // Ugly, but it is useful for us to have the defs and content separated
@@ -72,7 +72,28 @@ var Layout = React.createClass({
     dragging: React.PropTypes.bool.isRequired,
     document: React.PropTypes.instanceOf(Document).isRequired,
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
-    onMouseDown: React.PropTypes.func.isRequired
+    onMouseDown: React.PropTypes.func.isRequired,
+    undo: React.PropTypes.string
+  },
+
+  contextTypes: {
+    showMessage: React.PropTypes.func.isRequired
+  },
+
+  draw: function(document) {
+    var svg = drawSVG(document);
+
+    if (!svg) {
+      if (this.props.undo !== undefined) {
+        this.context.showMessage(`Sorry, this action (${this.props.undo}) is not supported on this pedigree.`);
+        DocumentActions.undo();
+      } else {
+        this.context.showMessage('Sorry, Nested cannot render this pedigree.');
+      }
+      svg = {};
+    }
+
+    this.svg = svg;
   },
 
   handleMouseUp: function(event) {
@@ -104,12 +125,12 @@ var Layout = React.createClass({
   },
 
   componentWillMount: function() {
-    this.svg = drawSVG(this.props.document);
+    this.draw(this.props.document);
   },
 
   componentWillReceiveProps: function(nextProps) {
     if (nextProps.document !== this.props.document) {
-      this.svg = drawSVG(nextProps.document);
+      this.draw(nextProps.document);
     }
   },
 
