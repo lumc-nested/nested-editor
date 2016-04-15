@@ -84,7 +84,7 @@
         },
         "affected": {
           "title": "Affected",
-          "type": "boolean"
+          "type": "string"
         }
       }
     },

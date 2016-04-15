@@ -12,20 +12,13 @@
     "3": {
       "gender": "male",
       "proband": true,
-      "affected": true,
+      "affected": "A",
       "father": "2",
       "mother": "1"
     },
     "4": {
       "father": "2",
       "mother": "1"
-    }
-  },
-
-  "customMemberPropertySchemas": {
-    "affected": {
-      "title": "Affected",
-      "type": "boolean"
     }
   }
 }

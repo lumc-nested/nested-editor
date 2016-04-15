@@ -19,9 +19,9 @@ var drawSVG = function(document) {
     var deceased;
     var proband;
     var consultand;
-    var affected;
     var sampled;
     var carrier;
+    var fields
 
     if (member.get('dateOfBirth')) {
       dob = moment(member.get('dateOfBirth')).format('YYYY-MM-DD');
@@ -35,9 +35,6 @@ var drawSVG = function(document) {
     if (member.get('consultand')) {
       consultand = 'yes';
     }
-    if (member.get('affected')) {
-      affected = 'A';
-    }
     if (member.get('sampled')) {
       sampled = 'yes';
     }
@@ -45,7 +42,7 @@ var drawSVG = function(document) {
       carrier = 'yes';
     }
 
-    return Immutable.Map({
+    fields = {
       IndividualId: memberKey,
       Familyid: document.fields.get('title'),
       Gender: member.get('gender', 'unknown'),
@@ -58,10 +55,15 @@ var drawSVG = function(document) {
       Deceased: deceased,
       Proband: proband,
       Consultand: consultand,
-      Affected: affected,
       Sampled: sampled,
       Carrier: carrier
+    };
+
+    member.filter((_, field) => field.toLowerCase().startsWith('affected')).forEach((value, field) => {
+      fields[field.charAt(0).toUpperCase() + field.slice(1)] = value;
     });
+
+    return Immutable.Map(fields);
   }).toList().toJS(), ['Name', 'DOB']);
 
   if (!svg) {
