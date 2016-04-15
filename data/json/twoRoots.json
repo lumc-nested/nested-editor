@@ -1,50 +1,39 @@
 {
-  "pedigree": {
-    "title": "Two Roots",
-    "members": {
-      "1": {
-        "gender": 2,
-        "deceased": true
-      },
-      "2": {
-        "gender": 1
-      },
-      "3": {
-        "gender": 1,
-        "proband": true
-      },
-      "4": {
-      },
-      "5": {
-        "gender": 1
-      },
-      "6": {
-        "gender": 2
-      },
-      "7": {
-        "gender": 1
-      },
-      "8": {
-        "gender": 2
-      }
+  "title": "Two Roots",
+
+  "members": {
+    "1": {
+      "gender": "female",
+      "deceased": true,
+      "father": "5",
+      "mother": "6"
     },
-    "nests": {
-      "2,1": {
-        "pregnancies": [
-          { "children": ["3"] },
-          { "children": ["4"] }
-        ]
-      },
-      "5,6": {
-        "pregnancies": [
-          { "children": ["1"] }
-        ]
-      },
-      "7,8": {
-        "pregnancies": [
-          { "children": ["2"] }
-        ]
-      }
+    "2": {
+      "gender": "male",
+      "father": "7",
+      "mother": "8"
+    },
+    "3": {
+      "gender": "male",
+      "proband": true,
+      "father": "2",
+      "mother": "1"
+    },
+    "4": {
+      "father": "2",
+      "mother": "1"
+    },
+    "5": {
+      "gender": "male"
+    },
+    "6": {
+      "gender": "female"
+    },
+    "7": {
+      "gender": "male"
+    },
+    "8": {
+      "gender": "female"
     }
   }
 }

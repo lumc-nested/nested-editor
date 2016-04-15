@@ -3,6 +3,7 @@ var Icon = require('react-fa/lib/Icon');
 var React = require('react');
 var {Button, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
 
+var CsvReader = require('../readers/CsvReader');
 var ExcelReader = require('../readers/ExcelReader');
 var FamReader = require('../readers/FamReader');
 var JsonReader = require('../readers/JsonReader');
@@ -44,12 +45,13 @@ var indexByArray = function(objects, property) {
 };
 
 
-var readers = indexByArray([ExcelReader, FamReader, JsonReader, PedReader], 'accept');
+var readers = indexByArray([CsvReader, ExcelReader, FamReader, JsonReader, PedReader], 'accept');
 
 
 var getAppState = function() {
   return {
-    schema: AppStore.getSchema()
+    documentFieldSchemas: AppStore.getDocumentFieldSchemas(),
+    memberFieldSchemas: AppStore.getMemberFieldSchemas()
   };
 };
 
@@ -140,15 +142,17 @@ var Editor = React.createClass({
 
     if (this.state.view === VIEWS.TABLE) {
       view = <TableView style={this.props.style}
-                        members={document.pedigree.members}
-                        schemas={document.schema.member.mergeDeep(this.state.app.schema.member)} />;
+                        document={document}
+                        focus={focus}
+                        documentFieldSchemas={this.state.app.documentFieldSchemas}
+                        memberFieldSchemas={this.state.app.memberFieldSchemas} />;
     } else {
       view = <LayoutView style={this.props.style}
-                         pedigree={document.pedigree}
+                         undo={undo}
+                         document={document}
                          focus={focus}
-                         symbol={document.symbol}
-                         documentSchema={document.schema}
-                         appSchema={this.state.app.schema} />;
+                         documentFieldSchemas={this.state.app.documentFieldSchemas}
+                         memberFieldSchemas={this.state.app.memberFieldSchemas} />;
     }
 
     return (

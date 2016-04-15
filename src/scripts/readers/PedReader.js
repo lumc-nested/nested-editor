@@ -1,31 +1,28 @@
 var Immutable = require('immutable');
 
-var Structures = require('../common/Structures');
-var Utils = require('./Utils');
+var {Document} = require('../common/Structures');
 
 var parser = require('./ped.pegjs');
-
-
-var Document = Structures.Document;
-var Member = Structures.Member;
-var Nest = Structures.Nest;
-var Pedigree = Structures.Pedigree;
-var Pregnancy = Structures.Pregnancy;
-var Schema = Structures.Schema;
 
 
 var accept = ['ped'];
 
 
+var parseGender = function(gender) {
+  if (gender === 1) {
+    return 'male';
+  } else if (gender === 2) {
+    return 'female';
+  }
+  return 'unknown';
+};
+
+
 var readParseTree = function(parseTree) {
+  var customMemberFieldSchemas;
+  var fields;
   var members;
-  var mergeNests;
-  var nests;
   var originalMembers;
-  var pedigree;
-  var schema;
-  var singletonNest;
-  var singletonNestMap;
   var uniqueKeys;
 
   /* eslint-disable comma-dangle, array-bracket-spacing */
@@ -60,52 +57,24 @@ var readParseTree = function(parseTree) {
     .toMap()
     .mapEntries(([, member]) => {
       return [member.get('member'),
-              new Member({fields: Immutable.Map({
-                gender: member.get('gender'),
+              Immutable.Map({
+                father: member.get('father'),
+                mother: member.get('mother'),
+                gender: parseGender(member.get('gender')),
                 family: member.get('family')
-              })})];
+              })];
     });
 
-  // Nest of one child with given key.
-  singletonNest = key => {
-    var pregnancy = new Pregnancy({children: Immutable.List.of(key)});
-    return new Nest({pregnancies: Immutable.List.of(pregnancy)});
-  };
+  fields = Immutable.Map({title: 'Imported from PED'});
 
-  // Map of one singleton nest for the given member, indexed by the parent keys.
-  singletonNestMap = member => Immutable.Map([
-    [Immutable.Set.of(member.get('father'), member.get('mother')),
-     singletonNest(member.get('member'))]
-  ]);
-
-  // Combine pregnancies from two nests.
-  mergeNests = (nestA, nestB) => new Nest({
-    pregnancies: nestA.pregnancies.concat(nestB.pregnancies)
+  customMemberFieldSchemas = Immutable.Map({
+    family: {
+      title: 'Family',
+      type: 'string'
+    }
   });
 
-  // Create a singleton nest for each member that we know both parents of,
-  // index these nests by their parents and merge any duplicates.
-  nests = originalMembers
-    .filter(member => members.has(member.get('father')) && members.has(member.get('mother')))
-    .toMap()
-    .reduce((oldNests, member) => oldNests.mergeWith(mergeNests, singletonNestMap(member)),
-            Immutable.Map());
-
-  // Add parents key to member instances.
-  members = Utils.populateParents(members, nests);
-
-  pedigree = new Pedigree({members, nests});
-
-  schema = new Schema({
-    member: Immutable.fromJS({
-      family: {
-        title: 'Family',
-        type: 'string'
-      }
-    })
-  });
-
-  return new Document({pedigree, schema});
+  return new Document({members, fields, customMemberFieldSchemas});
 };
 
 

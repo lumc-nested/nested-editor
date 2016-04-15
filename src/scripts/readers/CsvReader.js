@@ -1,11 +1,10 @@
 var Immutable = require('immutable');
-var XLSX = require('xlsx');
+var Papa = require('papaparse');
 
 var {Document} = require('../common/Structures');
 
 
-var accept = ['xlsx', 'ods'];
-var binary = true;
+var accept = ['csv', 'tsv'];
 
 
 // Convert some value to a boolean.
@@ -90,43 +89,25 @@ var mappers = {
   deceased: {
     aliases: ['dead', 'died'],
     convert: convertBoolean
+  },
+
+  affected: {
+    aliases: [],
+    convert: value => value.toString()
   }
 };
 
 
-// Get an array of column names from the header row.
-var getColumnNames = function(sheet) {
-  var range = XLSX.utils.decode_range(sheet['!ref']);
-  var row = XLSX.utils.encode_row(range.s.r);
-  var names = [];
-  var column;
-  var value;
-
-  for (column = range.s.c; column <= range.e.c; ++column) {
-    value = sheet[XLSX.utils.encode_col(column) + row];
-    if (value !== undefined) {
-      names.push(XLSX.utils.format_cell(value));
-    }
-  }
-
-  return names;
-};
-
-
-var readWorkbook = function(workbook) {
+var readPapa = function(data) {
   var columns;
   var customMemberFieldSchemas;
   var fields;
   var getters;
   var mappedColumns;
   var members;
-  var originalMembers;
-  var sheet;
-
-  sheet = workbook.Sheets[workbook.SheetNames[0]];
 
   // Array of column names.
-  columns = getColumnNames(sheet);
+  columns = data.shift();
 
   // Array of column names we mapped to predefined member fields.
   mappedColumns = [];
@@ -155,29 +136,11 @@ var readWorkbook = function(workbook) {
     });
   });
 
-  // TODO: Somehow keep track of column mappings so that we could use the
-  //   original column names on export to Excel. Ideally, we could even export
-  //   to the original column value (needs sort of the inverse of the convert
-  //   functions).
-
-  // Per member, a map of strings (column names) to values.
-  originalMembers = Immutable.fromJS(XLSX.utils.sheet_to_json(sheet));
-
   // TODO: Our app currently does not handle unconnected pedigrees well. We
   //   should at least implement a warning for the user. This would apply to
   //   all readers, not just ExcelReader.
   if (!['key', 'father', 'mother'].every(key => getters.hasOwnProperty(key))) {
     console.log('WARNING: Could not infer relationship definitions from Excel file');
-  }
-
-  // We should always have a 'key' getter, so if we couldn't find it we
-  // generate keys ourselves.
-  if (!getters.hasOwnProperty('key')) {
-    originalMembers = originalMembers.map(
-      (member, index) => member.set('_key', index.toString())
-    );
-    mappedColumns.push('_key');
-    getters.key = member => member.get('_key');
   }
 
   // Map of strings (member keys) to Maps (member fields).
@@ -188,21 +151,25 @@ var readWorkbook = function(workbook) {
   //   the custom field editor (which has not be implemented at this point).
   // TODO: Instead of assuming unmapped columns are strings, try to infer the
   //   type.
-  members = originalMembers
+  members = Immutable.fromJS(data)
     .toMap()
-    .mapEntries(([, member]) => [
-      getters.key(member),
-      Immutable.Map(getters)
-        .delete('key')
-        .map(getter => getter(member))
-        .merge(
-          Immutable.Map(member)
-            .filter((_, key) => mappedColumns.indexOf(key) === -1)
-            .map(value => value === undefined ? value : value.toString())
-        )
-    ]);
+    .mapEntries(([, member]) => {
+      // TODO: Cleanup this code.
+      member = member.toMap().mapEntries(([k, v]) => [columns[k], v === '.' ? '' : v]);
+      return [
+        getters.key(member),
+        Immutable.Map(getters)
+          .delete('key')
+          .map(getter => getter(member))
+          .merge(
+            Immutable.Map(member)
+              .filter((_, key) => mappedColumns.indexOf(key) === -1)
+              .map(value => value === undefined ? value : value.toString())
+          )
+      ];
+    });
 
-  fields = Immutable.Map({title: 'Imported from Excel'});
+  fields = Immutable.Map({title: 'Imported from CSV'});
 
   // We include custom field definitions for all columns we could not map (for
   // now all as type string).
@@ -219,8 +186,8 @@ var readWorkbook = function(workbook) {
 
 
 var readString = function(string) {
-  return readWorkbook(XLSX.read(string, {type: 'binary'}));
+  return readPapa(Papa.parse(string).data);
 };
 
 
-module.exports = {accept, binary, readWorkbook, readString};
+module.exports = {accept, readPapa, readString};

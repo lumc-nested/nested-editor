@@ -2,39 +2,29 @@ var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var Immutable = require('immutable');
 
-var Structures = require('../common/Structures');
-
 var jsonSchema = require('../../schemas/schema.json');
-
-
-var Schema = Structures.Schema;
 
 
 var CHANGE_EVENT = 'change';
 
 
-var SCHEMA = new Schema({
-  pedigree: Immutable.fromJS(
-    jsonSchema.definitions.pedigree.properties
-  ).delete('members').delete('nests'),
+var DOCUMENT_FIELD_SCHEMAS = Immutable.fromJS(
+  jsonSchema.properties
+).delete('members').delete('customMemberPropertySchemas');
 
-  member: Immutable.fromJS(
-    jsonSchema.definitions.member.properties
-  ),
 
-  nest: Immutable.fromJS(
-    jsonSchema.definitions.nest.properties
-  ).delete('pregnancies'),
-
-  pregnancy: Immutable.fromJS(
-    jsonSchema.definitions.pregnancy.properties
-  ).delete('children').delete('zygotes')
-});
+var MEMBER_FIELD_SCHEMAS = Immutable.fromJS(
+  jsonSchema.definitions.member.properties
+).delete('father').delete('mother').delete('monozygote').delete('dizygote');
 
 
 var AppStore = assign({}, EventEmitter.prototype, {
-  getSchema: function() {
-    return SCHEMA;
+  getDocumentFieldSchemas: function() {
+    return DOCUMENT_FIELD_SCHEMAS;
+  },
+
+  getMemberFieldSchemas: function() {
+    return MEMBER_FIELD_SCHEMAS;
   },
 
   emitChange: function() {

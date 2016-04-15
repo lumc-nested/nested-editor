@@ -28,7 +28,8 @@ var examples = {
   xlsx: [
     ['XLSX (Excel 2007+)', require('!binary!../data/spreadsheet/example.xlsx')],
     ['ODS (OpenDocument)', require('!binary!../data/spreadsheet/example.ods')]
-  ]
+  ],
+  csv: []
 };
 
 
@@ -104,6 +105,10 @@ var Example = React.createClass({
 
   openSpreadsheet: function(event) {
     this.openFile(event, 'xlsx', true);
+  },
+
+  openCsv: function(event) {
+    this.openFile(event, 'csv');
   },
 
   openFile: function(event, filetype, binary) {
@@ -184,6 +189,13 @@ var Example = React.createClass({
                 <ul>
                   {links('xlsx')}
                   <li><FileInput extensions={['xlsx', 'ods']} onChange={this.openSpreadsheet} /></li>
+                </ul>
+              </Col>
+              <Col md={3}>
+                <p>CSV format</p>
+                <ul>
+                  {links('csv')}
+                  <li><FileInput extensions={['csv', 'tsv']} onChange={this.openCsv} /></li>
                 </ul>
               </Col>
             </Row>

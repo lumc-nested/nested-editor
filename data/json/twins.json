@@ -1,148 +1,114 @@
 {
-  "pedigree": {
-    "title": "Example Pedigree",
+  "title": "Twins",
 
-    "members": {
-      "1": {
-        "gender": 2,
-        "Test3": true
-      },
-      "2": {
-        "gender": 1,
-        "Test1": true,
-        "Test2": true,
-        "Test3": true
-      },
-      "3": {
-        "gender": 1,
-        "Test1": true
-      },
-      "4": {
-        "gender": 2
-      },
-      "5": {
-        "gender": 2
-      },
-      "6": {
-        "gender": 2
-      },
-      "7": {
-        "gender": 2
-      },
-      "8": {
-        "gender": 0,
-        "Test1": true,
-        "Test2": true
-      },
-      "9": {
-        "gender": 1
-      },
-      "10": {
-        "gender": 1
-      },
-      "11": {
-        "gender": 0
-      },
-      "12": {
-        "gender": 2,
-        "Test3": true
-      },
-      "13": {
-        "gender": 2
-      },
-      "14": {
-        "gender": 2,
-        "Test2": true
-      },
-      "15": {
-        "gender": 2
-      },
-      "16": {
-        "gender": 1
-      },
-      "17": {
-        "gender": 1,
-        "Test2": true,
-        "Test3": true
-      },
-      "18": {
-        "gender": 1,
-        "Test1": true,
-        "Test3": true
-      }
+  "members": {
+    "1": {
+      "gender": "female",
+      "Test3": true
     },
-    "nests": {
-      "2,1": {
-        "pregnancies": [
-          {
-            "children": ["3", "4"],
-            "zygotes": [0, 1]
-          },
-          {
-            "children": ["5", "6"],
-            "zygotes": [0, 0]
-          },
-          {
-            "children": ["7", "8"]
-          }
-        ]
-      },
-      "6,9": {
-        "pregnancies": [
-          {
-            "children": ["10", "11", "12"],
-            "zygotes": [0, 1, 1]
-          },
-          {
-            "children": ["13", "14", "15"],
-            "zygotes": [0, 0, 0]
-          },
-          {
-            "children": ["16", "17", "18"]
-          }
-        ]
-      }
+    "2": {
+      "gender": "male",
+      "Test1": true,
+      "Test2": true,
+      "Test3": true
+    },
+    "3": {
+      "gender": "male",
+      "Test1": true,
+      "father": "2",
+      "mother": "1",
+      "dizygote": "a"
+    },
+    "4": {
+      "gender": "female",
+      "father": "2",
+      "mother": "1",
+      "dizygote": "a"
+    },
+    "5": {
+      "gender": "female",
+      "father": "2",
+      "mother": "1",
+      "monozygote": "b"
+    },
+    "6": {
+      "gender": "female",
+      "father": "2",
+      "mother": "1",
+      "monozygote": "b"
+    },
+    "7": {
+      "gender": "female",
+      "father": "2",
+      "mother": "1",
+      "dizygote": "c"
+    },
+    "8": {
+      "gender": "unknown",
+      "Test1": true,
+      "Test2": true,
+      "father": "2",
+      "mother": "1",
+      "dizygote": "c"
+    },
+    "9": {
+      "gender": "male"
+    },
+    "13": {
+      "gender": "female",
+      "father": "9",
+      "mother": "6",
+      "monozygote": "d"
+    },
+    "14": {
+      "gender": "female",
+      "Test2": true,
+      "father": "9",
+      "mother": "6",
+      "monozygote": "d"
+    },
+    "15": {
+      "gender": "female",
+      "father": "9",
+      "mother": "6",
+      "monozygote": "d"
+    },
+    "16": {
+      "gender": "male",
+      "father": "9",
+      "mother": "6",
+      "dizygote": "e"
+    },
+    "17": {
+      "gender": "male",
+      "Test2": true,
+      "Test3": true,
+      "father": "9",
+      "mother": "6",
+      "dizygote": "e"
+    },
+    "18": {
+      "gender": "male",
+      "Test1": true,
+      "Test3": true,
+      "father": "9",
+      "mother": "6",
+      "dizygote": "e"
     }
   },
 
-  "symbol": {
-    "scheme": 3,
-    "mapping": ["Test1", "Test2", "Test3"],
-    "color": ["indigo", "gold", "cyan"],
-    "pattern": ["horizontal", "solid", "solid"]
-  },
-
-  "schemaExtension": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "definitions": {
-      "pedigree": {
-        "properties": {
-        }
-      },
-      "member": {
-        "properties": {
-          "Test1": {
-            "title": "Test1",
-            "type": "boolean"
-          },
-          "Test2": {
-            "title": "Test2",
-            "type": "boolean"
-          },
-          "Test3": {
-            "title": "Test3",
-            "type": "boolean"
-          }
-        }
-      },
-      "nest": {
-        "properties": {
-        }
-      },
-      "pregnancy": {
-        "properties": {
-        }
-      }
+  "customMemberPropertySchemas": {
+    "Test1": {
+      "title": "Test1",
+      "type": "boolean"
+    },
+    "Test2": {
+      "title": "Test2",
+      "type": "boolean"
+    },
+    "Test3": {
+      "title": "Test3",
+      "type": "boolean"
     }
   }
 }

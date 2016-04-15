@@ -5,17 +5,15 @@ var React = require('react');
 var {Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var validate = require('plexus-validate');
 
-var DocumentActions = require('../../actions/DocumentActions');
-var {ObjectRef} = require('../../common/Structures');
-var AppConstants = require('../../constants/AppConstants');
-var Form = require('../forms/Form');
+var DocumentActions = require('../actions/DocumentActions');
+var Form = require('./forms/Form');
 
 
-var Fields = React.createClass({
+var MemberFields = React.createClass({
   propTypes: {
-    objectRef: React.PropTypes.instanceOf(ObjectRef).isRequired,
-    schemas: React.PropTypes.object.isRequired,
-    fields: React.PropTypes.object.isRequired,
+    member: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    memberKey: React.PropTypes.string.isRequired,
+    schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     showSchemas: React.PropTypes.func.isRequired
   },
 
@@ -28,9 +26,9 @@ var Fields = React.createClass({
     var props = this.props;
 
     // Compare all props, except for the `showSchemas` callback.
-    return !is(props.objectRef, nextProps.objectRef) ||
+    return !is(props.member, nextProps.memberKey) ||
            !is(props.schemas, nextProps.schemas) ||
-           !is(props.fields, nextProps.fields);
+           props.member !== nextProps.member;
   },
 
   onSubmit: function(output, value, errors) {
@@ -38,31 +36,18 @@ var Fields = React.createClass({
       this.context.showMessage('Please correct all errors in the form.');
       return;
     }
-    DocumentActions.updateFields(this.props.objectRef, output);
+    DocumentActions.updateMemberFields(this.props.memberKey, output);
   },
 
   render: function() {
     var button;
     var schema;
-    var title;
     var tooltip;
 
     schema = {
       type: 'object',
       properties: this.props.schemas.toJS()
     };
-
-    switch (this.props.objectRef.type) {
-      case AppConstants.ObjectType.Member:
-        title = 'Member';
-        break;
-      case AppConstants.ObjectType.Nest:
-        title = 'Nest';
-        break;
-      case AppConstants.ObjectType.Pedigree:
-      default:
-        title = 'Pedigree';
-    }
 
     button = (submit) =>
       <Button onClick={submit} bsStyle="primary" className="pull-right">Save fields</Button>;
@@ -76,7 +61,7 @@ var Fields = React.createClass({
     return (
       <div>
         <h1>
-          {title}
+          Individual
           <OverlayTrigger placement="left" overlay={tooltip}>
             <a onClick={this.props.showSchemas} className="pull-right">
               <Icon name="pencil" />
@@ -87,7 +72,7 @@ var Fields = React.createClass({
           buttons={button}
           schema={schema}
           validate={validate}
-          values={this.props.fields.toJS()}
+          values={this.props.member.toJS()}
           onSubmit={this.onSubmit} />
       </div>
     );
@@ -95,4 +80,4 @@ var Fields = React.createClass({
 });
 
 
-module.exports = Fields;
+module.exports = MemberFields;

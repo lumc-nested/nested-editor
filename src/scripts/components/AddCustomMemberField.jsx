@@ -4,17 +4,15 @@ var React = require('react');
 var {Button, Modal} = require('react-bootstrap');
 var validate = require('plexus-validate');
 
-var AppConstants = require('../../constants/AppConstants');
-var DocumentActions = require('../../actions/DocumentActions');
+var DocumentActions = require('../actions/DocumentActions');
 
-var Form = require('../forms/Form');
+var Form = require('./forms/Form');
 
 
-var AddField = React.createClass({
+var AddCustomMemberField = React.createClass({
   propTypes: {
-    objectType: React.PropTypes.number.isRequired,
-    onHide: React.PropTypes.func,
-    reservedFields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
+    reservedFields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    onHide: React.PropTypes.func
   },
 
   getInitialState: function() {
@@ -59,12 +57,7 @@ var AddField = React.createClass({
       schema.format = 'multiline';
     }
 
-    DocumentActions.addField(
-      this.props.objectType,
-      output.field,
-      schema
-    );
-
+    DocumentActions.addCustomMemberField(output.field, schema);
     this.props.onHide();
   },
 
@@ -75,19 +68,6 @@ var AddField = React.createClass({
   render: function() {
     var message;
     var schema;
-    var title;
-
-    switch (this.props.objectType) {
-      case AppConstants.ObjectType.Member:
-        title = 'Add member field';
-        break;
-      case AppConstants.ObjectType.Nest:
-        title = 'Add nest field';
-        break;
-      case AppConstants.ObjectType.Pedigree:
-      default:
-        title = 'Add pedigree field';
-    }
 
     if (this.state.message) {
       message = (
@@ -120,7 +100,7 @@ var AddField = React.createClass({
     return (
       <Modal {...this.props}>
         <Modal.Header className="bg-primary text-primary" closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>Add field</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form
@@ -142,4 +122,4 @@ var AddField = React.createClass({
 });
 
 
-module.exports = AddField;
+module.exports = AddCustomMemberField;

@@ -1,208 +1,135 @@
 {
-  "pedigree": {
-    "members": {
-      "1": {
-        "gender": 1
-      },
-      "2": {
-        "gender": 2
-      },
-      "3": {
-        "gender": 1
-      },
-      "4": {
-        "gender": 2
-      },
-      "5": {
-        "gender": 2
-      },
-      "6": {
-        "gender": 1
-      },
-      "7": {
-        "gender": 1
-      },
-      "8": {
-        "gender": 2
-      },
-      "9": {
-        "gender": 2
-      },
-      "10": {
-        "gender": 2
-      },
-      "11": {
-        "gender": 1
-      },
-      "12": {
-        "gender": 1
-      },
-      "13": {
-        "gender": 1
-      },
-      "14": {
-        "gender": 1
-      },
-      "15": {
-        "gender": 2
-      },
-      "16": {
-        "gender": 1
-      },
-      "17": {
-        "gender": 1
-      },
-      "18": {
-        "gender": 2
-      },
-      "19": {
-        "gender": 2
-      },
-      "20": {
-        "gender": 2
-      },
-      "21": {
-        "gender": 1
-      },
-      "22": {
-        "gender": 1
-      },
-      "23": {
-        "gender": 2
-      },
-      "24": {
-        "gender": 1
-      },
-      "25": {
-        "gender": 2
-      },
-      "26": {
-        "gender": 2
-      },
-      "27": {
-        "gender": 1
-      }
+  "title": "Complex Pedigree",
+
+  "members": {
+    "1": {
+      "gender": "male"
     },
-    "nests": {
-      "7,8": {
-        "pregnancies": [
-          {
-            "children": [
-              "9",
-              "10"
-            ]
-          }
-        ]
-      },
-      "10,11": {
-        "pregnancies": []
-      },
-      "23,24": {
-        "pregnancies": [
-          {
-            "children": [
-              "25",
-              "26"
-            ]
-          }
-        ]
-      },
-      "14,15": {
-        "pregnancies": [
-          {
-            "children": [
-              "16"
-            ]
-          }
-        ]
-      },
-      "17,18": {
-        "pregnancies": [
-          {
-            "children": [
-              "6"
-            ]
-          },
-          {
-            "children": [
-              "19"
-            ]
-          },
-          {
-            "children": [
-              "20"
-            ]
-          }
-        ]
-      },
-      "20,22": {
-        "pregnancies": [
-          {
-            "children": [
-              "23"
-            ]
-          },
-          {
-            "children": [
-              "27"
-            ]
-          }
-        ]
-      },
-      "9,12": {
-        "pregnancies": []
-      },
-      "1,2": {
-        "pregnancies": [
-          {
-            "children": [
-              "13",
-              "14"
-            ]
-          },
-          {
-            "children": [
-              "21"
-            ]
-          }
-        ]
-      },
-      "3,4": {
-        "pregnancies": [
-          {
-            "children": [
-              "2",
-              "5"
-            ]
-          }
-        ]
-      },
-      "5,6": {
-        "pregnancies": [
-          {
-            "children": [
-              "7"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "schemaExtension": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "definitions": {
-      "pedigree": {
-        "properties": {}
-      },
-      "member": {
-        "properties": {}
-      },
-      "nest": {
-        "properties": {}
-      },
-      "pregnancy": {
-        "properties": {}
-      }
+    "2": {
+      "gender": "female",
+      "father": "3",
+      "mother": "4",
+      "dizygote": "d"
+    },
+    "3": {
+      "gender": "male"
+    },
+    "4": {
+      "gender": "female"
+    },
+    "5": {
+      "gender": "female",
+      "father": "3",
+      "mother": "4",
+      "dizygote": "d"
+    },
+    "6": {
+      "gender": "male",
+      "father": "17",
+      "mother": "18"
+    },
+    "7": {
+      "gender": "male",
+      "father": "6",
+      "mother": "5"
+    },
+    "8": {
+      "gender": "female"
+    },
+    "9": {
+      "gender": "female",
+      "father": "7",
+      "mother": "8",
+      "monozygote": "a"
+    },
+    "10": {
+      "gender": "female",
+      "father": "7",
+      "mother": "8",
+      "monozygote": "a"
+    },
+    "11": {
+      "gender": "male"
+    },
+    "12": {
+      "gender": "male"
+    },
+    "13": {
+      "gender": "male",
+      "father": "1",
+      "mother": "2",
+      "dizygote": "c"
+    },
+    "14": {
+      "gender": "male",
+      "father": "1",
+      "mother": "2",
+      "dizygote": "c"
+    },
+    "15": {
+      "gender": "female"
+    },
+    "16": {
+      "gender": "male",
+      "father": "14",
+      "mother": "15"
+    },
+    "17": {
+      "gender": "male"
+    },
+    "18": {
+      "gender": "female"
+    },
+    "19": {
+      "gender": "female",
+      "father": "17",
+      "mother": "18"
+    },
+    "20": {
+      "gender": "female",
+      "father": "17",
+      "mother": "18"
+    },
+    "21": {
+      "gender": "male",
+      "father": "1",
+      "mother": "2"
+    },
+    "22": {
+      "gender": "male"
+    },
+    "23": {
+      "gender": "female",
+      "father": "22",
+      "mother": "20"
+    },
+    "24": {
+      "gender": "male"
+    },
+    "25": {
+      "gender": "female",
+      "father": "24",
+      "mother": "23",
+      "dizygote": "b"
+    },
+    "26": {
+      "gender": "female",
+      "father": "24",
+      "mother": "23",
+      "dizygote": "b"
+    },
+    "27": {
+      "gender": "male",
+      "father": "22",
+      "mother": "20"
+    },
+    "^dummy-28": {
+      "father": "11",
+      "mother": "10"
+    },
+    "^dummy-29": {
+      "father": "12",
+      "mother": "9"
     }
   }
 }

@@ -1,61 +1,24 @@
 {
-  "pedigree": {
-    "title": "Simple Family",
+  "title": "Simple Family",
 
-    "members": {
-      "1": {
-        "gender": 2,
-        "deceased": true
-      },
-      "2": {
-        "gender": 1
-      },
-      "3": {
-        "gender": 1,
-        "proband": true,
-        "affected": true
-      },
-      "4": {
-      }
+  "members": {
+    "1": {
+      "gender": "female",
+      "deceased": true
     },
-    "nests": {
-      "2,1": {
-        "pregnancies": [
-          { "children": ["3"] },
-          { "children": ["4"] }
-        ]
-      }
-    }
-  },
-
-  "symbol": {
-    "scheme": 0,
-    "mapping": ["affected"],
-    "color": ["indigo"],
-    "pattern": ["solid"]
-  },
-
-  "schemaExtension": {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "definitions": {
-      "pedigree": {
-      },
-      "member": {
-        "properties": {
-          "affected": {
-            "title": "Affected",
-            "type": "boolean"
-          }
-        }
-      },
-      "nest": {
-        "properties": {
-        }
-      },
-      "pregnancy": {
-        "properties": {
-        }
-      }
+    "2": {
+      "gender": "male"
+    },
+    "3": {
+      "gender": "male",
+      "proband": true,
+      "affected": "A",
+      "father": "2",
+      "mother": "1"
+    },
+    "4": {
+      "father": "2",
+      "mother": "1"
     }
   }
 }

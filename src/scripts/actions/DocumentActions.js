@@ -24,10 +24,11 @@ var DocumentActions = {
     });
   },
 
-  addChild: function(nestKey, gender) {
+  addChild: function(fatherKey, motherKey, gender) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.ADD_CHILD,
-      nestKey,
+      fatherKey,
+      motherKey,
       gender
     });
   },
@@ -53,27 +54,25 @@ var DocumentActions = {
     });
   },
 
-  updateFields: function(objectRef, fields) {
+  updateMemberFields: function(memberKey, fields) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_FIELDS,
-      objectRef,
+      actionType: ActionTypes.UPDATE_MEMBER_FIELDS,
+      memberKey,
       fields
     });
   },
 
-  addField: function(objectType, field, schema) {
+  addCustomMemberField: function(field, schema) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.ADD_FIELD,
-      objectType,
+      actionType: ActionTypes.ADD_CUSTOM_MEMBER_FIELD,
       field,
       schema
     });
   },
 
-  deleteField: function(objectType, field) {
+  deleteCustomMemberField: function(field) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.DELETE_FIELD,
-      objectType,
+      actionType: ActionTypes.DELETE_CUSTOM_MEMBER_FIELD,
       field
     });
   },
