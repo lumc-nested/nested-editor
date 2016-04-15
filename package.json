@@ -28,7 +28,7 @@
     "immutable": "~3.7.6",
     "keymirror": "~0.1.1",
     "lodash.sortbyorder": "~3.4.4",
-    "madeline": "git+https://github.com/lumc-nested/madeline-js.git#master",
+    "madeline": "git+https://github.com/lumc-nested/madeline-js.git#v0.0.1",
     "moment": "~2.11.2",
     "object-assign": "~4.0.1",
     "papaparse": "~4.1.2",
