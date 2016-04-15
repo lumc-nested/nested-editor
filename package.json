@@ -1,6 +1,6 @@
 {
   "name": "nested-editor",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "React pedigree editor component",
   "license": "MIT",
   "main": "src/scripts/index.js",
