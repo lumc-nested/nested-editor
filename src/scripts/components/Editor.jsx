@@ -3,6 +3,7 @@ var Icon = require('react-fa/lib/Icon');
 var React = require('react');
 var {Button, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
 
+var CsvReader = require('../readers/CsvReader');
 var ExcelReader = require('../readers/ExcelReader');
 var FamReader = require('../readers/FamReader');
 var JsonReader = require('../readers/JsonReader');
@@ -44,7 +45,7 @@ var indexByArray = function(objects, property) {
 };
 
 
-var readers = indexByArray([ExcelReader, FamReader, JsonReader, PedReader], 'accept');
+var readers = indexByArray([CsvReader, ExcelReader, FamReader, JsonReader, PedReader], 'accept');
 
 
 var getAppState = function() {

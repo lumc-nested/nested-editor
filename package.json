@@ -31,6 +31,7 @@
     "madeline": "git+https://github.com/lumc-nested/madeline-js.git#master",
     "moment": "~2.11.2",
     "object-assign": "~4.0.1",
+    "papaparse": "~4.1.2",
     "plexus-form": "git+https://github.com/martijnvermaat/plexus-form.git#nested",
     "plexus-validate": "0.0.4",
     "react": "~0.14.7",
