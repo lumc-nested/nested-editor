@@ -14,10 +14,13 @@ var convertBoolean = function(value) {
     case 'yes':
     case 'true':
     case 'on':
+    case '1':
       return true;
     case 'no':
     case 'false':
     case 'off':
+    case '.':
+    case '0':
       return false;
     default:
       return Boolean(value);
@@ -31,7 +34,8 @@ var mappers = {
   key: {
     aliases: ['id',
               'member', 'memberid', 'member_id', 'member id',
-              'person', 'personid', 'person_id', 'person id'],
+              'person', 'personid', 'person_id', 'person id',
+              'individualid'],
     convert: value => value.toString()
   },
 
@@ -50,9 +54,11 @@ var mappers = {
     convert: value => {
       switch (value.toString().toLowerCase()) {
         case 'male':
+        case 'm':
         case '1':
           return 'male';
         case 'female':
+        case 'f':
         case '2':
           return 'female';
         default:
