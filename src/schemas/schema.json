@@ -73,6 +73,18 @@
         "deceased": {
           "title": "Deceased",
           "type": "boolean"
+        },
+        "sampled": {
+          "title": "Sampled",
+          "type": "boolean"
+        },
+        "Carrier": {
+          "title": "Carrier",
+          "type": "boolean"
+        },
+        "affected": {
+          "title": "Affected",
+          "type": "boolean"
         }
       }
     },

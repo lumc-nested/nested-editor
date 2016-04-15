@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var Immutable = require('immutable');
 var classNames = require('classnames');
 var Madeline = require('madeline');
+var moment = require('moment');
 
 var DocumentActions = require('../actions/DocumentActions');
 var {Document, NestKey, ObjectRef} = require('../common/Structures');
@@ -13,8 +14,38 @@ var drawSVG = function(document) {
   var defs;
   var svg;
 
-  svg = Madeline.draw(
-    document.members.map((member, memberKey) => Immutable.Map({
+  svg = Madeline.draw(document.members.map((member, memberKey) => {
+    var dob;
+    var deceased;
+    var proband;
+    var consultand;
+    var affected;
+    var sampled;
+    var carrier;
+
+    if (member.get('dateOfBirth')) {
+      dob = moment(member.get('dateOfBirth')).format('YYYY-MM-DD');
+    }
+    if (member.get('dateOfDeath') || member.get('deceased')) {
+      deceased = 'yes';
+    }
+    if (member.get('proband')) {
+      proband = 'yes';
+    }
+    if (member.get('consultand')) {
+      consultand = 'yes';
+    }
+    if (member.get('affected')) {
+      affected = 'A';
+    }
+    if (member.get('sampled')) {
+      sampled = 'yes';
+    }
+    if (member.get('carrier')) {
+      carrier = 'yes';
+    }
+
+    return Immutable.Map({
       IndividualId: memberKey,
       Familyid: document.fields.get('title'),
       Gender: member.get('gender', 'unknown'),
@@ -22,11 +53,16 @@ var drawSVG = function(document) {
       Father: member.get('father', ''),
       DZTwin: member.get('dizygote', ''),
       MZTwin: member.get('monozygote', ''),
-      DOB: '',
-      Name: member.get('name') || '\n'
-    })).toList().toJS(),
-    ['Name']
-  );
+      Name: member.get('name') || `\n${memberKey}`,
+      DOB: dob,
+      Deceased: deceased,
+      Proband: proband,
+      Consultand: consultand,
+      Affected: affected,
+      Sampled: sampled,
+      Carrier: carrier
+    });
+  }).toList().toJS(), ['Name', 'DOB']);
 
   if (!svg) {
     // TODO: What to store in this.svg in this case? Perhaps Madeline should
