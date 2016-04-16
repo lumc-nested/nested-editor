@@ -10,9 +10,9 @@ var accept = ['json'];
 
 
 var readJson = function(json) {
-  var customMemberFieldSchemas;
+  var customIndividualFieldSchemas;
   var fields;
-  var members;
+  var individuals;
   var mergedJsonSchema;
 
   if (!tv4.validate(json, jsonSchema)) {
@@ -20,13 +20,13 @@ var readJson = function(json) {
     throw new Error('base schema validation failed');
   }
 
-  // Our base schema with any custom member field definitions added.
+  // Our base schema with any custom individual field definitions added.
   // TODO: Check if this does what we hope it does.
   mergedJsonSchema =
     Immutable.fromJS(jsonSchema).setIn(
-      ['definitions', 'member', 'properties'],
-      Immutable.fromJS(json.customMemberPropertySchemas || {}).merge(
-        jsonSchema.definitions.member.properties
+      ['definitions', 'individual', 'properties'],
+      Immutable.fromJS(json.customIndividualPropertySchemas || {}).merge(
+        jsonSchema.definitions.individual.properties
       )
     ).toJS();
 
@@ -35,11 +35,11 @@ var readJson = function(json) {
     throw new Error('merged schema validation failed');
   }
 
-  members = Immutable.fromJS(json.members || {});
-  fields = Immutable.fromJS(json).delete('members').delete('customMemberPropertySchemas');
-  customMemberFieldSchemas = Immutable.fromJS(json.customMemberPropertySchemas || {});
+  individuals = Immutable.fromJS(json.individuals || {});
+  fields = Immutable.fromJS(json).delete('individuals').delete('customIndividualPropertySchemas');
+  customIndividualFieldSchemas = Immutable.fromJS(json.customIndividualPropertySchemas || {});
 
-  return new Document({members, fields, customMemberFieldSchemas});
+  return new Document({individuals, fields, customIndividualFieldSchemas});
 };
 
 

@@ -1,7 +1,7 @@
 {
   "title": "Twins",
 
-  "members": {
+  "individuals": {
     "1": {
       "gender": "female",
       "Test3": true
@@ -97,7 +97,7 @@
     }
   },
 
-  "customMemberPropertySchemas": {
+  "customIndividualPropertySchemas": {
     "Test1": {
       "title": "Test1",
       "type": "boolean"

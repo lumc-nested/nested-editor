@@ -28,14 +28,14 @@ var convertBoolean = function(value) {
 };
 
 
-// We try to map columns to our predefined member fields (and structural
+// We try to map columns to our predefined individual fields (and structural
 // properties key, father, mother). Aliases must be in lower case.
 var mappers = {
   key: {
     aliases: ['id',
               'member', 'memberid', 'member_id', 'member id',
               'person', 'personid', 'person_id', 'person id',
-              'individualid'],
+              'individual', 'individualid', 'individual_id', 'individual id'],
     convert: value => value.toString()
   },
 
@@ -115,12 +115,12 @@ var getColumnNames = function(sheet) {
 
 var readWorkbook = function(workbook) {
   var columns;
-  var customMemberFieldSchemas;
+  var customIndividualFieldSchemas;
   var fields;
   var getters;
   var mappedColumns;
-  var members;
-  var originalMembers;
+  var individuals;
+  var originalIndividuals;
   var sheet;
 
   sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -128,7 +128,7 @@ var readWorkbook = function(workbook) {
   // Array of column names.
   columns = getColumnNames(sheet);
 
-  // Array of column names we mapped to predefined member fields.
+  // Array of column names we mapped to predefined individual fields.
   mappedColumns = [];
 
   // For each mapped column name, a getter function yielding the corresponding
@@ -147,8 +147,8 @@ var readWorkbook = function(workbook) {
       if (index !== -1) {
         column = columns[index];
         mappedColumns.push(column);
-        getters[key] = member => {
-          var value = member.get(column);
+        getters[key] = individual => {
+          var value = individual.get(column);
           return value === undefined ? value : mapper.convert(value, alias);
         };
       }
@@ -160,8 +160,8 @@ var readWorkbook = function(workbook) {
   //   to the original column value (needs sort of the inverse of the convert
   //   functions).
 
-  // Per member, a map of strings (column names) to values.
-  originalMembers = Immutable.fromJS(XLSX.utils.sheet_to_json(sheet));
+  // Per individual, a map of strings (column names) to values.
+  originalIndividuals = Immutable.fromJS(XLSX.utils.sheet_to_json(sheet));
 
   // TODO: Our app currently does not handle unconnected pedigrees well. We
   //   should at least implement a warning for the user. This would apply to
@@ -173,14 +173,14 @@ var readWorkbook = function(workbook) {
   // We should always have a 'key' getter, so if we couldn't find it we
   // generate keys ourselves.
   if (!getters.hasOwnProperty('key')) {
-    originalMembers = originalMembers.map(
-      (member, index) => member.set('_key', index.toString())
+    originalIndividuals = originalIndividuals.map(
+      (individual, index) => individual.set('_key', index.toString())
     );
     mappedColumns.push('_key');
-    getters.key = member => member.get('_key');
+    getters.key = individual => individual.get('_key');
   }
 
-  // Map of strings (member keys) to Maps (member fields).
+  // Map of strings (individual keys) to Maps (individual fields).
   // We first get the values for mapped columns using `getters` and then add
   // the remaining columns as strings.
   // TODO: Do we want to lowercase the unmapped column keys (and remove
@@ -188,15 +188,15 @@ var readWorkbook = function(workbook) {
   //   the custom field editor (which has not be implemented at this point).
   // TODO: Instead of assuming unmapped columns are strings, try to infer the
   //   type.
-  members = originalMembers
+  individuals = originalIndividuals
     .toMap()
-    .mapEntries(([, member]) => [
-      getters.key(member),
+    .mapEntries(([, individual]) => [
+      getters.key(individual),
       Immutable.Map(getters)
         .delete('key')
-        .map(getter => getter(member))
+        .map(getter => getter(individual))
         .merge(
-          Immutable.Map(member)
+          Immutable.Map(individual)
             .filter((_, key) => mappedColumns.indexOf(key) === -1)
             .map(value => value === undefined ? value : value.toString())
         )
@@ -206,7 +206,7 @@ var readWorkbook = function(workbook) {
 
   // We include custom field definitions for all columns we could not map (for
   // now all as type string).
-  customMemberFieldSchemas = Immutable.List(columns)
+  customIndividualFieldSchemas = Immutable.List(columns)
     .filterNot(column => mappedColumns.includes(column))
     .toMap()
     .mapEntries(([, column]) => [
@@ -214,7 +214,7 @@ var readWorkbook = function(workbook) {
       Immutable.Map({title: column, type: 'string'})
     ]);
 
-  return new Document({members, fields, customMemberFieldSchemas});
+  return new Document({individuals, fields, customIndividualFieldSchemas});
 };
 
 

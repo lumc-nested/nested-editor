@@ -2,14 +2,14 @@ var produce = 'ped';
 
 
 var flatten = function(document) {
-  return document.members
-    .map((member, memberKey) => {
+  return document.individuals
+    .map((individual, individualKey) => {
       return [
-        member.get('family', 'default'),
-        memberKey,
-        member.get('father', 0),
-        member.get('mother', 0),
-        member.get('gender'),
+        individual.get('family', 'default'),
+        individualKey,
+        individual.get('father', 0),
+        individual.get('mother', 0),
+        individual.get('gender'),
         2
       ];
     })

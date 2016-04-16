@@ -3,8 +3,8 @@ var produce = 'json';
 
 var writeJson = function(document) {
   return document.fields.merge({
-    members: document.members,
-    customMemberPropertySchemas: document.customMemberFieldSchemas
+    individuals: document.individuals,
+    customIndividualPropertySchemas: document.customIndividualFieldSchemas
   }).toJS();
 };
 

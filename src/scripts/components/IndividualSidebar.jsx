@@ -1,8 +1,8 @@
 var Immutable = require('immutable');
 var React = require('react');
 
-var MemberFields = require('./MemberFields');
-var MemberSchemas = require('./MemberSchemas');
+var IndividualFields = require('./IndividualFields');
+var IndividualSchemas = require('./IndividualSchemas');
 
 
 var VIEWS = {
@@ -11,10 +11,10 @@ var VIEWS = {
 };
 
 
-var MemberSidebar = React.createClass({
+var IndividualSidebar = React.createClass({
   propTypes: {
-    member: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    memberKey: React.PropTypes.string.isRequired,
+    individual: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    individualKey: React.PropTypes.string.isRequired,
     schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     customSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired
   },
@@ -24,7 +24,7 @@ var MemberSidebar = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!Immutable.is(this.props.member, nextProps.member)) {
+    if (!Immutable.is(this.props.individual, nextProps.individual)) {
       this.changeView(VIEWS.FIELDS);
     }
   },
@@ -35,14 +35,14 @@ var MemberSidebar = React.createClass({
 
   render: function() {
     if (this.state.view === VIEWS.SCHEMAS) {
-      return <MemberSchemas
+      return <IndividualSchemas
                schemas={this.props.schemas}
                customSchemas={this.props.customSchemas}
                showFields={() => this.changeView(VIEWS.FIELDS)} />;
     } else {
-      return <MemberFields
-               member={this.props.member}
-               memberKey={this.props.memberKey}
+      return <IndividualFields
+               individual={this.props.individual}
+               individualKey={this.props.individualKey}
                schemas={this.props.customSchemas.merge(this.props.schemas)}
                showSchemas={() => this.changeView(VIEWS.SCHEMAS)} />;
     }
@@ -50,4 +50,4 @@ var MemberSidebar = React.createClass({
 });
 
 
-module.exports = MemberSidebar;
+module.exports = IndividualSidebar;

@@ -18,9 +18,9 @@ var createColumns = function(schemas) {
 };
 
 
-var createData = function(members) {
-  return members.map(
-    (member, key) => member.set('_key', key)
+var createData = function(individuals) {
+  return individuals.map(
+    (individual, key) => individual.set('_key', key)
   ).toList().toJS();
 };
 
@@ -30,13 +30,15 @@ var TableView = React.createClass({
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     document: React.PropTypes.instanceOf(Document).isRequired,
     documentFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    memberFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    individualFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     style: React.PropTypes.object
   },
 
   getInitialState: function() {
-    var columns = createColumns(this.props.document.customMemberFieldSchemas.merge(this.props.memberFieldSchemas));
-    var data = createData(this.props.document.members);
+    var columns = createColumns(
+      this.props.document.customIndividualFieldSchemas.merge(this.props.individualFieldSchemas)
+    );
+    var data = createData(this.props.document.individuals);
     var columnNames = {
       onClick: column => {
         sortColumn(
@@ -58,10 +60,10 @@ var TableView = React.createClass({
       this.setState({data: createData(nextProps.document)});
     }
 
-    if (!is(nextProps.memberFieldSchemas, this.props.memberFieldSchemas) ||
-        !is(nextProps.document.customMemberFieldSchemas, this.props.document.customMemberFieldSchemas)) {
+    if (!is(nextProps.individualFieldSchemas, this.props.individualFieldSchemas) ||
+        !is(nextProps.document.customIndividualFieldSchemas, this.props.document.customIndividualFieldSchemas)) {
       this.setState({columns: createColumns(
-        nextProps.document.customMemberFieldSchemas.merge(nextProps.memberFieldSchemas))}
+        nextProps.document.customIndividualFieldSchemas.merge(nextProps.individualFieldSchemas))}
       );
     }
   },

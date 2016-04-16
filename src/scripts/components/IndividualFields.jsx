@@ -9,10 +9,10 @@ var DocumentActions = require('../actions/DocumentActions');
 var Form = require('./forms/Form');
 
 
-var MemberFields = React.createClass({
+var IndividualFields = React.createClass({
   propTypes: {
-    member: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    memberKey: React.PropTypes.string.isRequired,
+    individual: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    individualKey: React.PropTypes.string.isRequired,
     schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     showSchemas: React.PropTypes.func.isRequired
   },
@@ -26,9 +26,9 @@ var MemberFields = React.createClass({
     var props = this.props;
 
     // Compare all props, except for the `showSchemas` callback.
-    return !is(props.member, nextProps.memberKey) ||
+    return !is(props.individual, nextProps.individualKey) ||
            !is(props.schemas, nextProps.schemas) ||
-           props.member !== nextProps.member;
+           props.individual !== nextProps.individual;
   },
 
   onSubmit: function(output, value, errors) {
@@ -36,7 +36,7 @@ var MemberFields = React.createClass({
       this.context.showMessage('Please correct all errors in the form.');
       return;
     }
-    DocumentActions.updateMemberFields(this.props.memberKey, output);
+    DocumentActions.updateIndividualFields(this.props.individualKey, output);
   },
 
   render: function() {
@@ -72,7 +72,7 @@ var MemberFields = React.createClass({
           buttons={button}
           schema={schema}
           validate={validate}
-          values={this.props.member.toJS()}
+          values={this.props.individual.toJS()}
           onSubmit={this.onSubmit} />
       </div>
     );
@@ -80,4 +80,4 @@ var MemberFields = React.createClass({
 });
 
 
-module.exports = MemberFields;
+module.exports = IndividualFields;

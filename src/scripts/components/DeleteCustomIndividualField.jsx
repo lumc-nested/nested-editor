@@ -4,14 +4,14 @@ var {Button, Modal} = require('react-bootstrap');
 var DocumentActions = require('../actions/DocumentActions');
 
 
-var DeleteCustomMemberField = React.createClass({
+var DeleteCustomIndividualField = React.createClass({
   propTypes: {
     field: React.PropTypes.string.isRequired,
     onHide: React.PropTypes.func
   },
 
   onDelete: function() {
-    DocumentActions.deleteCustomMemberField(this.props.field);
+    DocumentActions.deleteCustomIndividualField(this.props.field);
     this.props.onHide();
   },
 
@@ -35,4 +35,4 @@ var DeleteCustomMemberField = React.createClass({
 });
 
 
-module.exports = DeleteCustomMemberField;
+module.exports = DeleteCustomIndividualField;

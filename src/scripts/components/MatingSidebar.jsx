@@ -2,11 +2,11 @@ var Immutable = require('immutable');
 var React = require('react');
 
 
-var NestSidebar = React.createClass({
+var MatingSidebar = React.createClass({
   propTypes: {
     father: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     mother: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    // TODO: It would be convenient if the key was in the member map.
+    // TODO: It would be convenient if the key was in the individual map.
     fatherKey: React.PropTypes.string.isRequired,
     motherKey: React.PropTypes.string.isRequired
   },
@@ -23,4 +23,4 @@ var NestSidebar = React.createClass({
 });
 
 
-module.exports = NestSidebar;
+module.exports = MatingSidebar;
