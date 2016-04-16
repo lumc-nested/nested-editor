@@ -190,8 +190,6 @@ var Example = React.createClass({
                   {links('xlsx')}
                   <li><FileInput extensions={['xlsx', 'ods']} onChange={this.openSpreadsheet} /></li>
                 </ul>
-              </Col>
-              <Col md={3}>
                 <p>CSV format</p>
                 <ul>
                   {links('csv')}
