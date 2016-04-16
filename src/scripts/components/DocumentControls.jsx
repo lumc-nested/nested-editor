@@ -62,8 +62,8 @@ var DocumentControls = React.createClass({
     DocumentActions.addTwin(this.props.focus.get('key'));
   },
 
-  deleteMember: function() {
-    DocumentActions.deleteMember(this.props.focus.get('key'));
+  deleteIndividual: function() {
+    DocumentActions.deleteIndividual(this.props.focus.get('key'));
   },
 
   undo: function() {
@@ -131,9 +131,9 @@ var DocumentControls = React.createClass({
     // todo loose the this.props prefix
     if (focus !== undefined) {
       switch (focus.type) {
-        case 'member':
+        case 'individual':
           pedigreeButtons.addPartner = <Button onClick={this.addPartner}>Add partner</Button>;
-          if (document.members.get(focus.key).get('father') && document.members.get(focus.key).get('mother')) {
+          if (document.individuals.get(focus.key).get('father') && document.individuals.get(focus.key).get('mother')) {
             // TODO: add twin with zygosity information.
             pedigreeButtons.addTwin = <Button onClick={this.addTwin}>Add twin</Button>;
           } else {
@@ -141,20 +141,20 @@ var DocumentControls = React.createClass({
           }
 
           // TODO: should we cache this?
-          // this is recalculated everytime we switch focus between members.
-          // but this property based on the member is key is probably not changed.
-          canDelete = !document.members.some((member, memberKey) =>
-            !memberKey.startsWith('^') && (member.get('father') === focus.key ||
-                                           member.get('mother') === focus.key)
+          // this is recalculated everytime we switch focus between individuals.
+          // but this property based on the individual is key is probably not changed.
+          canDelete = !document.individuals.some((individual, individualKey) =>
+            !individualKey.startsWith('^') && (individual.get('father') === focus.key ||
+                                               individual.get('mother') === focus.key)
           );
 
           if (canDelete) {
-            pedigreeButtons.deleteMember = <Button onClick={this.deleteMember}>Delete member</Button>;
+            pedigreeButtons.deleteIndividual = <Button onClick={this.deleteIndividual}>Delete individual</Button>;
           }
 
           break;
 
-        case 'nest':
+        case 'mating':
           pedigreeButtons.addChild = <DropdownButton
                                          id="dropdown-add-child"
                                          onSelect={(_, gender) => this.addChild(gender)}

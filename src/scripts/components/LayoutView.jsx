@@ -16,7 +16,7 @@ var LayoutView = React.createClass({
     focus: React.PropTypes.instanceOf(ObjectRef).isRequired,
     document: React.PropTypes.instanceOf(Document).isRequired,
     documentFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    memberFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    individualFieldSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     undo: React.PropTypes.string,
     style: React.PropTypes.object
   },
@@ -177,7 +177,7 @@ var LayoutView = React.createClass({
             <LayoutSidebar document={this.props.document}
                            focus={this.props.focus}
                            documentFieldSchemas={this.props.documentFieldSchemas}
-                           memberFieldSchemas={this.props.memberFieldSchemas} />
+                           individualFieldSchemas={this.props.individualFieldSchemas} />
           </Col>
         </Row>
       </Grid>

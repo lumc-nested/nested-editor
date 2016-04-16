@@ -2,7 +2,7 @@ var Immutable = require('immutable');
 var React = require('react');
 
 
-var PedigreeSidebar = React.createClass({
+var DocumentSidebar = React.createClass({
   propTypes: {
     fields: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired
@@ -19,4 +19,4 @@ var PedigreeSidebar = React.createClass({
 });
 
 
-module.exports = PedigreeSidebar;
+module.exports = DocumentSidebar;

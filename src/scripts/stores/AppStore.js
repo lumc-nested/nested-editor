@@ -10,11 +10,11 @@ var CHANGE_EVENT = 'change';
 
 var DOCUMENT_FIELD_SCHEMAS = Immutable.fromJS(
   jsonSchema.properties
-).delete('members').delete('customMemberPropertySchemas');
+).delete('individuals').delete('customIndividualPropertySchemas');
 
 
-var MEMBER_FIELD_SCHEMAS = Immutable.fromJS(
-  jsonSchema.definitions.member.properties
+var INDIVIDUAL_FIELD_SCHEMAS = Immutable.fromJS(
+  jsonSchema.definitions.individual.properties
 ).delete('father').delete('mother').delete('monozygote').delete('dizygote');
 
 
@@ -23,8 +23,8 @@ var AppStore = assign({}, EventEmitter.prototype, {
     return DOCUMENT_FIELD_SCHEMAS;
   },
 
-  getMemberFieldSchemas: function() {
-    return MEMBER_FIELD_SCHEMAS;
+  getIndividualFieldSchemas: function() {
+    return INDIVIDUAL_FIELD_SCHEMAS;
   },
 
   emitChange: function() {

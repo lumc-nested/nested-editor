@@ -17,10 +17,10 @@ var DocumentActions = {
     });
   },
 
-  addPartner: function(memberKey) {
+  addPartner: function(individualKey) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.ADD_PARTNER,
-      memberKey
+      individualKey
     });
   },
 
@@ -33,46 +33,46 @@ var DocumentActions = {
     });
   },
 
-  addParents: function(memberKey) {
+  addParents: function(individualKey) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.ADD_PARENTS,
-      memberKey
+      individualKey
     });
   },
 
-  addTwin: function(memberKey) {
+  addTwin: function(individualKey) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.ADD_TWIN,
-      memberKey
+      individualKey
     });
   },
 
-  deleteMember: function(memberKey) {
+  deleteIndividual: function(individualKey) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.DELETE_MEMBER,
-      memberKey
+      actionType: ActionTypes.DELETE_INDIVIDUAL,
+      individualKey
     });
   },
 
-  updateMemberFields: function(memberKey, fields) {
+  updateIndividualFields: function(individualKey, fields) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_MEMBER_FIELDS,
-      memberKey,
+      actionType: ActionTypes.UPDATE_INDIVIDUAL_FIELDS,
+      individualKey,
       fields
     });
   },
 
-  addCustomMemberField: function(field, schema) {
+  addCustomIndividualField: function(field, schema) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.ADD_CUSTOM_MEMBER_FIELD,
+      actionType: ActionTypes.ADD_CUSTOM_INDIVIDUAL_FIELD,
       field,
       schema
     });
   },
 
-  deleteCustomMemberField: function(field) {
+  deleteCustomIndividualField: function(field) {
     AppDispatcher.dispatch({
-      actionType: ActionTypes.DELETE_CUSTOM_MEMBER_FIELD,
+      actionType: ActionTypes.DELETE_CUSTOM_INDIVIDUAL_FIELD,
       field
     });
   },

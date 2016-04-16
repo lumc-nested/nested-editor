@@ -5,8 +5,8 @@ var React = require('react');
 var {Button, OverlayTrigger, Table, Tooltip} = require('react-bootstrap');
 
 var {ModalTrigger} = require('./Utils');
-var AddCustomMemberField = require('./AddCustomMemberField');
-var DeleteCustomMemberField = require('./DeleteCustomMemberField');
+var AddCustomIndividualField = require('./AddCustomIndividualField');
+var DeleteCustomIndividualField = require('./DeleteCustomIndividualField');
 
 
 var schemaAsString = function(schema) {
@@ -30,7 +30,7 @@ var schemaAsString = function(schema) {
 };
 
 
-var MemberSchemas = React.createClass({
+var IndividualSchemas = React.createClass({
   propTypes: {
     schemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     customSchemas: React.PropTypes.instanceOf(Immutable.Map).isRequired,
@@ -55,7 +55,7 @@ var MemberSchemas = React.createClass({
   renderSchema: function(field, schema) {
     // We add some top margin to fix incorrect tooltip placement (hack).
     var deleteTooltip = <Tooltip id="tooltip-remove" style={{marginTop: 10}}>Remove field</Tooltip>;
-    var deleteModal = <DeleteCustomMemberField field={field} />;
+    var deleteModal = <DeleteCustomIndividualField field={field} />;
     return (
       <tr key={field}>
         <td>
@@ -103,15 +103,14 @@ var MemberSchemas = React.createClass({
   render: function() {
     // Disallowed are any predefined as well as custom field names and titles.
     // TODO: I think we should also blacklist some other field names (e.g.,
-    //   'members' and 'nests' on the pedigree level, '_key' on the member
-    //   level which we use as a special field in the table view, etc).
+    // '_key' which we use as a special field in the table view, etc).
     var reservedFields = this.props.schemas.keySeq().concat(
       this.props.schemas.toList().map(schema => schema.get('title')),
       this.props.customSchemas.keySeq(),
       this.props.customSchemas.toList().map(schema => schema.get('title')),
     ).toSet().filter(field => field).toArray();
 
-    var addModal = <AddCustomMemberField reservedFields={reservedFields} />;
+    var addModal = <AddCustomIndividualField reservedFields={reservedFields} />;
 
     return (
       <div>
@@ -126,4 +125,4 @@ var MemberSchemas = React.createClass({
 });
 
 
-module.exports = MemberSchemas;
+module.exports = IndividualSchemas;

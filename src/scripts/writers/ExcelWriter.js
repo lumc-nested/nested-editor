@@ -77,18 +77,20 @@ var sheetFromArrayOfArrays = function(data) {
 
 var flatten = function(document) {
   var flattened;
-  var memberFieldSchemas;
+  var individualFieldSchemas;
 
   // TODO: Perhaps it's not a good idea to query the AppStore from here.
-  memberFieldSchemas = document.customMemberFieldSchemas.mergeDeep(AppStore.getMemberFieldSchemas());
+  individualFieldSchemas = document.customIndividualFieldSchemas.mergeDeep(AppStore.getIndividualFieldSchemas());
 
-  flattened = document.members
-    .map((member, memberKey) => [memberKey, member.get('father', ''), member.get('mother', '')].concat(
-      memberFieldSchemas.map((_, fieldKey) => member.get(fieldKey)).toArray()
+  flattened = document.individuals
+    .map((individual, individualKey) => [
+      individualKey, individual.get('father', ''), individual.get('mother', '')
+    ].concat(
+      individualFieldSchemas.map((_, fieldKey) => individual.get(fieldKey)).toArray()
     )).toArray();
 
   flattened.unshift(['ID', 'Father', 'Mother'].concat(
-    memberFieldSchemas.map(field => field.get('title')).toArray()
+    individualFieldSchemas.map(field => field.get('title')).toArray()
   ));
 
   return flattened;

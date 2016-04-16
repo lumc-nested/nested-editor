@@ -51,7 +51,7 @@ var readers = indexByArray([CsvReader, ExcelReader, FamReader, JsonReader, PedRe
 var getAppState = function() {
   return {
     documentFieldSchemas: AppStore.getDocumentFieldSchemas(),
-    memberFieldSchemas: AppStore.getMemberFieldSchemas()
+    individualFieldSchemas: AppStore.getIndividualFieldSchemas()
   };
 };
 
@@ -145,14 +145,14 @@ var Editor = React.createClass({
                         document={document}
                         focus={focus}
                         documentFieldSchemas={this.state.app.documentFieldSchemas}
-                        memberFieldSchemas={this.state.app.memberFieldSchemas} />;
+                        individualFieldSchemas={this.state.app.individualFieldSchemas} />;
     } else {
       view = <LayoutView style={this.props.style}
                          undo={undo}
                          document={document}
                          focus={focus}
                          documentFieldSchemas={this.state.app.documentFieldSchemas}
-                         memberFieldSchemas={this.state.app.memberFieldSchemas} />;
+                         individualFieldSchemas={this.state.app.individualFieldSchemas} />;
     }
 
     return (

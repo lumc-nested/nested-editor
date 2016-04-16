@@ -9,23 +9,23 @@
 
 lines = (newline* line:line newline+ { return line })*
 
-line = comment / member
+line = comment / individual
 
 comment =
   "#" spacing? chars:nonnewline*
   { return ["comment", chars.join("")] }
 
-member =
+individual =
   family:name spacing
-  member:name spacing
+  individual:name spacing
   father:(name / missing) spacing
   mother:(name / missing) spacing
   gender:gender spacing
   phenotype:phenotype
   genotypes:(genotype / missinggenotype)*
-  { return ["member", {
+  { return ["individual", {
       "family": family,
-      "member": member,
+      "individual": individual,
       "father": father,
       "mother": mother,
       "gender": gender,
@@ -55,4 +55,3 @@ namechar = [a-zA-Z0-9_-]
 whitespace = (spacing / newline)+
 spacing = [ \t]+
 newline = "\r"? "\n"
-

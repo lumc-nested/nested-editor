@@ -6,7 +6,7 @@ var Madeline = require('madeline');
 var moment = require('moment');
 
 var DocumentActions = require('../actions/DocumentActions');
-var {Document, NestKey, ObjectRef} = require('../common/Structures');
+var {Document, MatingKey, ObjectRef} = require('../common/Structures');
 
 
 var drawSVG = function(document) {
@@ -14,7 +14,7 @@ var drawSVG = function(document) {
   var defs;
   var svg;
 
-  svg = Madeline.draw(document.members.map((member, memberKey) => {
+  svg = Madeline.draw(document.individuals.map((individual, individualKey) => {
     var dob;
     var deceased;
     var proband;
@@ -23,34 +23,34 @@ var drawSVG = function(document) {
     var carrier;
     var fields
 
-    if (member.get('dateOfBirth')) {
-      dob = moment(member.get('dateOfBirth')).format('YYYY-MM-DD');
+    if (individual.get('dateOfBirth')) {
+      dob = moment(individual.get('dateOfBirth')).format('YYYY-MM-DD');
     }
-    if (member.get('dateOfDeath') || member.get('deceased')) {
+    if (individual.get('dateOfDeath') || individual.get('deceased')) {
       deceased = 'yes';
     }
-    if (member.get('proband')) {
+    if (individual.get('proband')) {
       proband = 'yes';
     }
-    if (member.get('consultand')) {
+    if (individual.get('consultand')) {
       consultand = 'yes';
     }
-    if (member.get('sampled')) {
+    if (individual.get('sampled')) {
       sampled = 'yes';
     }
-    if (member.get('carrier')) {
+    if (individual.get('carrier')) {
       carrier = 'yes';
     }
 
     fields = {
-      IndividualId: memberKey,
+      IndividualId: individualKey,
       Familyid: document.fields.get('title'),
-      Gender: member.get('gender', 'unknown'),
-      Mother: member.get('mother', ''),
-      Father: member.get('father', ''),
-      DZTwin: member.get('dizygote', ''),
-      MZTwin: member.get('monozygote', ''),
-      Name: member.get('name') || `\n${memberKey}`,
+      Gender: individual.get('gender', 'unknown'),
+      Mother: individual.get('mother', ''),
+      Father: individual.get('father', ''),
+      DZTwin: individual.get('dizygote', ''),
+      MZTwin: individual.get('monozygote', ''),
+      Name: individual.get('name') || `\n${individualKey}`,
       DOB: dob,
       Deceased: deceased,
       Proband: proband,
@@ -59,7 +59,7 @@ var drawSVG = function(document) {
       Carrier: carrier
     };
 
-    member.filter((_, field) => field.toLowerCase().startsWith('affected')).forEach((value, field) => {
+    individual.filter((_, field) => field.toLowerCase().startsWith('affected')).forEach((value, field) => {
       fields[field.charAt(0).toUpperCase() + field.slice(1)] = value;
     });
 
@@ -87,15 +87,15 @@ var updateFocus = function(svg, focus) {
   });
 
   switch (focus.type) {
-    case 'member':
+    case 'individual':
       svg.getElementById(`individual-${focus.key}`).classList.add('selected');
       break;
-    case 'nest':
+    case 'mating':
       svg.getElementById(`mating-${focus.key.mother}:${focus.key.father}`).classList.add('selected');
       svg.getElementById(`individual-${focus.key.mother}`).classList.add('selected');
       svg.getElementById(`individual-${focus.key.father}`).classList.add('selected');
       break;
-    case 'pedigree':
+    case 'document':
     default:
   }
 };
@@ -147,17 +147,17 @@ var Layout = React.createClass({
       mating = event.nativeEvent.target.closest('.mating');
       if (individual) {
         DocumentActions.setFocus(new ObjectRef({
-          type: 'member',
+          type: 'individual',
           key: individual.getAttribute('id').substr(11)
         }));
       } else if (mating) {
         [motherKey, fatherKey] = mating.getAttribute('id').substr(7).split(':')
         DocumentActions.setFocus(new ObjectRef({
-          type: 'nest',
-          key: new NestKey({father: fatherKey, mother: motherKey})
+          type: 'mating',
+          key: new MatingKey({father: fatherKey, mother: motherKey})
         }));
       } else {
-        DocumentActions.setFocus(new ObjectRef({type: 'pedigree'}));
+        DocumentActions.setFocus(new ObjectRef({type: 'document'}));
       }
     }
   },

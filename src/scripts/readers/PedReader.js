@@ -19,62 +19,62 @@ var parseGender = function(gender) {
 
 
 var readParseTree = function(parseTree) {
-  var customMemberFieldSchemas;
+  var customIndividualFieldSchemas;
   var fields;
-  var members;
-  var originalMembers;
+  var individuals;
+  var originalIndividuals;
   var uniqueKeys;
 
   /* eslint-disable comma-dangle, array-bracket-spacing */
 
-  // List of member Maps with the fields we got from the PEG.js parser.
-  originalMembers = Immutable.fromJS(parseTree)
-    .filter(([type, ]) => type === 'member')
-    .map(([, member]) => member);
+  // List of individual Maps with the fields we got from the PEG.js parser.
+  originalIndividuals = Immutable.fromJS(parseTree)
+    .filter(([type, ]) => type === 'individual')
+    .map(([, individual]) => individual);
 
   /* eslint-ensable comma-dangle, array-bracket-spacing */
 
-  // Are the member keys unique?
-  uniqueKeys = originalMembers.map(m => m.get('member')).toSet().size === originalMembers.size;
+  // Are the individual keys unique?
+  uniqueKeys = originalIndividuals.map(m => m.get('individual')).toSet().size === originalIndividuals.size;
 
   if (!uniqueKeys) {
-    // Add the family key to the member key to make them unique.
-    originalMembers = originalMembers.map(member => {
+    // Add the family key to the individual key to make them unique.
+    originalIndividuals = originalIndividuals.map(individual => {
       var withFamily = field => {
-        var value = member.get(field);
-        return (value === undefined) ? undefined : (member.get('family') + '.' + value);
+        var value = individual.get(field);
+        return (value === undefined) ? undefined : (individual.get('family') + '.' + value);
       };
-      return member.merge({
-        member: withFamily('member'),
+      return individual.merge({
+        individual: withFamily('individual'),
         father: withFamily('father'),
         mother: withFamily('mother')
       });
     });
   }
 
-  // Map of strings (member keys) to Maps (member fields).
-  members = originalMembers
+  // Map of strings (individual keys) to Maps (individual fields).
+  individuals = originalIndividuals
     .toMap()
-    .mapEntries(([, member]) => {
-      return [member.get('member'),
+    .mapEntries(([, individual]) => {
+      return [individual.get('individual'),
               Immutable.Map({
-                father: member.get('father'),
-                mother: member.get('mother'),
-                gender: parseGender(member.get('gender')),
-                family: member.get('family')
+                father: individual.get('father'),
+                mother: individual.get('mother'),
+                gender: parseGender(individual.get('gender')),
+                family: individual.get('family')
               })];
     });
 
   fields = Immutable.Map({title: 'Imported from PED'});
 
-  customMemberFieldSchemas = Immutable.Map({
+  customIndividualFieldSchemas = Immutable.Map({
     family: {
       title: 'Family',
       type: 'string'
     }
   });
 
-  return new Document({members, fields, customMemberFieldSchemas});
+  return new Document({individuals, fields, customIndividualFieldSchemas});
 };
 
 

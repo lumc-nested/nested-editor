@@ -27,14 +27,14 @@ var convertBoolean = function(value) {
 };
 
 
-// We try to map columns to our predefined member fields (and structural
+// We try to map columns to our predefined individual fields (and structural
 // properties key, father, mother). Aliases must be in lower case.
 var mappers = {
   key: {
     aliases: ['id',
               'member', 'memberid', 'member_id', 'member id',
               'person', 'personid', 'person_id', 'person id',
-              'individualid'],
+              'individual', 'individualid', 'individual_id', 'individual id'],
     convert: value => value.toString()
   },
 
@@ -100,16 +100,16 @@ var mappers = {
 
 var readPapa = function(data) {
   var columns;
-  var customMemberFieldSchemas;
+  var customIndividualFieldSchemas;
   var fields;
   var getters;
   var mappedColumns;
-  var members;
+  var individuals;
 
   // Array of column names.
   columns = data.shift();
 
-  // Array of column names we mapped to predefined member fields.
+  // Array of column names we mapped to predefined individual fields.
   mappedColumns = [];
 
   // For each mapped column name, a getter function yielding the corresponding
@@ -128,8 +128,8 @@ var readPapa = function(data) {
       if (index !== -1) {
         column = columns[index];
         mappedColumns.push(column);
-        getters[key] = member => {
-          var value = member.get(column);
+        getters[key] = individual => {
+          var value = individual.get(column);
           return value === undefined ? value : mapper.convert(value, alias);
         };
       }
@@ -143,7 +143,7 @@ var readPapa = function(data) {
     console.log('WARNING: Could not infer relationship definitions from Excel file');
   }
 
-  // Map of strings (member keys) to Maps (member fields).
+  // Map of strings (individual keys) to Maps (individual fields).
   // We first get the values for mapped columns using `getters` and then add
   // the remaining columns as strings.
   // TODO: Do we want to lowercase the unmapped column keys (and remove
@@ -151,18 +151,18 @@ var readPapa = function(data) {
   //   the custom field editor (which has not be implemented at this point).
   // TODO: Instead of assuming unmapped columns are strings, try to infer the
   //   type.
-  members = Immutable.fromJS(data)
+  individuals = Immutable.fromJS(data)
     .toMap()
-    .mapEntries(([, member]) => {
+    .mapEntries(([, individual]) => {
       // TODO: Cleanup this code.
-      member = member.toMap().mapEntries(([k, v]) => [columns[k], v === '.' ? '' : v]);
+      individual = individual.toMap().mapEntries(([k, v]) => [columns[k], v === '.' ? '' : v]);
       return [
-        getters.key(member),
+        getters.key(individual),
         Immutable.Map(getters)
           .delete('key')
-          .map(getter => getter(member))
+          .map(getter => getter(individual))
           .merge(
-            Immutable.Map(member)
+            Immutable.Map(individual)
               .filter((_, key) => mappedColumns.indexOf(key) === -1)
               .map(value => value === undefined ? value : value.toString())
           )
@@ -173,7 +173,7 @@ var readPapa = function(data) {
 
   // We include custom field definitions for all columns we could not map (for
   // now all as type string).
-  customMemberFieldSchemas = Immutable.List(columns)
+  customIndividualFieldSchemas = Immutable.List(columns)
     .filterNot(column => mappedColumns.includes(column))
     .toMap()
     .mapEntries(([, column]) => [
@@ -181,7 +181,7 @@ var readPapa = function(data) {
       Immutable.Map({title: column, type: 'string'})
     ]);
 
-  return new Document({members, fields, customMemberFieldSchemas});
+  return new Document({individuals, fields, customIndividualFieldSchemas});
 };
 
 

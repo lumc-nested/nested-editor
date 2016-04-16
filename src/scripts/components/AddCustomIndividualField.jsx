@@ -9,7 +9,7 @@ var DocumentActions = require('../actions/DocumentActions');
 var Form = require('./forms/Form');
 
 
-var AddCustomMemberField = React.createClass({
+var AddCustomIndividualField = React.createClass({
   propTypes: {
     reservedFields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
     onHide: React.PropTypes.func
@@ -57,7 +57,7 @@ var AddCustomMemberField = React.createClass({
       schema.format = 'multiline';
     }
 
-    DocumentActions.addCustomMemberField(output.field, schema);
+    DocumentActions.addCustomIndividualField(output.field, schema);
     this.props.onHide();
   },
 
@@ -122,4 +122,4 @@ var AddCustomMemberField = React.createClass({
 });
 
 
-module.exports = AddCustomMemberField;
+module.exports = AddCustomIndividualField;

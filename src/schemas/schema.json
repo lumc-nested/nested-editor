@@ -1,29 +1,29 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "required": ["members"],
+  "required": ["individuals"],
   "properties": {
     "title": {
       "title": "Title",
       "type": "string"
     },
-    "members" : {
-      "title": "Members",
-      "description": "Members in a pedigree.",
+    "individuals" : {
+      "title": "Individuals",
+      "description": "Individuals in a pedigree.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/member"
+        "$ref": "#/definitions/individual"
       }
     },
-    "customMemberPropertySchemas": {
+    "customIndividualPropertySchemas": {
       "additionalProperties": {
-        "$ref": "#/definitions/customMemberPropertySchema"
+        "$ref": "#/definitions/customIndividualPropertySchema"
       }
     }
   },
   "definitions": {
-    "member": {
-      "title": "Member",
+    "individual": {
+      "title": "Individual",
       "type": "object",
       "properties": {
         "father": {
@@ -88,8 +88,8 @@
         }
       }
     },
-    "customMemberPropertySchema": {
-      "title": "Custom member property schema",
+    "customIndividualPropertySchema": {
+      "title": "Custom individual property schema",
       "type": "object",
       "properties": {
         "title": {
