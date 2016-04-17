@@ -44,7 +44,7 @@ var drawSVG = function(document) {
 
     fields = {
       IndividualId: individualKey,
-      Familyid: document.fields.get('title'),
+      Familyid: document.fields.get('title', 'Family'),
       Gender: individual.get('gender', 'unknown'),
       Mother: individual.get('mother', ''),
       Father: individual.get('father', ''),
