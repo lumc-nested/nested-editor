@@ -15,8 +15,8 @@ var MatingSidebar = React.createClass({
     return (
       <div>
         <h1>Mating</h1>
-        <p>{this.props.fatherKey}</p>
-        <p>{this.props.motherKey}</p>
+        <p>Father: {this.props.father.get('name') || this.props.fatherKey}</p>
+        <p>Mother: {this.props.mother.get('name') || this.props.motherKey}</p>
       </div>
     );
   }
