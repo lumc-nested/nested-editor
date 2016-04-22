@@ -162,6 +162,10 @@ var LayoutView = React.createClass({
                        value={this.state.zoomLevel}
                        onChange={this.zoomSlide} />
               </div>
+              <p id="copyright">
+                <a href="https://github.com/lumc-nested/nested-editor">LUMC Nested</a> (rendering
+                by <a href="http://madeline.med.umich.edu/">Madeline 2.0</a>)
+              </p>
               <Layout width={this.state.width}
                       scale={zoomLevel}
                       x={this.state.x}
