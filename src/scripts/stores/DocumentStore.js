@@ -165,8 +165,12 @@ var _addChild = function(fatherKey, motherKey, gender) {
   individuals = _document.individuals
     // Remove any leftover dummy children (their keys start with ^).
     // IE: Is String.prototype.startsWith() supported?
-    .filterNot((_, individualKey) => individualKey.startsWith('^'))
-    .set(childKey, Immutable.Map({
+    .filterNot(
+      (individual, individualKey) =>
+        individualKey.startsWith('^') &&
+        individual.get('father') === fatherKey &&
+        individual.get('mother') === motherKey
+    ).set(childKey, Immutable.Map({
       gender,
       father: fatherKey,
       mother: motherKey
