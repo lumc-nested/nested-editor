@@ -3,6 +3,8 @@ Nested Editor
 
 Pedigree editor component for [React](http://facebook.github.io/react/).
 
+Actual rendering is done by [Madeline 2.0 PDE](http://madeline.med.umich.edu/).
+
 Example usage:
 
 ```javascript
